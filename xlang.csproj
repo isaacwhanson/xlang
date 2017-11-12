@@ -9,4 +9,10 @@
     <PackageReference Include="LLVMSharp" Version="5.0.0" />
   </ItemGroup>
 
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+  <PropertyGroup>
+    <PreBuildEvent>dotnet $(ProjectDir)../coco/bin/Debug/netcoreapp2.0/coco.dll $(ProjectDir)xlang.atg -frames $(ProjectDir)../coco/ -o $(ProjectDir)</PreBuildEvent>
+  </PropertyGroup>
+
 </Project>
