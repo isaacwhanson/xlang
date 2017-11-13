@@ -1,12 +1,12 @@
-/* xlang compiler */
+/* Coco/R ATG for XLANG Compiler */
 
-// Imports
+// --> Imports
 using System.Collections;
-// COMPILER ident
-COMPILER XLANG
-// GlobalFieldsAndMethods
 
-// ScannerSpecification
+COMPILER XLANG
+// --> GlobalFieldsAndMethods
+
+// --> ScannerSpecification
 CHARACTERS
   lower       = 'a'..'z'.
   upper       = 'A'..'Z'.
@@ -20,25 +20,25 @@ CHARACTERS
   hex         = digit + 'a'..'f' + 'A'..'F'.
   notquote    = ANY - '\"' - newline.
   notapost    = ANY - '\'' - newline.
-  sign        = '+' + '-'.
-  e           = 'e' + 'E'.
+  sign        = "+-".
+  e           = "eE".
 
 TOKENS
   ident       = (lower | '_') {letter | digit}.
   typeid      = upper {letter | digit}.
   string      = '"' {notquote | "\\\""} '"'.
   char        = "'" (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) "'".
-  floatcon    = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
-  intcon      = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
+  float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
+  int         = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
 
 COMMENTS FROM "/*" TO "*/"
 COMMENTS FROM "//" TO '\n'
 COMMENTS FROM '#' TO '\n'
-
 IGNORE whitespace + newline
-// ParserSpecificaton
+
+// --> ParserSpecificaton
 PRODUCTIONS
   XLANG = string.
-// END ident .
+
 END XLANG.
 
