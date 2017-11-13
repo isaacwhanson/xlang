@@ -8,28 +8,34 @@ COMPILER XLANG
 
 // ScannerSpecification
 CHARACTERS
-	lower				= 'a'..'z'.
-	upper				= 'A'..'Z'.
-	letter			= lower + upper + '_'.
+  lower       = 'a'..'z'.
+  upper       = 'A'..'Z'.
+  letter      = lower + upper + '_'.
   newline     = '\r' + '\n'.
-  whitespace  = ' ' + '\t' + '\u000b' + '\u000c'.
-  oct    			= '0'..'7'.
+  whitespace  = ' ' + '\t' + '\u000b' + '\u000c' + '\f'.
+  bin         = "01".
+  oct         = '0'..'7'.
   digit       = '0'..'9'.
   nonzero     = '1'..'9'.
-  hex			    = digit + 'a'..'f' + 'A'..'F'.
+  hex         = digit + 'a'..'f' + 'A'..'F'.
   notquote    = ANY - '\"' - newline.
   notapost    = ANY - '\'' - newline.
-	sign				= '+' + '-'.
-	e						= 'e' + 'E'.
+  sign        = '+' + '-'.
+  e           = 'e' + 'E'.
 
 TOKENS
-	ident				= (lower | '_') {letter | digit}.
-	typeid			= upper {letter | digit}.
+  ident       = (lower | '_') {letter | digit}.
+  typeid      = upper {letter | digit}.
   string      = '"' {notquote | "\\\""} '"'.
   char        = "'" (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) "'".
-  floatcon		= (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
-	intcon			= (nonzero {digit} | '0' {oct} | ("0x"|"0X") hex {hex}) {'u'|'U'|'l'|'L'}.
+  floatcon    = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
+  intcon      = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
 
+COMMENTS FROM "/*" TO "*/"
+COMMENTS FROM "//" TO newline
+COMMENTS FROM '#' TO newline
+
+IGNORE whitespace + newline
 // ParserSpecificaton
 
 // END ident .
