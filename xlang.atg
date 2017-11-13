@@ -27,20 +27,28 @@ TOKENS
   ident       = (lower | '_') {letter | digit}.
   typeid      = upper {letter | digit}.
   string      = '"' {notquote | "\\\""} '"'.
-  char        = "'" (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) "'".
+  char        = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) "'".
   float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
   int         = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
 
 COMMENTS FROM "/*" TO "*/"
-COMMENTS FROM "//" TO '\n'
-COMMENTS FROM '#' TO '\n'
+COMMENTS FROM "//" TO "\n"
+COMMENTS FROM "#" TO "\n"
 IGNORE whitespace + newline
 
 // --> ParserSpecificaton
 PRODUCTIONS
-  XLANG (. string value; .) = String<out value> (. Console.WriteLine(value); .).
-  String<out string value> =
-    string (. value = t.val; .).
+  XLANG =
+    GlobalStatement ";" {GlobalStatement ";"}.
+  
+  GlobalStatement =
+    LetStatement.
+
+  LetStatement =
+    "let" ident "=" Expression.
+
+  Expression =
+    string.
 
 END XLANG.
 
