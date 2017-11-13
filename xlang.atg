@@ -32,12 +32,13 @@ TOKENS
   intcon      = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
 
 COMMENTS FROM "/*" TO "*/"
-COMMENTS FROM "//" TO newline
-COMMENTS FROM '#' TO newline
+COMMENTS FROM "//" TO '\n'
+COMMENTS FROM '#' TO '\n'
 
 IGNORE whitespace + newline
 // ParserSpecificaton
-
+PRODUCTIONS
+  XLANG = string.
 // END ident .
 END XLANG.
 
