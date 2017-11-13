@@ -38,7 +38,9 @@ IGNORE whitespace + newline
 
 // --> ParserSpecificaton
 PRODUCTIONS
-  XLANG = string.
+  XLANG (. string value; .) = String<out value> (. Console.WriteLine(value); .).
+  String<out string value> =
+    string (. value = t.val; .).
 
 END XLANG.
 

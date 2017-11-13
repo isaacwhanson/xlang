@@ -6,7 +6,16 @@ namespace xlang
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            if (args.Length > 0) {
+                Scanner scanner = new Scanner(args[0]);
+                Parser parser = new Parser(scanner);
+                parser.Parse();
+                if (parser.errors.count == 0) {
+                    Console.WriteLine("-- Success!");
+                }
+            } else {
+                Console.WriteLine("-- No source file specified");
+            }
         }
     }
 }
