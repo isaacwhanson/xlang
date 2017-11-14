@@ -36,24 +36,64 @@ IGNORE whitespace + newline
 // --> ParserSpecificaton
 PRODUCTIONS
   XLANG =
+    Module.
+
+  Module =
     GlobalStatement ";" {GlobalStatement ";"}.
 
   GlobalStatement =
-    LetStatement.
-
-  LetStatement =
     "let" id "=" Expression.
 
   Expression =
-      string
-    | char
-    | float
-    | int
-    | Boolean.
+      "(" Expression ")"
+    | BinaryExpression
+    | UnaryExpression
+    | Constant
+    | id
+    .
 
-  Boolean =
-      "true"
-    | "false".
+  Constant =
+      char
+    | string
+    | int
+    | float
+    | "true" | "false"
+    .
+
+  BinaryExpression =
+    Expression BinaryOperator Expression.
+
+  UnaryExpression =
+    UnaryOperator Expression.
+
+  BinaryOperator =
+      "+"
+    | "-"
+    | "*"
+    | "/"
+    | "%"
+    | "^"
+    | "==="
+    | "!=="
+    | "!="
+    | "=="
+    | "&&"
+    | "&"
+    | "||"
+    | "|"
+    | ">>"
+    | "<<"
+    | ">="
+    | ">"
+    | "<="
+    | "<"
+    .
+
+  UnaryOperator =
+      "-"
+    | "~"
+    | "!"
+    .
 
 END XLANG.
 
