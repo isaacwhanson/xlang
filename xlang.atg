@@ -5,7 +5,7 @@ using System.Collections;
 COMPILER XLANG
 
 // --> GlobalFieldsAndMethods
-public ASTModule module = new ASTModule();
+public ASTNode ast;
 
 CHARACTERS
   lower       = 'a'..'z'.
@@ -41,7 +41,7 @@ PRODUCTIONS
   XLANG =
     Module.
 
-  Module =
+  Module (. ast = new ASTModule(); .) =
     GlobalStatement {GlobalStatement}.
 
   GlobalStatement =

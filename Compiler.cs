@@ -6,15 +6,19 @@ namespace xlang
     {
         static void Main(string[] args)
         {
-            if (args.Length > 0) {
+            if (args.Length > 0)
+            {
                 Scanner scanner = new Scanner(args[0]);
                 Parser parser = new Parser(scanner);
                 parser.Parse();
-                if (parser.errors.count == 0) {
+                if (parser.errors.count == 0)
+                {
                     Console.WriteLine("-- Success!");
                 }
-                ASTModule module = parser.module;
-            } else {
+                ASTNode ast = parser.ast;
+            }
+            else
+            {
                 Console.WriteLine("-- No source file specified");
             }
         }

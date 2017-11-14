@@ -5,18 +5,20 @@ namespace xlang
 {
     public interface ASTVisitor
     {
-        ASTNode visitASTModule(ASTModule module);
+        void visitASTModule(ASTModule module);
     }
 
     public interface ASTNode
     {
-        ASTNode accept(ASTVisitor visitor);
+        void accept(ASTVisitor visitor);
     }
 
-    public class ASTModule : ASTNode {
+    public class ASTModule : ASTNode
+    {
         // TODO: [add-global-statement]
-        public ASTNode accept(ASTVisitor visitor) {
-            return visitor.visitASTModule(this);
+        public void accept(ASTVisitor visitor)
+        {
+            visitor.visitASTModule(this);
         }
     }
 }
