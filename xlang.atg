@@ -3,9 +3,10 @@
 using System.Collections;
 
 COMPILER XLANG
-// --> GlobalFieldsAndMethods
 
-// --> ScannerSpecification
+// --> GlobalFieldsAndMethods
+public ASTModule module = new ASTModule();
+
 CHARACTERS
   lower       = 'a'..'z'.
   upper       = 'A'..'Z'.
@@ -32,17 +33,19 @@ TOKENS
 COMMENTS FROM "/*" TO "*/"
 COMMENTS FROM "//" TO "\n"
 COMMENTS FROM "#" TO "\n"
+
 IGNORE whitespace + newline
+
 // --> ParserSpecificaton
 PRODUCTIONS
   XLANG =
     Module.
 
   Module =
-    GlobalStatement ";" {GlobalStatement ";"}.
+    GlobalStatement {GlobalStatement}.
 
   GlobalStatement =
-    "let" id "=" Expression.
+    "let" id "=" Expression ";".
 
   Expression =
       "(" Expression ")"
@@ -57,7 +60,7 @@ PRODUCTIONS
     | string
     | int
     | float
-    | "true" | "false"
+    | ("true" | "false")
     .
 
   BinaryExpression =
@@ -96,4 +99,3 @@ PRODUCTIONS
     .
 
 END XLANG.
-

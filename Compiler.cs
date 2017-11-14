@@ -2,7 +2,7 @@
 
 namespace xlang
 {
-    class Program
+    class Compiler
     {
         static void Main(string[] args)
         {
@@ -13,6 +13,7 @@ namespace xlang
                 if (parser.errors.count == 0) {
                     Console.WriteLine("-- Success!");
                 }
+                ASTModule module = parser.module;
             } else {
                 Console.WriteLine("-- No source file specified");
             }

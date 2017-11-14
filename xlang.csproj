@@ -12,7 +12,7 @@
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
 
   <PropertyGroup>
-    <PreBuildEvent>dotnet $(ProjectDir)../coco/bin/Debug/netcoreapp2.0/coco.dll $(ProjectDir)xlang.atg -frames $(ProjectDir)../coco/ -o $(ProjectDir)</PreBuildEvent>
+    <PreBuildEvent>dotnet $(ProjectDir)../coco/bin/Debug/netcoreapp2.0/coco.dll $(ProjectDir)xlang.atg -frames $(ProjectDir)../coco/ -o $(ProjectDir) -namespace xlang</PreBuildEvent>
   </PropertyGroup>
 
 </Project>
