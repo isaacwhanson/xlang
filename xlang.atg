@@ -1,5 +1,4 @@
-/* Coco/R ATG for XLANG Compiler */
-
+/* Coco/R ATG for (C#) XLANG Compiler */
 // --> Imports
 using System.Collections;
 
@@ -24,10 +23,9 @@ CHARACTERS
   e           = "eE".
 
 TOKENS
-  ident       = (lower | '_') {letter | digit}.
-  typeid      = upper {letter | digit}.
+  id          = letter {letter | digit}.
   string      = '"' {notquote | "\\\""} '"'.
-  char        = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) "'".
+  char        = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) '\''.
   float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
   int         = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
 
@@ -35,20 +33,27 @@ COMMENTS FROM "/*" TO "*/"
 COMMENTS FROM "//" TO "\n"
 COMMENTS FROM "#" TO "\n"
 IGNORE whitespace + newline
-
 // --> ParserSpecificaton
 PRODUCTIONS
   XLANG =
     GlobalStatement ";" {GlobalStatement ";"}.
-  
+
   GlobalStatement =
     LetStatement.
 
   LetStatement =
-    "let" ident "=" Expression.
+    "let" id "=" Expression.
 
   Expression =
-    string.
+      string
+    | char
+    | float
+    | int
+    | Boolean.
+
+  Boolean =
+      "true"
+    | "false".
 
 END XLANG.
 
