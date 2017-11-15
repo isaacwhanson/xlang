@@ -5,7 +5,7 @@ using System.Collections;
 COMPILER XLang
 
 // --> GlobalFieldsAndMethods
-public ASTXLang xlang;
+public _XLang xlang;
 
 CHARACTERS
   lower       = 'a'..'z'.
@@ -38,14 +38,14 @@ IGNORE whitespace + newline
 
 // --> ParserSpecificaton
 PRODUCTIONS
-  XLang (. xlang = new ASTXLang(); .) =
-    Module<out ASTModule module> (. xlang.module = module; .).
+  XLang =                                 (. xlang = new _XLang();          .)
+    Module<out _Module m>                 (. xlang.module = m;              .).
 
-  Module<out ASTModule module> (. module = new ASTModule(); .) =
-    GlobalStatement<out ASTGlobalStatement stmt> (. module.Push(stmt); .)
-    {GlobalStatement<out ASTGlobalStatement stmt2> (. module.Push(stmt2); .)}.
+  Module<out _Module m> =                 (. m = new _Module();             .)
+    GlblStmt<out _GlblStmt stmt>          (. m.stmts.Add(stmt);             .)
+    {GlblStmt<out _GlblStmt stmt2>        (. m.stmts.Add(stmt2);            .)}.
 
-  GlobalStatement<out ASTGlobalStatement stmt> (. stmt = new ASTGlobalStatement(); .) =
+  GlblStmt<out _GlblStmt stmt> =          (. stmt = new _GlblStmt();        .)
     "let" id "=" Expression ";".
 
   Expression =

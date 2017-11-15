@@ -1,5 +1,5 @@
 ﻿//
-//  ASTModule.cs
+//  AST.cs
 //
 //  Author:
 //       Isaac W Hanson <isaac@starlig.ht>
@@ -23,18 +23,13 @@ using System.Collections.Generic;
 
 namespace XLang
 {
-  public partial class ASTXLang
+  public partial class _XLang
   {
-    public ASTModule module;
+    public _Module module;
   }
 
-  public partial class ASTModule
+  public partial class _Module
   {
-    public List<ASTGlobalStatement> statements = new List<ASTGlobalStatement>();
-
-    public void Push(ASTGlobalStatement statement)
-    {
-      statements.Add(statement);
-    }
+    public List<_GlblStmt> stmts = new List<_GlblStmt>();
   }
 }

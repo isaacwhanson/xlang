@@ -714,112 +714,112 @@ public interface IASTNode
 
 public interface IASTVisitor
 {
-	void VisitCoco(ASTCoco node);
-	void VisitSetDecl(ASTSetDecl node);
-	void VisitTokenDecl(ASTTokenDecl node);
-	void VisitTokenExpr(ASTTokenExpr node);
-	void VisitSet(ASTSet node);
-	void VisitAttrDecl(ASTAttrDecl node);
-	void VisitSemText(ASTSemText node);
-	void VisitExpression(ASTExpression node);
-	void VisitSimSet(ASTSimSet node);
-	void VisitChar(ASTChar node);
-	void VisitSym(ASTSym node);
-	void VisitTerm(ASTTerm node);
-	void VisitResolver(ASTResolver node);
-	void VisitFactor(ASTFactor node);
-	void VisitAttribs(ASTAttribs node);
-	void VisitCondition(ASTCondition node);
-	void VisitTokenTerm(ASTTokenTerm node);
-	void VisitTokenFactor(ASTTokenFactor node);
+	void VisitCoco(_Coco node);
+	void VisitSetDecl(_SetDecl node);
+	void VisitTokenDecl(_TokenDecl node);
+	void VisitTokenExpr(_TokenExpr node);
+	void VisitSet(_Set node);
+	void VisitAttrDecl(_AttrDecl node);
+	void VisitSemText(_SemText node);
+	void VisitExpression(_Expression node);
+	void VisitSimSet(_SimSet node);
+	void VisitChar(_Char node);
+	void VisitSym(_Sym node);
+	void VisitTerm(_Term node);
+	void VisitResolver(_Resolver node);
+	void VisitFactor(_Factor node);
+	void VisitAttribs(_Attribs node);
+	void VisitCondition(_Condition node);
+	void VisitTokenTerm(_TokenTerm node);
+	void VisitTokenFactor(_TokenFactor node);
 }
 
-public partial class ASTCoco : IASTNode
+public partial class _Coco : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitCoco(this); }
 }
 
-public partial class ASTSetDecl : IASTNode
+public partial class _SetDecl : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSetDecl(this); }
 }
 
-public partial class ASTTokenDecl : IASTNode
+public partial class _TokenDecl : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTokenDecl(this); }
 }
 
-public partial class ASTTokenExpr : IASTNode
+public partial class _TokenExpr : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTokenExpr(this); }
 }
 
-public partial class ASTSet : IASTNode
+public partial class _Set : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSet(this); }
 }
 
-public partial class ASTAttrDecl : IASTNode
+public partial class _AttrDecl : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitAttrDecl(this); }
 }
 
-public partial class ASTSemText : IASTNode
+public partial class _SemText : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSemText(this); }
 }
 
-public partial class ASTExpression : IASTNode
+public partial class _Expression : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitExpression(this); }
 }
 
-public partial class ASTSimSet : IASTNode
+public partial class _SimSet : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSimSet(this); }
 }
 
-public partial class ASTChar : IASTNode
+public partial class _Char : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitChar(this); }
 }
 
-public partial class ASTSym : IASTNode
+public partial class _Sym : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSym(this); }
 }
 
-public partial class ASTTerm : IASTNode
+public partial class _Term : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTerm(this); }
 }
 
-public partial class ASTResolver : IASTNode
+public partial class _Resolver : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitResolver(this); }
 }
 
-public partial class ASTFactor : IASTNode
+public partial class _Factor : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitFactor(this); }
 }
 
-public partial class ASTAttribs : IASTNode
+public partial class _Attribs : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitAttribs(this); }
 }
 
-public partial class ASTCondition : IASTNode
+public partial class _Condition : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitCondition(this); }
 }
 
-public partial class ASTTokenTerm : IASTNode
+public partial class _TokenTerm : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTokenTerm(this); }
 }
 
-public partial class ASTTokenFactor : IASTNode
+public partial class _TokenFactor : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTokenFactor(this); }
 }

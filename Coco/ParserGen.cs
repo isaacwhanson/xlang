@@ -388,12 +388,12 @@ namespace at.jku.ssw.Coco
       gen.WriteLine("{");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\tvoid Visit{0}(AST{0} node);", sym.name);
+        gen.WriteLine("\tvoid Visit{0}(_{0} node);", sym.name);
       }
       gen.WriteLine("}");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\npublic partial class AST{0} : IASTNode", sym.name);
+        gen.WriteLine("\npublic partial class _{0} : IASTNode", sym.name);
         gen.WriteLine("{");
         gen.WriteLine("\tpublic void Accept(IASTVisitor visitor) {{ visitor.Visit{0}(this); }}", sym.name);
         gen.WriteLine("}");

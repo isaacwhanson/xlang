@@ -28,7 +28,7 @@ public class Parser {
  public Token la;   // lookahead token
  int errDist = minErrDist;
 
-public ASTXLang xlang;
+public _XLang xlang;
 
 
 
@@ -90,23 +90,23 @@ public ASTXLang xlang;
 
  
 	void XLang() {
-		xlang = new ASTXLang(); 
-		Module(out ASTModule module);
-		xlang.module = module; 
+		xlang = new _XLang();          
+		Module(out _Module m);
+		xlang.module = m;              
 	}
 
-	void Module(out ASTModule module) {
-		module = new ASTModule(); 
-		GlobalStatement(out ASTGlobalStatement stmt);
-		module.Push(stmt); 
+	void Module(out _Module m) {
+		m = new _Module();             
+		GlblStmt(out _GlblStmt stmt);
+		m.stmts.Add(stmt);             
 		while (la.kind == 6) {
-			GlobalStatement(out ASTGlobalStatement stmt2);
-			module.Push(stmt2); 
+			GlblStmt(out _GlblStmt stmt2);
+			m.stmts.Add(stmt2);            
 		}
 	}
 
-	void GlobalStatement(out ASTGlobalStatement stmt) {
-		stmt = new ASTGlobalStatement(); 
+	void GlblStmt(out _GlblStmt stmt) {
+		stmt = new _GlblStmt();        
 		Expect(6);
 		Expect(1);
 		Expect(7);
@@ -281,58 +281,58 @@ public interface IASTNode
 
 public interface IASTVisitor
 {
-	void VisitXLang(ASTXLang node);
-	void VisitModule(ASTModule node);
-	void VisitGlobalStatement(ASTGlobalStatement node);
-	void VisitExpression(ASTExpression node);
-	void VisitBinaryExpression(ASTBinaryExpression node);
-	void VisitUnaryExpression(ASTUnaryExpression node);
-	void VisitConstant(ASTConstant node);
-	void VisitBinaryOperator(ASTBinaryOperator node);
-	void VisitUnaryOperator(ASTUnaryOperator node);
+	void VisitXLang(_XLang node);
+	void VisitModule(_Module node);
+	void VisitGlblStmt(_GlblStmt node);
+	void VisitExpression(_Expression node);
+	void VisitBinaryExpression(_BinaryExpression node);
+	void VisitUnaryExpression(_UnaryExpression node);
+	void VisitConstant(_Constant node);
+	void VisitBinaryOperator(_BinaryOperator node);
+	void VisitUnaryOperator(_UnaryOperator node);
 }
 
-public partial class ASTXLang : IASTNode
+public partial class _XLang : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitXLang(this); }
 }
 
-public partial class ASTModule : IASTNode
+public partial class _Module : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitModule(this); }
 }
 
-public partial class ASTGlobalStatement : IASTNode
+public partial class _GlblStmt : IASTNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitGlobalStatement(this); }
+	public void Accept(IASTVisitor visitor) { visitor.VisitGlblStmt(this); }
 }
 
-public partial class ASTExpression : IASTNode
+public partial class _Expression : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitExpression(this); }
 }
 
-public partial class ASTBinaryExpression : IASTNode
+public partial class _BinaryExpression : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitBinaryExpression(this); }
 }
 
-public partial class ASTUnaryExpression : IASTNode
+public partial class _UnaryExpression : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitUnaryExpression(this); }
 }
 
-public partial class ASTConstant : IASTNode
+public partial class _Constant : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitConstant(this); }
 }
 
-public partial class ASTBinaryOperator : IASTNode
+public partial class _BinaryOperator : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitBinaryOperator(this); }
 }
 
-public partial class ASTUnaryOperator : IASTNode
+public partial class _UnaryOperator : IASTNode
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitUnaryOperator(this); }
 }
