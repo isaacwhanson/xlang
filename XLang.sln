@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XLang", "XLang\XLang.csproj", "{6E8C52A9-F80F-4F8A-83CB-EF5B0D5F9C98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coco", "Coco\Coco.csproj", "{2568D485-CBA5-4E9F-AC11-900DF89E5798}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E8C52A9-F80F-4F8A-83CB-EF5B0D5F9C98}.Debug|x86.ActiveCfg = Debug|x86
+		{6E8C52A9-F80F-4F8A-83CB-EF5B0D5F9C98}.Debug|x86.Build.0 = Debug|x86
+		{6E8C52A9-F80F-4F8A-83CB-EF5B0D5F9C98}.Release|x86.ActiveCfg = Release|x86
+		{6E8C52A9-F80F-4F8A-83CB-EF5B0D5F9C98}.Release|x86.Build.0 = Release|x86
+		{2568D485-CBA5-4E9F-AC11-900DF89E5798}.Debug|x86.ActiveCfg = Debug|x86
+		{2568D485-CBA5-4E9F-AC11-900DF89E5798}.Debug|x86.Build.0 = Debug|x86
+		{2568D485-CBA5-4E9F-AC11-900DF89E5798}.Release|x86.ActiveCfg = Release|x86
+		{2568D485-CBA5-4E9F-AC11-900DF89E5798}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+EndGlobal
