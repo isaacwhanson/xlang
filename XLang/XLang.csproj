@@ -27,6 +27,12 @@
           <command>mono ${SolutionDir}/Coco/bin/${ProjectConfigName}/Coco.exe XLang.atg -namespace XLang -frames ${SolutionDir}/Coco/bin/${ProjectConfigName}</command>
           <workingdir>${ProjectDir}</workingdir>
         </Command>
+        <Command>
+          <type>Custom</type>
+          <name>Coco</name>
+          <command>mono ${SolutionDir}/Coco/bin/${ProjectConfigName}/Coco.exe XLang.atg -namespace XLang -frames ${SolutionDir}/Coco/bin/${ProjectConfigName}</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
       </CustomCommands>
     </CustomCommands>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
@@ -124,13 +130,14 @@
     <None Include="C.atg" />
     <None Include="LICENSE" />
     <None Include="README.md" />
-    <None Include="XLang.atg" />
     <None Include="packages.config" />
+    <None Include="XLang.atg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coco\Coco.csproj">
       <Project>{2568D485-CBA5-4E9F-AC11-900DF89E5798}</Project>
       <Name>Coco</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
