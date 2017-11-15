@@ -25,8 +25,11 @@ Global
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
 		$0.TextStylePolicy = $2
-		$2.inheritsSet = null
 		$2.scope = text/x-csharp
+		$2.FileWidth = 80
+		$2.TabWidth = 2
+		$2.TabsToSpaces = True
+		$2.IndentWidth = 2
 		$0.CSharpFormattingPolicy = $3
 		$3.scope = text/x-csharp
 		$0.VersionControlPolicy = $4
@@ -36,6 +39,8 @@ Global
 		$6.FileWidth = 80
 		$6.scope = text/plain
 		$6.TabsToSpaces = True
+		$6.TabWidth = 2
+		$6.IndentWidth = 2
 		$0.TextStylePolicy = $7
 		$7.TabsToSpaces = True
 		$7.NoTabsAfterNonTabs = True

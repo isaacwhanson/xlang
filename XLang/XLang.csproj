@@ -5,10 +5,10 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProjectGuid>{6E8C52A9-F80F-4F8A-83CB-EF5B0D5F9C98}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>xlang</RootNamespace>
+    <RootNamespace>XLang</RootNamespace>
     <AssemblyName>XLang</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <StartupObject>xlang.Compiler</StartupObject>
+    <StartupObject>XLang.Compiler</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,7 +24,7 @@
       <CustomCommands>
         <Command>
           <type>BeforeBuild</type>
-          <command>mono ${SolutionDir}/Coco/bin/Debug/Coco.exe xlang.atg -namespace xlang -frames ${SolutionDir}/Coco/bin/Debug</command>
+          <command>mono ${SolutionDir}/Coco/bin/Debug/Coco.exe XLang.atg -namespace XLang -frames ${SolutionDir}/Coco/bin/Debug</command>
           <workingdir>${ProjectDir}</workingdir>
         </Command>
       </CustomCommands>
@@ -113,7 +113,7 @@
     <None Include="C.atg" />
     <None Include="LICENSE" />
     <None Include="README.md" />
-    <None Include="xlang.atg" />
+    <None Include="XLang.atg" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

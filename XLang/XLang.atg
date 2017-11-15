@@ -1,0 +1,101 @@
+/* Coco/R ATG for (C#) XLANG Compiler */
+// --> Imports
+using System.Collections;
+
+COMPILER XLANG
+
+// --> GlobalFieldsAndMethods
+public IASTNode ast;
+
+CHARACTERS
+  lower       = 'a'..'z'.
+  upper       = 'A'..'Z'.
+  letter      = lower + upper + '_'.
+  newline     = '\r' + '\n'.
+  whitespace  = ' ' + '\t' + '\u000b' + '\u000c' + '\f'.
+  bin         = "01".
+  oct         = '0'..'7'.
+  digit       = '0'..'9'.
+  nonzero     = '1'..'9'.
+  hex         = digit + 'a'..'f' + 'A'..'F'.
+  notquote    = ANY - '\"' - newline.
+  notapost    = ANY - '\'' - newline.
+  sign        = "+-".
+  e           = "eE".
+
+TOKENS
+  id          = letter {letter | digit}.
+  string      = '"' {notquote | "\\\""} '"'.
+  char        = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) '\''.
+  float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
+  int         = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
+
+COMMENTS FROM "/*" TO "*/"
+COMMENTS FROM "//" TO "\n"
+COMMENTS FROM "#" TO "\n"
+
+IGNORE whitespace + newline
+
+// --> ParserSpecificaton
+PRODUCTIONS
+  XLANG =
+    Module.
+
+  Module (. ast = new ASTModule(); .) =
+    GlobalStatement {GlobalStatement}.
+
+  GlobalStatement =
+    "let" id "=" Expression ";".
+
+  Expression =
+      "(" Expression ")"
+    | BinaryExpression
+    | UnaryExpression
+    | Constant
+    | id
+    .
+
+  Constant =
+      char
+    | string
+    | int
+    | float
+    | ("true" | "false")
+    .
+
+  BinaryExpression =
+    Expression BinaryOperator Expression.
+
+  UnaryExpression =
+    UnaryOperator Expression.
+
+  BinaryOperator =
+      "+"
+    | "-"
+    | "*"
+    | "/"
+    | "%"
+    | "^"
+    | "==="
+    | "!=="
+    | "!="
+    | "=="
+    | "&&"
+    | "&"
+    | "||"
+    | "|"
+    | ">>"
+    | "<<"
+    | ">="
+    | ">"
+    | "<="
+    | "<"
+    .
+
+  UnaryOperator =
+      "-"
+    | "~"
+    | "!"
+    .
+
+END XLANG.
