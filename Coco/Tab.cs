@@ -160,7 +160,7 @@ namespace at.jku.ssw.Coco
   // Sets 
   //=====================================================================
 
-  public class Sets
+  public static class Sets
   {
 
     public static int Elements(BitArray s)
@@ -292,7 +292,7 @@ namespace at.jku.ssw.Coco
 
     int Num(Node p)
     {
-      if (p == null) return 0; else return p.n;
+      if (p == null) return 0; return p.n;
     }
 
     void PrintSym(Symbol sym)
@@ -457,11 +457,13 @@ namespace at.jku.ssw.Coco
     {
       string s = Unescape(str.Substring(1, str.Length - 2));
       if (s.Length == 0) parser.SemErr("empty token not allowed");
-      Graph g = new Graph();
-      g.r = dummyNode;
+      Graph g = new Graph()
+      {
+        r = dummyNode
+      };
       for (int i = 0; i < s.Length; i++)
       {
-        Node p = NewNode(Node.chr, (int)s[i], 0);
+        Node p = NewNode(Node.chr, s[i], 0);
         g.r.next = p; g.r = p;
       }
       g.l = dummyNode.next; dummyNode.next = null;
@@ -504,9 +506,9 @@ namespace at.jku.ssw.Coco
     public static bool DelNode(Node p)
     {
       if (p.typ == Node.nt) return p.sym.deletable;
-      else if (p.typ == Node.alt) return DelSubGraph(p.sub) || p.down != null && DelSubGraph(p.down);
-      else return p.typ == Node.iter || p.typ == Node.opt || p.typ == Node.sem
-          || p.typ == Node.eps || p.typ == Node.rslv || p.typ == Node.sync;
+      if (p.typ == Node.alt) return DelSubGraph(p.sub) || p.down != null && DelSubGraph(p.down);
+      return p.typ == Node.iter || p.typ == Node.opt || p.typ == Node.sem
+                || p.typ == Node.eps || p.typ == Node.rslv || p.typ == Node.sync;
     }
 
     //----------------- graph printing ----------------------
@@ -519,7 +521,7 @@ namespace at.jku.ssw.Coco
 
     string Pos(Position pos)
     {
-      if (pos == null) return "     "; else return String.Format("{0,5}", pos.beg);
+      if (pos == null) return "     "; return String.Format("{0,5}", pos.beg);
     }
 
     public string Name(string name)
@@ -615,7 +617,7 @@ namespace at.jku.ssw.Coco
     string Ch(int ch)
     {
       if (ch < ' ' || ch >= 127 || ch == '\'' || ch == '\\') return ch.ToString();
-      else return String.Format("'{0}'", (char)ch);
+      return String.Format("'{0}'", (char)ch);
     }
 
     void WriteCharSet(CharSet s)
@@ -716,21 +718,23 @@ namespace at.jku.ssw.Coco
       while (p != null && !visited[p.n])
       {
         visited[p.n] = true;
-        if (p.typ == Node.nt)
+        switch (p.typ)
         {
-          BitArray s = First(p.next);
-          p.sym.follow.Or(s);
-          if (DelGraph(p.next))
-            p.sym.nts[curSy.n] = true;
+          case Node.nt:
+            BitArray s = First(p.next);
+            p.sym.follow.Or(s);
+            if (DelGraph(p.next))
+              p.sym.nts[curSy.n] = true;
+            break;
+          case Node.opt:
+          case Node.iter:
+            CompFollow(p.sub);
+            break;
+          case Node.alt:
+            CompFollow(p.sub); CompFollow(p.down);
+            break;
         }
-        else if (p.typ == Node.opt || p.typ == Node.iter)
-        {
-          CompFollow(p.sub);
-        }
-        else if (p.typ == Node.alt)
-        {
-          CompFollow(p.sub); CompFollow(p.down);
-        }
+
         p = p.next;
       }
     }
@@ -778,13 +782,21 @@ namespace at.jku.ssw.Coco
     {
       if (p == null) return null;
       Node a = null;
-      if (p.typ == Node.any) a = p;
-      else if (p.typ == Node.alt)
+      switch (p.typ)
       {
-        a = LeadingAny(p.sub);
-        if (a == null) a = LeadingAny(p.down);
+        case Node.any:
+          a = p;
+          break;
+        case Node.alt:
+          a = LeadingAny(p.sub);
+          if (a == null) a = LeadingAny(p.down);
+          break;
+        case Node.opt:
+        case Node.iter:
+          a = LeadingAny(p.sub);
+          break;
       }
-      else if (p.typ == Node.opt || p.typ == Node.iter) a = LeadingAny(p.sub);
+
       if (a == null && DelNode(p) && !p.up) a = LeadingAny(p.next);
       return a;
     }
@@ -851,7 +863,7 @@ namespace at.jku.ssw.Coco
     public BitArray Expected0(Node p, Symbol curSy)
     {
       if (p.typ == Node.rslv) return new BitArray(terminals.Count);
-      else return Expected(p, curSy);
+      return Expected(p, curSy);
     }
 
     void CompSync(Node p)
@@ -859,27 +871,33 @@ namespace at.jku.ssw.Coco
       while (p != null && !visited[p.n])
       {
         visited[p.n] = true;
-        if (p.typ == Node.sync)
+        switch (p.typ)
         {
-          BitArray s = Expected(p.next, curSy);
-          s[eofSy.n] = true;
-          allSyncSets.Or(s);
-          p.set = s;
+          case Node.sync:
+            BitArray s = Expected(p.next, curSy);
+            s[eofSy.n] = true;
+            allSyncSets.Or(s);
+            p.set = s;
+            break;
+          case Node.alt:
+            CompSync(p.sub); CompSync(p.down);
+            break;
+          case Node.opt:
+          case Node.iter:
+            CompSync(p.sub);
+            break;
         }
-        else if (p.typ == Node.alt)
-        {
-          CompSync(p.sub); CompSync(p.down);
-        }
-        else if (p.typ == Node.opt || p.typ == Node.iter)
-          CompSync(p.sub);
+
         p = p.next;
       }
     }
 
     void CompSyncSets()
     {
-      allSyncSets = new BitArray(terminals.Count);
-      allSyncSets[eofSy.n] = true;
+      allSyncSets = new BitArray(terminals.Count)
+      {
+        [eofSy.n] = true
+      };
       visited = new BitArray(nodes.Count);
       foreach (Symbol sym in nonterminals)
       {
@@ -893,8 +911,10 @@ namespace at.jku.ssw.Coco
       foreach (Node p in nodes)
         if (p.typ == Node.any)
         {
-          p.set = new BitArray(terminals.Count, true);
-          p.set[eofSy.n] = false;
+          p.set = new BitArray(terminals.Count, true)
+          {
+            [eofSy.n] = false
+          };
         }
     }
 
@@ -1009,10 +1029,7 @@ namespace at.jku.ssw.Coco
               {
                 buf.Append(Hex2Char(s.Substring(i + 2, 4))); i += 6; break;
               }
-              else
-              {
-                parser.SemErr("bad escape sequence in string or character"); i = s.Length; break;
-              }
+              parser.SemErr("bad escape sequence in string or character"); i = s.Length; break;
             default: parser.SemErr("bad escape sequence in string or character"); i += 2; break;
           }
         }
@@ -1110,8 +1127,8 @@ namespace at.jku.ssw.Coco
           onLeftSide = false; onRightSide = false;
           foreach (CNode m in list)
           {
-            if (n.left == m.right) onRightSide = true;
-            if (n.right == m.left) onLeftSide = true;
+            onRightSide |= n.left == m.right;
+            onLeftSide |= n.right == m.left;
           }
           if (!onLeftSide || !onRightSide)
           {
@@ -1157,35 +1174,37 @@ namespace at.jku.ssw.Coco
       BitArray s1, s2;
       while (p != null)
       {
-        if (p.typ == Node.alt)
+        switch (p.typ)
         {
-          Node q = p;
-          s1 = new BitArray(terminals.Count);
-          while (q != null)
-          { // for all alternatives
-            s2 = Expected0(q.sub, curSy);
-            CheckOverlap(s1, s2, 1);
-            s1.Or(s2);
-            CheckAlts(q.sub);
-            q = q.down;
-          }
+          case Node.alt:
+            Node q = p;
+            s1 = new BitArray(terminals.Count);
+            while (q != null)
+            { // for all alternatives
+              s2 = Expected0(q.sub, curSy);
+              CheckOverlap(s1, s2, 1);
+              s1.Or(s2);
+              CheckAlts(q.sub);
+              q = q.down;
+            }
+
+            break;
+          case Node.opt:
+          case Node.iter:
+            if (DelSubGraph(p.sub)) LL1Error(4, null); // e.g. [[...]]
+            else
+            {
+              s1 = Expected0(p.sub, curSy);
+              s2 = Expected(p.next, curSy);
+              CheckOverlap(s1, s2, 2);
+            }
+            CheckAlts(p.sub);
+            break;
+          case Node.any:
+            if (Sets.Elements(p.set) == 0) LL1Error(3, null);
+            break;
         }
-        else if (p.typ == Node.opt || p.typ == Node.iter)
-        {
-          if (DelSubGraph(p.sub)) LL1Error(4, null); // e.g. [[...]]
-          else
-          {
-            s1 = Expected0(p.sub, curSy);
-            s2 = Expected(p.next, curSy);
-            CheckOverlap(s1, s2, 2);
-          }
-          CheckAlts(p.sub);
-        }
-        else if (p.typ == Node.any)
-        {
-          if (Sets.Elements(p.set) == 0) LL1Error(3, null);
-          // e.g. {ANY} ANY or [ANY] ANY or ( ANY | ANY )
-        }
+
         if (p.up) break;
         p = p.next;
       }
@@ -1419,7 +1438,6 @@ namespace at.jku.ssw.Coco
             case 'P': ddt[8] = true; break; // print statistics
             case 'S': ddt[6] = true; break; // list symbol table
             case 'X': ddt[7] = true; break; // list cross reference table
-            default: break;
           }
       }
     }
@@ -1442,7 +1460,7 @@ namespace at.jku.ssw.Coco
     {
       public int Compare(Object x, Object y)
       {
-        return ((Symbol)x).name.CompareTo(((Symbol)y).name);
+        return string.Compare(((Symbol)x).name, ((Symbol)y).name, StringComparison.Ordinal);
       }
     }
 

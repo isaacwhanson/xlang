@@ -84,7 +84,7 @@ namespace at.jku.ssw.Coco
           parser.tab.srcDir = srcDir;
           parser.tab.nsName = nsName;
           parser.tab.frameDir = frameDir;
-          parser.tab.outDir = (outDir != null) ? outDir : srcDir;
+          parser.tab.outDir = outDir ?? srcDir;
           parser.tab.emitLines = emitLines;
           if (ddtString != null) parser.tab.SetDDT(ddtString);
 

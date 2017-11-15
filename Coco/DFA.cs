@@ -230,7 +230,7 @@ namespace at.jku.ssw.Coco
           {
             cur.to++;
             Range next = cur.next;
-            if (next != null && cur.to == next.from - 1) { cur.to = next.to; cur.next = next.next; };
+            if (next != null && cur.to == next.from - 1) { cur.to = next.to; cur.next = next.next; }
           }
           return;
         }
@@ -330,12 +330,12 @@ namespace at.jku.ssw.Coco
   //-----------------------------------------------------------------------------
   class Generator
   {
-    private const int EOF = -1;
+    const int EOF = -1;
 
-    private FileStream fram;
-    private StreamWriter gen;
-    private readonly Tab tab;
-    private string frameFile;
+    FileStream fram;
+    StreamWriter gen;
+    readonly Tab tab;
+    string frameFile;
 
     public Generator(Tab tab)
     {
@@ -409,7 +409,7 @@ namespace at.jku.ssw.Coco
     }
 
     // if stop == null, copies until end of file
-    private void CopyFramePart(string stop, bool generateOutput)
+    void CopyFramePart(string stop, bool generateOutput)
     {
       char startCh = (char)0;
       int endOfStopString = 0;
@@ -444,7 +444,7 @@ namespace at.jku.ssw.Coco
       if (stop != null) throw new FatalError("Incomplete or corrupt frame file: " + frameFile);
     }
 
-    private int framRead()
+    int framRead()
     {
       try
       {
@@ -463,38 +463,38 @@ namespace at.jku.ssw.Coco
 
   public class DFA
   {
-    private int maxStates;
-    private int lastStateNr;   // highest state number
-    private State firstState;
-    private State lastState;   // last allocated state
-    private int lastSimState;  // last non melted state
-    private FileStream fram;   // scanner frame input
-    private StreamWriter gen;  // generated scanner file
-    private Symbol curSy;      // current token to be recognized (in FindTrans)
-    private bool dirtyDFA;     // DFA may become nondeterministic in MatchLiteral
+    int maxStates;
+    int lastStateNr;   // highest state number
+    State firstState;
+    State lastState;   // last allocated state
+    int lastSimState;  // last non melted state
+    FileStream fram;   // scanner frame input
+    StreamWriter gen;  // generated scanner file
+    Symbol curSy;      // current token to be recognized (in FindTrans)
+    bool dirtyDFA;     // DFA may become nondeterministic in MatchLiteral
 
     public bool ignoreCase;   // true if input should be treated case-insensitively
     public bool hasCtxMoves;  // DFA has context transitions
 
     // other Coco objects
-    private Parser parser;
-    private Tab tab;
-    private Errors errors;
-    private TextWriter trace;
+    readonly Parser parser;
+    readonly Tab tab;
+    readonly Errors errors;
+    readonly TextWriter trace;
 
     //---------- Output primitives
-    private string Ch(int ch)
+    string Ch(int ch)
     {
       if (ch < ' ' || ch >= 127 || ch == '\'' || ch == '\\') return Convert.ToString(ch);
       else return String.Format("'{0}'", (char)ch);
     }
 
-    private string ChCond(char ch)
+    string ChCond(char ch)
     {
       return String.Format("ch == {0}", Ch(ch));
     }
 
-    private void PutRange(CharSet s)
+    void PutRange(CharSet s)
     {
       for (CharSet.Range r = s.head; r != null; r = r.next)
       {
@@ -624,6 +624,9 @@ namespace at.jku.ssw.Coco
             Step(from, p.sub, stepped);
             break;
           }
+
+        default:
+          break;
       }
     }
 
@@ -668,6 +671,9 @@ namespace at.jku.ssw.Coco
             NumberNodes(p.down, state, renumIter);
             break;
           }
+
+        default:
+          break;
       }
     }
 
@@ -699,6 +705,9 @@ namespace at.jku.ssw.Coco
             FindTrans(p.sub, false, marked); FindTrans(p.down, false, marked);
             break;
           }
+
+        default:
+          break;
       }
     }
 

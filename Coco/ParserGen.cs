@@ -53,11 +53,10 @@ namespace at.jku.ssw.Coco
     StreamWriter gen; // generated parser source file
     StringWriter err; // generated parser error messages
     ArrayList symSet = new ArrayList();
-
-    Tab tab;          // other Coco objects
-    TextWriter trace;
-    Errors errors;
-    Buffer buffer;
+    readonly Tab tab;          // other Coco objects
+    readonly TextWriter trace;
+    readonly Errors errors;
+    readonly Buffer buffer;
 
     void Indent(int n)
     {
@@ -146,6 +145,8 @@ namespace at.jku.ssw.Coco
           break;
         case altErr: err.Write("invalid " + sym.name); break;
         case syncErr: err.Write("this symbol not expected in " + sym.name); break;
+        default:
+          break;
       }
       err.WriteLine("\"; break;");
     }
@@ -339,6 +340,8 @@ namespace at.jku.ssw.Coco
             GenCode(p.sub, indent + 1, s1);
             Indent(indent); gen.WriteLine("}");
             break;
+          default:
+            break;
         }
         if (p.typ != Node.eps && p.typ != Node.sem && p.typ != Node.sync)
           isChecked.SetAll(false);  // = new BitArray(tab.terminals.Count);
@@ -385,12 +388,12 @@ namespace at.jku.ssw.Coco
       gen.WriteLine("{");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\tvoid Visit{0}({0} node);", sym.name);
+        gen.WriteLine("\tvoid Visit{0}(AST{0} node);", sym.name);
       }
       gen.WriteLine("}");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\npublic partial class {0} : IASTNode", sym.name);
+        gen.WriteLine("\npublic partial class AST{0} : IASTNode", sym.name);
         gen.WriteLine("{");
         gen.WriteLine("\tpublic void Accept(IASTVisitor visitor) {{ visitor.Visit{0}(this); }}", sym.name);
         gen.WriteLine("}");
@@ -460,7 +463,7 @@ namespace at.jku.ssw.Coco
       g.CopyFramePart("-->parseRoot"); gen.WriteLine("\t\t{0}();", tab.gramSy.name); if (tab.checkEOF) gen.WriteLine("\t\tExpect(0);");
       g.CopyFramePart("-->initialization"); InitSets();
       g.CopyFramePart("-->custom"); GenNodes();
-      g.CopyFramePart("-->errors"); gen.Write(err.ToString());
+      g.CopyFramePart("-->errors"); gen.Write(err);
       g.CopyFramePart(null);
       /* AW 2002-12-20 close namespace, if it exists */
       if (!string.IsNullOrEmpty(tab.nsName)) gen.Write("}");

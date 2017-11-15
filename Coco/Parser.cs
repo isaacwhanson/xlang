@@ -19,16 +19,16 @@ public class Parser {
 	public const int _ddtSym = 42;
 	public const int _optionSym = 43;
 
-	const bool _T = true;
-	const bool _x = false;
-	const int minErrDist = 2;
-	
-	public Scanner scanner;
-	public Errors  errors;
+ const bool _T = true;
+ const bool _x = false;
+ const int minErrDist = 2;
+ 
+ public Scanner scanner;
+ public Errors  errors;
 
-	public Token t;    // last recognized token
-	public Token la;   // lookahead token
-	int errDist = minErrDist;
+ public Token t;    // last recognized token
+ public Token la;   // lookahead token
+ int errDist = minErrDist;
 
 const int id = 0;
 	const int str = 1;
@@ -46,26 +46,26 @@ const int id = 0;
 
 
 
-	public Parser(Scanner scanner) {
-		this.scanner = scanner;
-		errors = new Errors();
-	}
+ public Parser(Scanner scanner) {
+   this.scanner = scanner;
+   errors = new Errors();
+ }
 
-	void SynErr (int n) {
-		if (errDist >= minErrDist) errors.SynErr(la.line, la.col, n);
-		errDist = 0;
-	}
+ void SynErr (int n) {
+   if (errDist >= minErrDist) errors.SynErr(la.line, la.col, n);
+   errDist = 0;
+ }
 
-	public void SemErr (string msg) {
-		if (errDist >= minErrDist) errors.SemErr(t.line, t.col, msg);
-		errDist = 0;
-	}
-	
-	void Get () {
-		for (;;) {
-			t = la;
-			la = scanner.Scan();
-			if (la.kind <= maxT) { ++errDist; break; }
+ public void SemErr (string msg) {
+   if (errDist >= minErrDist) errors.SemErr(t.line, t.col, msg);
+   errDist = 0;
+ }
+ 
+ void Get () {
+   for (;;) {
+     t = la;
+     la = scanner.Scan();
+     if (la.kind <= maxT) { ++errDist; break; }
 				if (la.kind == 42) {
 				tab.SetDDT(la.val); 
 				}
@@ -73,42 +73,42 @@ const int id = 0;
 				tab.SetOption(la.val); 
 				}
 
-			la = t;
-		}
-	}
-	
-	void Expect (int n) {
-		if (la.kind==n) Get(); else { SynErr(n); }
-	}
-	
-	bool StartOf (int s) {
-		return set[s, la.kind];
-	}
-	
-	void ExpectWeak (int n, int follow) {
-		if (la.kind == n) Get();
-		else {
-			SynErr(n);
-			while (!StartOf(follow)) Get();
-		}
-	}
+     la = t;
+   }
+ }
+ 
+ void Expect (int n) {
+   if (la.kind==n) Get(); else { SynErr(n); }
+ }
+ 
+ bool StartOf (int s) {
+   return set[s, la.kind];
+ }
+ 
+ void ExpectWeak (int n, int follow) {
+   if (la.kind == n) Get();
+   else {
+     SynErr(n);
+     while (!StartOf(follow)) Get();
+   }
+ }
 
 
-	bool WeakSeparator(int n, int syFol, int repFol) {
-		int kind = la.kind;
-		if (kind == n) {Get(); return true;}
-		else if (StartOf(repFol)) {return false;}
-		else {
-			SynErr(n);
-			while (!(set[syFol, kind] || set[repFol, kind] || set[0, kind])) {
-				Get();
-				kind = la.kind;
-			}
-			return StartOf(syFol);
-		}
-	}
+ bool WeakSeparator(int n, int syFol, int repFol) {
+   int kind = la.kind;
+   if (kind == n) {Get(); return true;}
+   else if (StartOf(repFol)) {return false;}
+   else {
+     SynErr(n);
+     while (!(set[syFol, kind] || set[repFol, kind] || set[0, kind])) {
+       Get();
+       kind = la.kind;
+     }
+     return StartOf(syFol);
+   }
+ }
 
-	
+ 
 	void Coco() {
 		Symbol sym; Graph g, g1, g2; string gramName; CharSet s; int beg, line; 
 		if (StartOf(1)) {
@@ -672,16 +672,16 @@ const int id = 0;
 
 
 
-	public void Parse() {
-		la = new Token();
-		la.val = "";		
-		Get();
+ public void Parse() {
+   la = new Token();
+   la.val = "";    
+   Get();
 		Coco();
 		Expect(0);
 
-	}
-	
-	static readonly bool[,] set = {
+ }
+ 
+ static readonly bool[,] set = {
 		{_T,_T,_x,_T, _x,_T,_x,_x, _x,_x,_T,_T, _x,_x,_x,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x,_x},
 		{_x,_T,_T,_T, _T,_T,_x,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_x},
 		{_x,_T,_T,_T, _T,_T,_T,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_x},
@@ -704,19 +704,135 @@ const int id = 0;
 		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_T, _x,_T,_x,_T, _x,_x,_x,_x, _x,_x,_x},
 		{_x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_x, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_x}
 
-	};
+ };
 } // end Parser
 
-// -->custom
+public interface IASTNode
+{
+	void Accept(IASTVisitor visitor);
+}
+
+public interface IASTVisitor
+{
+	void VisitCoco(ASTCoco node);
+	void VisitSetDecl(ASTSetDecl node);
+	void VisitTokenDecl(ASTTokenDecl node);
+	void VisitTokenExpr(ASTTokenExpr node);
+	void VisitSet(ASTSet node);
+	void VisitAttrDecl(ASTAttrDecl node);
+	void VisitSemText(ASTSemText node);
+	void VisitExpression(ASTExpression node);
+	void VisitSimSet(ASTSimSet node);
+	void VisitChar(ASTChar node);
+	void VisitSym(ASTSym node);
+	void VisitTerm(ASTTerm node);
+	void VisitResolver(ASTResolver node);
+	void VisitFactor(ASTFactor node);
+	void VisitAttribs(ASTAttribs node);
+	void VisitCondition(ASTCondition node);
+	void VisitTokenTerm(ASTTokenTerm node);
+	void VisitTokenFactor(ASTTokenFactor node);
+}
+
+public partial class ASTCoco : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitCoco(this); }
+}
+
+public partial class ASTSetDecl : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitSetDecl(this); }
+}
+
+public partial class ASTTokenDecl : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitTokenDecl(this); }
+}
+
+public partial class ASTTokenExpr : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitTokenExpr(this); }
+}
+
+public partial class ASTSet : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitSet(this); }
+}
+
+public partial class ASTAttrDecl : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitAttrDecl(this); }
+}
+
+public partial class ASTSemText : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitSemText(this); }
+}
+
+public partial class ASTExpression : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitExpression(this); }
+}
+
+public partial class ASTSimSet : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitSimSet(this); }
+}
+
+public partial class ASTChar : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitChar(this); }
+}
+
+public partial class ASTSym : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitSym(this); }
+}
+
+public partial class ASTTerm : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitTerm(this); }
+}
+
+public partial class ASTResolver : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitResolver(this); }
+}
+
+public partial class ASTFactor : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitFactor(this); }
+}
+
+public partial class ASTAttribs : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitAttribs(this); }
+}
+
+public partial class ASTCondition : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitCondition(this); }
+}
+
+public partial class ASTTokenTerm : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitTokenTerm(this); }
+}
+
+public partial class ASTTokenFactor : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitTokenFactor(this); }
+}
+
 
 public class Errors {
-	public int count = 0;                                    // number of errors detected
-	public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
-	public string errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
+ public int count = 0;                                    // number of errors detected
+ public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
+ public string errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
 
-	public virtual void SynErr (int line, int col, int n) {
-		string s;
-		switch (n) {
+ public virtual void SynErr (int line, int col, int n) {
+   string s;
+   switch (n) {
 			case 0: s = "EOF expected"; break;
 			case 1: s = "ident expected"; break;
 			case 2: s = "number expected"; break;
@@ -770,33 +886,33 @@ public class Errors {
 			case 50: s = "invalid Attribs"; break;
 			case 51: s = "invalid TokenFactor"; break;
 
-			default: s = "error " + n; break;
-		}
-		errorStream.WriteLine(errMsgFormat, line, col, s);
-		count++;
-	}
+     default: s = "error " + n; break;
+   }
+   errorStream.WriteLine(errMsgFormat, line, col, s);
+   count++;
+ }
 
-	public virtual void SemErr (int line, int col, string s) {
-		errorStream.WriteLine(errMsgFormat, line, col, s);
-		count++;
-	}
-	
-	public virtual void SemErr (string s) {
-		errorStream.WriteLine(s);
-		count++;
-	}
-	
-	public virtual void Warning (int line, int col, string s) {
-		errorStream.WriteLine(errMsgFormat, line, col, s);
-	}
-	
-	public virtual void Warning(string s) {
-		errorStream.WriteLine(s);
-	}
+ public virtual void SemErr (int line, int col, string s) {
+   errorStream.WriteLine(errMsgFormat, line, col, s);
+   count++;
+ }
+ 
+ public virtual void SemErr (string s) {
+   errorStream.WriteLine(s);
+   count++;
+ }
+ 
+ public virtual void Warning (int line, int col, string s) {
+   errorStream.WriteLine(errMsgFormat, line, col, s);
+ }
+ 
+ public virtual void Warning(string s) {
+   errorStream.WriteLine(s);
+ }
 } // Errors
 
 
 public class FatalError: Exception {
-	public FatalError(string m): base(m) {}
+ public FatalError(string m): base(m) {}
 }
 }
