@@ -457,7 +457,7 @@ namespace at.jku.ssw.Coco
     {
       string s = Unescape(str.Substring(1, str.Length - 2));
       if (s.Length == 0) parser.SemErr("empty token not allowed");
-      Graph g = new Graph()
+      Graph g = new Graph
       {
         r = dummyNode
       };
