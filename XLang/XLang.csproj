@@ -118,6 +118,7 @@
     <Compile Include="Compiler.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Scanner.cs" />
+    <Compile Include="ValidatingVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="C.atg" />
@@ -139,7 +140,7 @@
     <MonoDevelop>
       <Properties>
         <Policies>
-          <StandardHeader IncludeInNewFiles="True" Text="&#xA; ${FileName}&#xA; &#xA; Author:&#xA;      ${AuthorName} &lt;${AuthorEmail}&gt;&#xA;&#xA; Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This program is free software; you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation; either version 2 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; This program is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the&#xA; GNU General Public License for more details.&#xA; &#xA; You should have received a copy of the GNU General Public License&#xA; along with this program; if not, write to the Free Software&#xA; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA&#xA;" />
+          <StandardHeader IncludeInNewFiles="True" Text=" &#xA; ${FileName}&#xA; &#xA; Author:&#xA;      ${AuthorName} &lt;${AuthorEmail}&gt;&#xA;&#xA; Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This program is free software: you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation, either version 3 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; This program is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA; GNU General Public License for more details.&#xA;&#xA; You should have received a copy of the GNU General Public License&#xA; along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;." />
         </Policies>
       </Properties>
     </MonoDevelop>

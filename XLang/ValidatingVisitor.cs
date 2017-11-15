@@ -1,5 +1,5 @@
 ﻿//
-//  Compiler.cs
+//  ValidatingVisitor.cs
 //
 //  Author:
 //       Isaac W Hanson <isaac@starlig.ht>
@@ -22,27 +22,15 @@ using System;
 
 namespace XLang
 {
-  class Compiler
+  public class ValidatingVisitor : IASTVisitor
   {
-    static void Main(string[] args)
+    public ValidatingVisitor()
     {
-      if (args.Length > 0)
-      {
-        Scanner scanner = new Scanner(args[0]);
-        Parser parser = new Parser(scanner);
-        parser.Parse();
-        if (parser.errors.count == 0)
-        {
-          Console.WriteLine("-- Success!");
-          // validate AST
-          ValidatingVisitor validator = new ValidatingVisitor();
-          parser.ast.Accept(validator);
-        }
-      }
-      else
-      {
-        Console.WriteLine("-- No source file specified");
-      }
+    }
+
+    public void VisitASTModule(ASTModule module)
+    {
+      throw new NotImplementedException();
     }
   }
 }
