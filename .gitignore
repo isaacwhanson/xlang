@@ -38,4 +38,7 @@ Thumbs.db
 
 # dotCover
 *.dotCover
+
+# Coco
 *.cs.old
+trace.txt
