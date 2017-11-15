@@ -3,22 +3,22 @@ using System.Collections;
 
 namespace xlang
 {
-    public interface ASTVisitor
+    public interface IASTVisitor
     {
-        void visitASTModule(ASTModule module);
+        void VisitASTModule(ASTModule module);
     }
 
-    public interface ASTNode
+    public interface IASTNode
     {
-        void accept(ASTVisitor visitor);
+        void Accept(IASTVisitor visitor);
     }
 
-    public class ASTModule : ASTNode
+    public class ASTModule : IASTNode
     {
         // TODO: [add-global-statement]
-        public void accept(ASTVisitor visitor)
+        public void Accept(IASTVisitor visitor)
         {
-            visitor.visitASTModule(this);
+            visitor.VisitASTModule(this);
         }
     }
 }

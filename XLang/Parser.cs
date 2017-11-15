@@ -28,7 +28,7 @@ public class Parser {
 	public Token la;   // lookahead token
 	int errDist = minErrDist;
 
-public ASTNode ast;
+public IASTNode ast;
 
 
 

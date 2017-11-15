@@ -15,7 +15,7 @@ namespace xlang
                 {
                     Console.WriteLine("-- Success!");
                 }
-                ASTNode ast = parser.ast;
+                IASTNode ast = parser.ast;
             }
             else
             {
