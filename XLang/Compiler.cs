@@ -36,7 +36,7 @@ namespace XLang
           Console.WriteLine("-- Success!");
           // validate AST
           ValidatingVisitor validator = new ValidatingVisitor();
-          parser.ast.Accept(validator);
+          parser.module.Accept(validator);
         }
       }
       else

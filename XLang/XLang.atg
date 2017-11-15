@@ -1,11 +1,11 @@
-/* Coco/R ATG for (C#) XLANG Compiler */
+/* Coco/R ATG for (C#) XLang Compiler */
 // --> Imports
 using System.Collections;
 
-COMPILER XLANG
+COMPILER XLang
 
 // --> GlobalFieldsAndMethods
-public IASTNode ast;
+public Module module;
 
 CHARACTERS
   lower       = 'a'..'z'.
@@ -38,10 +38,10 @@ IGNORE whitespace + newline
 
 // --> ParserSpecificaton
 PRODUCTIONS
-  XLANG =
+  XLang =
     Module.
 
-  Module (. ast = new ASTModule(); .) =
+  Module (. module = new Module(); .) =
     GlobalStatement {GlobalStatement}.
 
   GlobalStatement =
@@ -98,4 +98,4 @@ PRODUCTIONS
     | "!"
     .
 
-END XLANG.
+END XLang.

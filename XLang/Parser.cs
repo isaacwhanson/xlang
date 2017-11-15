@@ -28,7 +28,7 @@ public class Parser {
 	public Token la;   // lookahead token
 	int errDist = minErrDist;
 
-public IASTNode ast;
+public Module module;
 
 
 
@@ -89,12 +89,12 @@ public IASTNode ast;
 	}
 
 	
-	void XLANG() {
+	void XLang() {
 		Module();
 	}
 
 	void Module() {
-		ast = new ASTModule(); 
+		module = new Module(); 
 		GlobalStatement();
 		while (la.kind == 6) {
 			GlobalStatement();
@@ -256,7 +256,7 @@ public IASTNode ast;
 		la = new Token();
 		la.val = "";		
 		Get();
-		XLANG();
+		XLang();
 		Expect(0);
 
 	}

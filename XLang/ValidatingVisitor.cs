@@ -28,7 +28,7 @@ namespace XLang
     {
     }
 
-    public void VisitASTModule(ASTModule module)
+    public void VisitASTModule(Module module)
     {
       throw new NotImplementedException();
     }

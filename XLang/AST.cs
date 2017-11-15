@@ -5,7 +5,7 @@ namespace XLang
 {
   public interface IASTVisitor
   {
-    void VisitASTModule(ASTModule module);
+    void VisitASTModule(Module module);
   }
 
   public interface IASTNode
@@ -13,7 +13,7 @@ namespace XLang
     void Accept(IASTVisitor visitor);
   }
 
-  public class ASTModule : IASTNode
+  public class Module : IASTNode
   {
     // TODO: [add-global-statement]
     public void Accept(IASTVisitor visitor)
