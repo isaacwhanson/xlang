@@ -39,12 +39,13 @@ IGNORE whitespace + newline
 // --> ParserSpecificaton
 PRODUCTIONS
   XLang (. xlang = new ASTXLang(); .) =
-    Module.
+    Module<out ASTModule module> (. xlang.module = module; .).
 
-  Module =
-    GlobalStatement {GlobalStatement}.
+  Module<out ASTModule module> (. module = new ASTModule(); .) =
+    GlobalStatement<out ASTGlobalStatement stmt> (. module.Push(stmt); .)
+    {GlobalStatement<out ASTGlobalStatement stmt2> (. module.Push(stmt2); .)}.
 
-  GlobalStatement =
+  GlobalStatement<out ASTGlobalStatement stmt> (. stmt = new ASTGlobalStatement(); .) =
     "let" id "=" Expression ";".
 
   Expression =

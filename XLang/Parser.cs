@@ -91,17 +91,22 @@ public ASTXLang xlang;
  
 	void XLang() {
 		xlang = new ASTXLang(); 
-		Module();
+		Module(out ASTModule module);
+		xlang.module = module; 
 	}
 
-	void Module() {
-		GlobalStatement();
+	void Module(out ASTModule module) {
+		module = new ASTModule(); 
+		GlobalStatement(out ASTGlobalStatement stmt);
+		module.Push(stmt); 
 		while (la.kind == 6) {
-			GlobalStatement();
+			GlobalStatement(out ASTGlobalStatement stmt2);
+			module.Push(stmt2); 
 		}
 	}
 
-	void GlobalStatement() {
+	void GlobalStatement(out ASTGlobalStatement stmt) {
+		stmt = new ASTGlobalStatement(); 
 		Expect(6);
 		Expect(1);
 		Expect(7);
