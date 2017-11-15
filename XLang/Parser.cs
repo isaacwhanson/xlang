@@ -102,7 +102,6 @@ public ASTNode ast;
 	}
 
 	void GlobalStatement() {
-		string x = "hello"; 
 		Expect(6);
 		Expect(1);
 		Expect(7);

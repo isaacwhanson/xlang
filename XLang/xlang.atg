@@ -44,7 +44,7 @@ PRODUCTIONS
   Module (. ast = new ASTModule(); .) =
     GlobalStatement {GlobalStatement}.
 
-  GlobalStatement (. string x = "hello"; .)=
+  GlobalStatement =
     "let" id "=" Expression ";".
 
   Expression =
