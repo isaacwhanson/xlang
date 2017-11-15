@@ -28,7 +28,7 @@ public class Parser {
  public Token la;   // lookahead token
  int errDist = minErrDist;
 
-public ASTXLANG xlang;
+public ASTXLang xlang;
 
 
 
@@ -89,8 +89,8 @@ public ASTXLANG xlang;
  }
 
  
-	void XLANG() {
-		xlang = new ASTXLANG(); 
+	void XLang() {
+		xlang = new ASTXLang(); 
 		Module();
 	}
 
@@ -256,7 +256,7 @@ public ASTXLANG xlang;
    la = new Token();
    la.val = "";    
    Get();
-		XLANG();
+		XLang();
 		Expect(0);
 
  }
@@ -276,7 +276,7 @@ public interface IASTNode
 
 public interface IASTVisitor
 {
-	void VisitXLANG(ASTXLANG node);
+	void VisitXLang(ASTXLang node);
 	void VisitModule(ASTModule node);
 	void VisitGlobalStatement(ASTGlobalStatement node);
 	void VisitExpression(ASTExpression node);
@@ -287,9 +287,9 @@ public interface IASTVisitor
 	void VisitUnaryOperator(ASTUnaryOperator node);
 }
 
-public partial class ASTXLANG : IASTNode
+public partial class ASTXLang : IASTNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitXLANG(this); }
+	public void Accept(IASTVisitor visitor) { visitor.VisitXLang(this); }
 }
 
 public partial class ASTModule : IASTNode

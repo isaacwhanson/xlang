@@ -64,7 +64,7 @@ namespace XLang
       throw new NotImplementedException();
     }
 
-    public void VisitXLANG(ASTXLANG node)
+    public void VisitXLang(ASTXLang node)
     {
       throw new NotImplementedException();
     }

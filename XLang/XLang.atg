@@ -2,10 +2,10 @@
 // --> Imports
 using System.Collections;
 
-COMPILER XLANG
+COMPILER XLang
 
 // --> GlobalFieldsAndMethods
-public ASTXLANG xlang;
+public ASTXLang xlang;
 
 CHARACTERS
   lower       = 'a'..'z'.
@@ -38,7 +38,7 @@ IGNORE whitespace + newline
 
 // --> ParserSpecificaton
 PRODUCTIONS
-  XLANG (. xlang = new ASTXLANG(); .) =
+  XLang (. xlang = new ASTXLang(); .) =
     Module.
 
   Module =
@@ -98,4 +98,4 @@ PRODUCTIONS
     | "!"
     .
 
-END XLANG.
+END XLang.
