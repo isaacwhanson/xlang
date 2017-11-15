@@ -236,8 +236,10 @@ namespace at.jku.ssw.Coco
         }
         prev = cur; cur = cur.next;
       }
-      Range n = new Range(i, i);
-      n.next = cur;
+      Range n = new Range(i, i)
+      {
+        next = cur
+      };
       if (prev == null) head = n; else prev.next = n;
     }
 
@@ -509,7 +511,10 @@ namespace at.jku.ssw.Coco
 
     State NewState()
     {
-      State s = new State(); s.nr = ++lastStateNr;
+      State s = new State()
+      {
+        nr = ++lastStateNr
+      };
       if (firstState == null) firstState = s; else lastState.next = s;
       lastState = s;
       return s;
@@ -518,7 +523,10 @@ namespace at.jku.ssw.Coco
     void NewTransition(State from, State to, int typ, int sym, int tc)
     {
       Target t = new Target(to);
-      Action a = new Action(typ, sym, tc); a.target = t;
+      Action a = new Action(typ, sym, tc)
+      {
+        target = t
+      };
       from.AddAction(a);
       if (typ == Node.clas) curSy.tokenKind = Symbol.classToken;
     }
@@ -833,14 +841,11 @@ namespace at.jku.ssw.Coco
 
     void MeltStates(State state)
     {
-      bool ctx;
-      BitArray targets;
-      Symbol endOf;
       for (Action action = state.firstAction; action != null; action = action.next)
       {
         if (action.target.next != null)
         {
-          GetTargetStates(action, out targets, out endOf, out ctx);
+          GetTargetStates(action, out BitArray targets, out Symbol endOf, out bool ctx);
           Melted melt = StateWithSet(targets);
           if (melt == null)
           {
@@ -954,8 +959,11 @@ namespace at.jku.ssw.Coco
 
     Melted NewMelted(BitArray set, State state)
     {
-      Melted m = new Melted(set, state);
-      m.next = firstMelted; firstMelted = m;
+      Melted m = new Melted(set, state)
+      {
+        next = firstMelted
+      };
+      firstMelted = m;
       return m;
     }
 
@@ -1008,8 +1016,11 @@ namespace at.jku.ssw.Coco
 
     public void NewComment(Node from, Node to, bool nested)
     {
-      Comment c = new Comment(CommentStr(from), CommentStr(to), nested);
-      c.next = firstComment; firstComment = c;
+      Comment c = new Comment(CommentStr(from), CommentStr(to), nested)
+      {
+        next = firstComment
+      };
+      firstComment = c;
     }
 
 
@@ -1199,7 +1210,7 @@ namespace at.jku.ssw.Coco
       g.SkipFramePart("-->begin");
 
       g.CopyFramePart("-->namespace");
-      if (tab.nsName != null && tab.nsName.Length > 0)
+      if (!string.IsNullOrEmpty(tab.nsName))
       {
         gen.Write("namespace ");
         gen.Write(tab.nsName);
@@ -1254,7 +1265,7 @@ namespace at.jku.ssw.Coco
       for (State state = firstState.next; state != null; state = state.next)
         WriteState(state);
       g.CopyFramePart(null);
-      if (tab.nsName != null && tab.nsName.Length > 0) gen.Write("}");
+      if (!string.IsNullOrEmpty(tab.nsName)) gen.Write("}");
       gen.Close();
     }
 
