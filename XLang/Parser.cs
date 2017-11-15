@@ -17,84 +17,84 @@ public class Parser {
 	public const int _int = 5;
 	public const int maxT = 35;
 
-	const bool _T = true;
-	const bool _x = false;
-	const int minErrDist = 2;
-	
-	public Scanner scanner;
-	public Errors  errors;
+ const bool _T = true;
+ const bool _x = false;
+ const int minErrDist = 2;
+ 
+ public Scanner scanner;
+ public Errors  errors;
 
-	public Token t;    // last recognized token
-	public Token la;   // lookahead token
-	int errDist = minErrDist;
+ public Token t;    // last recognized token
+ public Token la;   // lookahead token
+ int errDist = minErrDist;
 
-public Module module;
-
-
-
-	public Parser(Scanner scanner) {
-		this.scanner = scanner;
-		errors = new Errors();
-	}
-
-	void SynErr (int n) {
-		if (errDist >= minErrDist) errors.SynErr(la.line, la.col, n);
-		errDist = 0;
-	}
-
-	public void SemErr (string msg) {
-		if (errDist >= minErrDist) errors.SemErr(t.line, t.col, msg);
-		errDist = 0;
-	}
-	
-	void Get () {
-		for (;;) {
-			t = la;
-			la = scanner.Scan();
-			if (la.kind <= maxT) { ++errDist; break; }
-
-			la = t;
-		}
-	}
-	
-	void Expect (int n) {
-		if (la.kind==n) Get(); else { SynErr(n); }
-	}
-	
-	bool StartOf (int s) {
-		return set[s, la.kind];
-	}
-	
-	void ExpectWeak (int n, int follow) {
-		if (la.kind == n) Get();
-		else {
-			SynErr(n);
-			while (!StartOf(follow)) Get();
-		}
-	}
+public XLANG xlang;
 
 
-	bool WeakSeparator(int n, int syFol, int repFol) {
-		int kind = la.kind;
-		if (kind == n) {Get(); return true;}
-		else if (StartOf(repFol)) {return false;}
-		else {
-			SynErr(n);
-			while (!(set[syFol, kind] || set[repFol, kind] || set[0, kind])) {
-				Get();
-				kind = la.kind;
-			}
-			return StartOf(syFol);
-		}
-	}
 
-	
-	void XLang() {
+ public Parser(Scanner scanner) {
+   this.scanner = scanner;
+   errors = new Errors();
+ }
+
+ void SynErr (int n) {
+   if (errDist >= minErrDist) errors.SynErr(la.line, la.col, n);
+   errDist = 0;
+ }
+
+ public void SemErr (string msg) {
+   if (errDist >= minErrDist) errors.SemErr(t.line, t.col, msg);
+   errDist = 0;
+ }
+ 
+ void Get () {
+   for (;;) {
+     t = la;
+     la = scanner.Scan();
+     if (la.kind <= maxT) { ++errDist; break; }
+
+     la = t;
+   }
+ }
+ 
+ void Expect (int n) {
+   if (la.kind==n) Get(); else { SynErr(n); }
+ }
+ 
+ bool StartOf (int s) {
+   return set[s, la.kind];
+ }
+ 
+ void ExpectWeak (int n, int follow) {
+   if (la.kind == n) Get();
+   else {
+     SynErr(n);
+     while (!StartOf(follow)) Get();
+   }
+ }
+
+
+ bool WeakSeparator(int n, int syFol, int repFol) {
+   int kind = la.kind;
+   if (kind == n) {Get(); return true;}
+   else if (StartOf(repFol)) {return false;}
+   else {
+     SynErr(n);
+     while (!(set[syFol, kind] || set[repFol, kind] || set[0, kind])) {
+       Get();
+       kind = la.kind;
+     }
+     return StartOf(syFol);
+   }
+ }
+
+ 
+	void XLANG() {
+		xlang = new XLANG(); 
 		Module();
 	}
 
 	void Module() {
-		module = new Module(); 
 		GlobalStatement();
 		while (la.kind == 6) {
 			GlobalStatement();
@@ -252,33 +252,95 @@ public Module module;
 
 
 
-	public void Parse() {
-		la = new Token();
-		la.val = "";		
-		Get();
-		XLang();
+ public void Parse() {
+   la = new Token();
+   la.val = "";    
+   Get();
+		XLANG();
 		Expect(0);
 
-	}
-	
-	static readonly bool[,] set = {
+ }
+ 
+ static readonly bool[,] set = {
 		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
 		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_T,_x,_T, _T,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_x, _x},
 		{_x,_x,_T,_T, _T,_T,_x,_x, _x,_x,_x,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
 
-	};
+ };
 } // end Parser
 
-// -->custom
+public interface IASTNode
+{
+	void Accept(IASTVisitor visitor);
+}
+
+public interface IASTVisitor
+{
+	void VisitXLANG(XLANG node);
+	void VisitModule(Module node);
+	void VisitGlobalStatement(GlobalStatement node);
+	void VisitExpression(Expression node);
+	void VisitBinaryExpression(BinaryExpression node);
+	void VisitUnaryExpression(UnaryExpression node);
+	void VisitConstant(Constant node);
+	void VisitBinaryOperator(BinaryOperator node);
+	void VisitUnaryOperator(UnaryOperator node);
+}
+
+public partial class XLANG : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitXLANG(this); }
+}
+
+public partial class Module : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitModule(this); }
+}
+
+public partial class GlobalStatement : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitGlobalStatement(this); }
+}
+
+public partial class Expression : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitExpression(this); }
+}
+
+public partial class BinaryExpression : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitBinaryExpression(this); }
+}
+
+public partial class UnaryExpression : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitUnaryExpression(this); }
+}
+
+public partial class Constant : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitConstant(this); }
+}
+
+public partial class BinaryOperator : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitBinaryOperator(this); }
+}
+
+public partial class UnaryOperator : IASTNode
+{
+	public void Accept(IASTVisitor visitor) { visitor.VisitUnaryOperator(this); }
+}
+
 
 public class Errors {
-	public int count = 0;                                    // number of errors detected
-	public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
-	public string errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
+ public int count = 0;                                    // number of errors detected
+ public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
+ public string errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
 
-	public virtual void SynErr (int line, int col, int n) {
-		string s;
-		switch (n) {
+ public virtual void SynErr (int line, int col, int n) {
+   string s;
+   switch (n) {
 			case 0: s = "EOF expected"; break;
 			case 1: s = "id expected"; break;
 			case 2: s = "string expected"; break;
@@ -320,33 +382,33 @@ public class Errors {
 			case 38: s = "invalid BinaryOperator"; break;
 			case 39: s = "invalid UnaryOperator"; break;
 
-			default: s = "error " + n; break;
-		}
-		errorStream.WriteLine(errMsgFormat, line, col, s);
-		count++;
-	}
+     default: s = "error " + n; break;
+   }
+   errorStream.WriteLine(errMsgFormat, line, col, s);
+   count++;
+ }
 
-	public virtual void SemErr (int line, int col, string s) {
-		errorStream.WriteLine(errMsgFormat, line, col, s);
-		count++;
-	}
-	
-	public virtual void SemErr (string s) {
-		errorStream.WriteLine(s);
-		count++;
-	}
-	
-	public virtual void Warning (int line, int col, string s) {
-		errorStream.WriteLine(errMsgFormat, line, col, s);
-	}
-	
-	public virtual void Warning(string s) {
-		errorStream.WriteLine(s);
-	}
+ public virtual void SemErr (int line, int col, string s) {
+   errorStream.WriteLine(errMsgFormat, line, col, s);
+   count++;
+ }
+ 
+ public virtual void SemErr (string s) {
+   errorStream.WriteLine(s);
+   count++;
+ }
+ 
+ public virtual void Warning (int line, int col, string s) {
+   errorStream.WriteLine(errMsgFormat, line, col, s);
+ }
+ 
+ public virtual void Warning(string s) {
+   errorStream.WriteLine(s);
+ }
 } // Errors
 
 
 public class FatalError: Exception {
-	public FatalError(string m): base(m) {}
+ public FatalError(string m): base(m) {}
 }
 }

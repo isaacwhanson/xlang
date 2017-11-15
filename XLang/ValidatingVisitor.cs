@@ -24,11 +24,47 @@ namespace XLang
 {
   public class ValidatingVisitor : IASTVisitor
   {
-    public ValidatingVisitor()
+    public void VisitBinaryExpression(BinaryExpression node)
     {
+      throw new NotImplementedException();
     }
 
-    public void VisitASTModule(Module module)
+    public void VisitBinaryOperator(BinaryOperator node)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void VisitConstant(Constant node)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void VisitExpression(Expression node)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void VisitGlobalStatement(GlobalStatement node)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void VisitModule(Module node)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void VisitUnaryExpression(UnaryExpression node)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void VisitUnaryOperator(UnaryOperator node)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void VisitXLANG(XLANG node)
     {
       throw new NotImplementedException();
     }

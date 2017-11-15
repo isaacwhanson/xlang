@@ -374,11 +374,28 @@ namespace at.jku.ssw.Coco
       }
     }
 
-    /*
-    void GenCustom() {
-        // make AST code?
+    void GenNodes()
+    {
+      // make AST code?
+      gen.WriteLine("public interface IASTNode");
+      gen.WriteLine("{");
+      gen.WriteLine("\tvoid Accept(IASTVisitor visitor);");
+      gen.WriteLine("}");
+      gen.WriteLine("\npublic interface IASTVisitor");
+      gen.WriteLine("{");
+      foreach (Symbol sym in tab.nonterminals)
+      {
+        gen.WriteLine("\tvoid Visit{0}({0} node);", sym.name);
+      }
+      gen.WriteLine("}");
+      foreach (Symbol sym in tab.nonterminals)
+      {
+        gen.WriteLine("\npublic partial class {0} : IASTNode", sym.name);
+        gen.WriteLine("{");
+        gen.WriteLine("\tpublic void Accept(IASTVisitor visitor) {{ visitor.Visit{0}(this); }}", sym.name);
+        gen.WriteLine("}");
+      }
     }
-    */
 
     void GenProductions()
     {
@@ -428,7 +445,7 @@ namespace at.jku.ssw.Coco
       if (usingPos != null) { CopySourcePart(usingPos, 0); gen.WriteLine(); }
       g.CopyFramePart("-->namespace");
       /* AW open namespace, if it exists */
-      if (tab.nsName != null && tab.nsName.Length > 0)
+      if (!string.IsNullOrEmpty(tab.nsName))
       {
         gen.WriteLine("namespace {0} {{", tab.nsName);
         gen.WriteLine();
@@ -442,11 +459,11 @@ namespace at.jku.ssw.Coco
       g.CopyFramePart("-->productions"); GenProductions();
       g.CopyFramePart("-->parseRoot"); gen.WriteLine("\t\t{0}();", tab.gramSy.name); if (tab.checkEOF) gen.WriteLine("\t\tExpect(0);");
       g.CopyFramePart("-->initialization"); InitSets();
-      // g.CopyFramePart("-->custom"); GenCustom();
+      g.CopyFramePart("-->custom"); GenNodes();
       g.CopyFramePart("-->errors"); gen.Write(err.ToString());
       g.CopyFramePart(null);
       /* AW 2002-12-20 close namespace, if it exists */
-      if (tab.nsName != null && tab.nsName.Length > 0) gen.Write("}");
+      if (!string.IsNullOrEmpty(tab.nsName)) gen.Write("}");
       gen.Close();
       buffer.Pos = oldPos;
     }

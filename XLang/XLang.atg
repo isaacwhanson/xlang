@@ -2,10 +2,10 @@
 // --> Imports
 using System.Collections;
 
-COMPILER XLang
+COMPILER XLANG
 
 // --> GlobalFieldsAndMethods
-public Module module;
+public XLANG xlang;
 
 CHARACTERS
   lower       = 'a'..'z'.
@@ -38,10 +38,10 @@ IGNORE whitespace + newline
 
 // --> ParserSpecificaton
 PRODUCTIONS
-  XLang =
+  XLANG (. xlang = new XLANG(); .) =
     Module.
 
-  Module (. module = new Module(); .) =
+  Module =
     GlobalStatement {GlobalStatement}.
 
   GlobalStatement =
@@ -98,4 +98,4 @@ PRODUCTIONS
     | "!"
     .
 
-END XLang.
+END XLANG.
