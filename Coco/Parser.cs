@@ -715,114 +715,114 @@ public abstract class ICocoNode
 
 public interface ICocoVisitor
 {
-	void VisitCoco(_Coco node);
-	void VisitSetDecl(_SetDecl node);
-	void VisitTokenDecl(_TokenDecl node);
-	void VisitTokenExpr(_TokenExpr node);
-	void VisitSet(_Set node);
-	void VisitAttrDecl(_AttrDecl node);
-	void VisitSemText(_SemText node);
-	void VisitExpression(_Expression node);
-	void VisitSimSet(_SimSet node);
-	void VisitChar(_Char node);
-	void VisitSym(_Sym node);
-	void VisitTerm(_Term node);
-	void VisitResolver(_Resolver node);
-	void VisitFactor(_Factor node);
-	void VisitAttribs(_Attribs node);
-	void VisitCondition(_Condition node);
-	void VisitTokenTerm(_TokenTerm node);
-	void VisitTokenFactor(_TokenFactor node);
+	void Visit(_Coco node);
+	void Visit(_SetDecl node);
+	void Visit(_TokenDecl node);
+	void Visit(_TokenExpr node);
+	void Visit(_Set node);
+	void Visit(_AttrDecl node);
+	void Visit(_SemText node);
+	void Visit(_Expression node);
+	void Visit(_SimSet node);
+	void Visit(_Char node);
+	void Visit(_Sym node);
+	void Visit(_Term node);
+	void Visit(_Resolver node);
+	void Visit(_Factor node);
+	void Visit(_Attribs node);
+	void Visit(_Condition node);
+	void Visit(_TokenTerm node);
+	void Visit(_TokenFactor node);
 }
 
 public partial class _Coco : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitCoco(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _SetDecl : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitSetDecl(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _TokenDecl : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitTokenDecl(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _TokenExpr : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitTokenExpr(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Set : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitSet(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _AttrDecl : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitAttrDecl(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _SemText : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitSemText(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Expression : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitExpression(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _SimSet : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitSimSet(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Char : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitChar(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Sym : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitSym(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Term : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitTerm(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Resolver : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitResolver(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Factor : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitFactor(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Attribs : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitAttribs(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Condition : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitCondition(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _TokenTerm : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitTokenTerm(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _TokenFactor : ICocoNode
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.VisitTokenFactor(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 
