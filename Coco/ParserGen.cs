@@ -379,22 +379,22 @@ namespace at.jku.ssw.Coco
 
     void GenNodes()
     {
-      gen.WriteLine("\npublic abstract class I{0}Node", tab.gramSy.name);
+      gen.WriteLine("\npublic abstract class I{0}Element", tab.gramSy.name);
       gen.WriteLine("{");
-      gen.WriteLine("\tpublic abstract void Accept(I{0}Visitor visitor);", tab.gramSy.name);
+      gen.WriteLine("\t\tpublic abstract void Accept(I{0}Visitor visitor);", tab.gramSy.name);
       gen.WriteLine("}");
       gen.WriteLine("\npublic interface I{0}Visitor", tab.gramSy.name);
       gen.WriteLine("{");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\tvoid Visit(_{0} node);", sym.name);
+        gen.WriteLine("\t\tvoid Visit(_{0} element);", sym.name);
       }
       gen.WriteLine("}");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\npublic partial class _{0} : I{1}Node", sym.name, tab.gramSy.name);
+        gen.WriteLine("\npublic partial class _{0} : I{1}Element", sym.name, tab.gramSy.name);
         gen.WriteLine("{");
-        gen.WriteLine("\tpublic override void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
+        gen.WriteLine("\t\tpublic override void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
         gen.WriteLine("}");
       }
     }

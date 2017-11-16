@@ -24,47 +24,47 @@ namespace XLang
 {
   public class ValidatingVisitor : IXLangVisitor
   {
-    public void Visit(_XLang node)
+    public void Visit(_XLang element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Module node)
+    public void Visit(_Module element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_GlblStmt node)
+    public void Visit(_GlblStmt element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Expression node)
+    public void Visit(_Expression element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_BinaryExpression node)
+    public void Visit(_BinaryExpression element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_UnaryExpression node)
+    public void Visit(_UnaryExpression element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Constant node)
+    public void Visit(_Constant element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_BinaryOperator node)
+    public void Visit(_BinaryOperator element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_UnaryOperator node)
+    public void Visit(_UnaryOperator element)
     {
       throw new NotImplementedException();
     }

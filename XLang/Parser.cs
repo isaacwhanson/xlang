@@ -275,67 +275,67 @@ public _XLang xlang;
 } // end Parser
 
 
-public abstract class IXLangNode
+public abstract class IXLangElement
 {
-	public abstract void Accept(IXLangVisitor visitor);
+		public abstract void Accept(IXLangVisitor visitor);
 }
 
 public interface IXLangVisitor
 {
-	void Visit(_XLang node);
-	void Visit(_Module node);
-	void Visit(_GlblStmt node);
-	void Visit(_Expression node);
-	void Visit(_BinaryExpression node);
-	void Visit(_UnaryExpression node);
-	void Visit(_Constant node);
-	void Visit(_BinaryOperator node);
-	void Visit(_UnaryOperator node);
+		void Visit(_XLang element);
+		void Visit(_Module element);
+		void Visit(_GlblStmt element);
+		void Visit(_Expression element);
+		void Visit(_BinaryExpression element);
+		void Visit(_UnaryExpression element);
+		void Visit(_Constant element);
+		void Visit(_BinaryOperator element);
+		void Visit(_UnaryOperator element);
 }
 
-public partial class _XLang : IXLangNode
+public partial class _XLang : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+		public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Module : IXLangNode
+public partial class _Module : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+		public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _GlblStmt : IXLangNode
+public partial class _GlblStmt : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+		public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Expression : IXLangNode
+public partial class _Expression : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+		public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _BinaryExpression : IXLangNode
+public partial class _BinaryExpression : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+		public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _UnaryExpression : IXLangNode
+public partial class _UnaryExpression : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+		public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Constant : IXLangNode
+public partial class _Constant : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+		public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _BinaryOperator : IXLangNode
+public partial class _BinaryOperator : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+		public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _UnaryOperator : IXLangNode
+public partial class _UnaryOperator : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+		public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 
