@@ -708,7 +708,12 @@ const int id = 0;
 } // end Parser
 
 
-public interface IASTVisitor
+public abstract class ICocoNode
+{
+	public abstract void Accept(ICocoVisitor visitor);
+}
+
+public interface ICocoVisitor
 {
 	void VisitCoco(_Coco node);
 	void VisitSetDecl(_SetDecl node);
@@ -730,94 +735,94 @@ public interface IASTVisitor
 	void VisitTokenFactor(_TokenFactor node);
 }
 
-public partial class _Coco
+public partial class _Coco : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitCoco(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitCoco(this); }
 }
 
-public partial class _SetDecl
+public partial class _SetDecl : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitSetDecl(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitSetDecl(this); }
 }
 
-public partial class _TokenDecl
+public partial class _TokenDecl : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitTokenDecl(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitTokenDecl(this); }
 }
 
-public partial class _TokenExpr
+public partial class _TokenExpr : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitTokenExpr(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitTokenExpr(this); }
 }
 
-public partial class _Set
+public partial class _Set : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitSet(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitSet(this); }
 }
 
-public partial class _AttrDecl
+public partial class _AttrDecl : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitAttrDecl(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitAttrDecl(this); }
 }
 
-public partial class _SemText
+public partial class _SemText : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitSemText(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitSemText(this); }
 }
 
-public partial class _Expression
+public partial class _Expression : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitExpression(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitExpression(this); }
 }
 
-public partial class _SimSet
+public partial class _SimSet : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitSimSet(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitSimSet(this); }
 }
 
-public partial class _Char
+public partial class _Char : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitChar(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitChar(this); }
 }
 
-public partial class _Sym
+public partial class _Sym : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitSym(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitSym(this); }
 }
 
-public partial class _Term
+public partial class _Term : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitTerm(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitTerm(this); }
 }
 
-public partial class _Resolver
+public partial class _Resolver : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitResolver(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitResolver(this); }
 }
 
-public partial class _Factor
+public partial class _Factor : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitFactor(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitFactor(this); }
 }
 
-public partial class _Attribs
+public partial class _Attribs : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitAttribs(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitAttribs(this); }
 }
 
-public partial class _Condition
+public partial class _Condition : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitCondition(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitCondition(this); }
 }
 
-public partial class _TokenTerm
+public partial class _TokenTerm : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitTokenTerm(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitTokenTerm(this); }
 }
 
-public partial class _TokenFactor
+public partial class _TokenFactor : ICocoNode
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitTokenFactor(this); }
+	public override void Accept(ICocoVisitor visitor) { visitor.VisitTokenFactor(this); }
 }
 
 
