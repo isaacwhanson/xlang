@@ -33,15 +33,13 @@ namespace XLang
         parser.Parse();
         if (parser.errors.count == 0)
         {
-          Console.WriteLine("-- Success!");
-          // validate AST
           ValidatingVisitor validator = new ValidatingVisitor();
           parser.xlang.Accept(validator);
         }
       }
       else
       {
-        Console.WriteLine("-- No source file specified");
+        Console.WriteLine("No source file specified");
       }
     }
   }

@@ -95,18 +95,18 @@ public _XLang xlang;
 		xlang.module = m;              
 	}
 
-	void Module(out _Module m) {
-		m = new _Module();             
-		GlblStmt(out _GlblStmt stmt);
-		m.stmts.Add(stmt);             
+	void Module(out _Module module) {
+		module = new _Module();        
+		GlblStmt(out _GlblStmt s0);
+		module.stmts.Add(s0);          
 		while (la.kind == 6) {
-			GlblStmt(out _GlblStmt stmt2);
-			m.stmts.Add(stmt2);            
+			GlblStmt(out _GlblStmt s1);
+			module.stmts.Add(s1);          
 		}
 	}
 
-	void GlblStmt(out _GlblStmt stmt) {
-		stmt = new _GlblStmt();        
+	void GlblStmt(out _GlblStmt s) {
+		s = new _GlblStmt();           
 		Expect(6);
 		Expect(1);
 		Expect(7);

@@ -41,11 +41,11 @@ PRODUCTIONS
   XLang =                                 (. xlang = new _XLang();          .)
     Module<out _Module m>                 (. xlang.module = m;              .).
 
-  Module<out _Module m> =                 (. m = new _Module();             .)
-    GlblStmt<out _GlblStmt stmt>          (. m.stmts.Add(stmt);             .)
-    {GlblStmt<out _GlblStmt stmt2>        (. m.stmts.Add(stmt2);            .)}.
+  Module<out _Module module> =            (. module = new _Module();        .)
+     GlblStmt<out _GlblStmt s0>           (. module.stmts.Add(s0);          .)
+    {GlblStmt<out _GlblStmt s1>           (. module.stmts.Add(s1);          .)}.
 
-  GlblStmt<out _GlblStmt stmt> =          (. stmt = new _GlblStmt();        .)
+  GlblStmt<out _GlblStmt s> =             (. s = new _GlblStmt();           .)
     "let" id "=" Expression ";".
 
   Expression =
