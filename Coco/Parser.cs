@@ -707,10 +707,6 @@ const int id = 0;
  };
 } // end Parser
 
-public interface IASTNode
-{
-	void Accept(IASTVisitor visitor);
-}
 
 public interface IASTVisitor
 {
@@ -734,92 +730,92 @@ public interface IASTVisitor
 	void VisitTokenFactor(_TokenFactor node);
 }
 
-public partial class _Coco : IASTNode
+public partial class _Coco
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitCoco(this); }
 }
 
-public partial class _SetDecl : IASTNode
+public partial class _SetDecl
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSetDecl(this); }
 }
 
-public partial class _TokenDecl : IASTNode
+public partial class _TokenDecl
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTokenDecl(this); }
 }
 
-public partial class _TokenExpr : IASTNode
+public partial class _TokenExpr
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTokenExpr(this); }
 }
 
-public partial class _Set : IASTNode
+public partial class _Set
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSet(this); }
 }
 
-public partial class _AttrDecl : IASTNode
+public partial class _AttrDecl
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitAttrDecl(this); }
 }
 
-public partial class _SemText : IASTNode
+public partial class _SemText
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSemText(this); }
 }
 
-public partial class _Expression : IASTNode
+public partial class _Expression
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitExpression(this); }
 }
 
-public partial class _SimSet : IASTNode
+public partial class _SimSet
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSimSet(this); }
 }
 
-public partial class _Char : IASTNode
+public partial class _Char
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitChar(this); }
 }
 
-public partial class _Sym : IASTNode
+public partial class _Sym
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitSym(this); }
 }
 
-public partial class _Term : IASTNode
+public partial class _Term
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTerm(this); }
 }
 
-public partial class _Resolver : IASTNode
+public partial class _Resolver
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitResolver(this); }
 }
 
-public partial class _Factor : IASTNode
+public partial class _Factor
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitFactor(this); }
 }
 
-public partial class _Attribs : IASTNode
+public partial class _Attribs
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitAttribs(this); }
 }
 
-public partial class _Condition : IASTNode
+public partial class _Condition
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitCondition(this); }
 }
 
-public partial class _TokenTerm : IASTNode
+public partial class _TokenTerm
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTokenTerm(this); }
 }
 
-public partial class _TokenFactor : IASTNode
+public partial class _TokenFactor
 {
 	public void Accept(IASTVisitor visitor) { visitor.VisitTokenFactor(this); }
 }

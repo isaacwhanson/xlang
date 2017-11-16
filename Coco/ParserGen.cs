@@ -379,12 +379,7 @@ namespace at.jku.ssw.Coco
 
     void GenNodes()
     {
-      // make AST code?
-      gen.WriteLine("public interface IASTNode");
-      gen.WriteLine("{");
-      gen.WriteLine("\tvoid Accept(IASTVisitor visitor);");
-      gen.WriteLine("}");
-      gen.WriteLine("\npublic interface IASTVisitor");
+      gen.WriteLine("\npublic interface I{0}Visitor", tab.gramSy.name);
       gen.WriteLine("{");
       foreach (Symbol sym in tab.nonterminals)
       {
@@ -393,9 +388,9 @@ namespace at.jku.ssw.Coco
       gen.WriteLine("}");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\npublic partial class _{0} : IASTNode", sym.name);
+        gen.WriteLine("\npublic partial class _{0}", sym.name);
         gen.WriteLine("{");
-        gen.WriteLine("\tpublic void Accept(IASTVisitor visitor) {{ visitor.Visit{0}(this); }}", sym.name);
+        gen.WriteLine("\tpublic void Accept(I{0}Visitor visitor) {{ visitor.Visit{1}(this); }}", tab.gramSy.name, sym.name);
         gen.WriteLine("}");
       }
     }

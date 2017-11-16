@@ -22,7 +22,7 @@ using System;
 
 namespace XLang
 {
-  public class ValidatingVisitor : IASTVisitor
+  public class ValidatingVisitor : IXLangVisitor
   {
     public void VisitBinaryExpression(_BinaryExpression node)
     {

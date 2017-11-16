@@ -274,12 +274,8 @@ public _XLang xlang;
  };
 } // end Parser
 
-public interface IASTNode
-{
-	void Accept(IASTVisitor visitor);
-}
 
-public interface IASTVisitor
+public interface IXLangVisitor
 {
 	void VisitXLang(_XLang node);
 	void VisitModule(_Module node);
@@ -292,49 +288,49 @@ public interface IASTVisitor
 	void VisitUnaryOperator(_UnaryOperator node);
 }
 
-public partial class _XLang : IASTNode
+public partial class _XLang
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitXLang(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.VisitXLang(this); }
 }
 
-public partial class _Module : IASTNode
+public partial class _Module
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitModule(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.VisitModule(this); }
 }
 
-public partial class _GlblStmt : IASTNode
+public partial class _GlblStmt
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitGlblStmt(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.VisitGlblStmt(this); }
 }
 
-public partial class _Expression : IASTNode
+public partial class _Expression
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitExpression(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.VisitExpression(this); }
 }
 
-public partial class _BinaryExpression : IASTNode
+public partial class _BinaryExpression
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitBinaryExpression(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.VisitBinaryExpression(this); }
 }
 
-public partial class _UnaryExpression : IASTNode
+public partial class _UnaryExpression
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitUnaryExpression(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.VisitUnaryExpression(this); }
 }
 
-public partial class _Constant : IASTNode
+public partial class _Constant
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitConstant(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.VisitConstant(this); }
 }
 
-public partial class _BinaryOperator : IASTNode
+public partial class _BinaryOperator
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitBinaryOperator(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.VisitBinaryOperator(this); }
 }
 
-public partial class _UnaryOperator : IASTNode
+public partial class _UnaryOperator
 {
-	public void Accept(IASTVisitor visitor) { visitor.VisitUnaryOperator(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.VisitUnaryOperator(this); }
 }
 
 
