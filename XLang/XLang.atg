@@ -39,11 +39,11 @@ IGNORE whitespace + newline
 // --> ParserSpecificaton
 PRODUCTIONS
   XLang =                                 (. xlang = new _XLang();          .)
-    Module<out _Module m>                 (. xlang.module = m;              .).
+    Module<out _Module m>                 (. xlang.Push(m);                 .).
 
   Module<out _Module module> =            (. module = new _Module();        .)
-     GlblStmt<out _GlblStmt s0>           (. module.stmts.Add(s0);          .)
-    {GlblStmt<out _GlblStmt s1>           (. module.stmts.Add(s1);          .)}.
+     GlblStmt<out _GlblStmt s0>           (. module.Push(s0);               .)
+    {GlblStmt<out _GlblStmt s1>           (. module.Push(s1);               .)}.
 
   GlblStmt<out _GlblStmt s> =             (. s = new _GlblStmt();           .)
     "let" id "=" Expression ";".

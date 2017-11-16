@@ -23,13 +23,4 @@ using System.Collections.Generic;
 
 namespace XLang
 {
-  public partial class _XLang
-  {
-    public _Module module;
-  }
-
-  public partial class _Module
-  {
-    public List<_GlblStmt> stmts = new List<_GlblStmt>();
-  }
 }

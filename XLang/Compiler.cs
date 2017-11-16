@@ -19,28 +19,47 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
+using System.Diagnostics.Contracts;
 
 namespace XLang
 {
   class Compiler
   {
-    static void Main(string[] args)
+    // exit codes
+    const int OK = 0;
+    const int WARN = 1;
+
+    static _XLang Parse(string filename)
+    {
+      Contract.Ensures(Contract.Result<_XLang>() != null);
+      Scanner scanner = new Scanner(filename);
+      Parser parser = new Parser(scanner);
+      parser.Parse();
+      if (parser.errors.count != 0)
+      {
+        throw new FatalError("Unhandled Parse error!");
+      }
+      return parser.xlang;
+    }
+
+    static int Main(string[] args)
     {
       if (args.Length > 0)
       {
-        Scanner scanner = new Scanner(args[0]);
-        Parser parser = new Parser(scanner);
-        parser.Parse();
-        if (parser.errors.count == 0)
-        {
-          ValidatingVisitor validator = new ValidatingVisitor();
-          parser.xlang.Accept(validator);
-        }
+        // parse -> ast
+        _XLang xlang = Parse(args[0]);
+        // validate
+        ValidatingVisitor validator = new ValidatingVisitor();
+        xlang.Accept(validator);
+        // done
+        Console.WriteLine("Done.");
+        return OK;
       }
       else
       {
         Console.WriteLine("No source file specified");
       }
+      return WARN;
     }
   }
 }

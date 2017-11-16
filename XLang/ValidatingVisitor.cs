@@ -26,7 +26,8 @@ namespace XLang
   {
     public void Visit(_XLang element)
     {
-      throw new NotImplementedException();
+      // TODO: setup validator start state
+      element.AcceptChildren(this);
     }
 
     public void Visit(_Module element)

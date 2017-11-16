@@ -379,22 +379,35 @@ namespace at.jku.ssw.Coco
 
     void GenNodes()
     {
-      gen.WriteLine("\npublic abstract class I{0}Element", tab.gramSy.name);
+      string gram = tab.gramSy.name;
+      gen.WriteLine("\npublic abstract class {0}Element", gram);
       gen.WriteLine("{");
-      gen.WriteLine("\t\tpublic abstract void Accept(I{0}Visitor visitor);", tab.gramSy.name);
+      gen.WriteLine("\tpublic List<{0}Element> children = new List<{0}Element>();", gram);
+      gen.WriteLine("\n\tpublic abstract void Accept(I{0}Visitor visitor);", gram);
+      gen.WriteLine("\n\tpublic void AcceptChildren(I{0}Visitor visitor)", gram);
+      gen.WriteLine("\t{");
+      gen.WriteLine("\t\tforeach({0}Element child in children)", gram);
+      gen.WriteLine("\t\t{");
+      gen.WriteLine("\t\t\tchild.Accept(visitor);");
+      gen.WriteLine("\t\t}");
+      gen.WriteLine("\t}");
+      gen.WriteLine("\n\tpublic void Push({0}Element child)", gram);
+      gen.WriteLine("\t{");
+      gen.WriteLine("\t\tchildren.Add(child);");
+      gen.WriteLine("\t}");
       gen.WriteLine("}");
       gen.WriteLine("\npublic interface I{0}Visitor", tab.gramSy.name);
       gen.WriteLine("{");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\t\tvoid Visit(_{0} element);", sym.name);
+        gen.WriteLine("\tvoid Visit(_{0} element);", sym.name);
       }
       gen.WriteLine("}");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\npublic partial class _{0} : I{1}Element", sym.name, tab.gramSy.name);
+        gen.WriteLine("\npublic partial class _{0} : {1}Element", sym.name, tab.gramSy.name);
         gen.WriteLine("{");
-        gen.WriteLine("\t\tpublic override void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
+        gen.WriteLine("\tpublic override void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
         gen.WriteLine("}");
       }
     }
