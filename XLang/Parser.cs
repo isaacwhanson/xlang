@@ -93,18 +93,18 @@ public _XLang xlang;
 	void XLang() {
 		xlang = new _XLang();          
 		Module(out _Module m);
-		xlang.Push(m);                 
+		xlang.module = m;              
 	}
 
 	void Module(out _Module module) {
 		module = new _Module();        
 		GlblStmt(out _GlblStmt s0);
 		Expect(6);
-		module.Push(s0);               
+		module.stmts.Add(s0);          
 		while (la.kind == 7) {
 			GlblStmt(out _GlblStmt s1);
 			Expect(6);
-			module.Push(s1);               
+			module.stmts.Add(s1);          
 		}
 	}
 
@@ -112,25 +112,21 @@ public _XLang xlang;
 		s = new _GlblStmt();           
 		Expect(7);
 		Expect(1);
-		s.id = t.val;                  
 		Expect(8);
-		Expr(out IExpr e);
-		s.expr = e;                    
+		Expr();
 	}
 
-	void Expr(out IExpr ex) {
-		CondExpr(out IExpr e);
-		ex = e;                        
+	void Expr() {
+		CondExpr();
 	}
 
-	void CondExpr(out IExpr ex) {
-		ex = new _CondExpr();          
+	void CondExpr() {
 		LogOrExpr();
 		if (la.kind == 9) {
 			Get();
-			Expr(out IExpr e1);
+			Expr();
 			Expect(10);
-			CondExpr(out IExpr e2);
+			CondExpr();
 		}
 	}
 
@@ -273,7 +269,7 @@ public _XLang xlang;
 		}
 		case 29: {
 			Get();
-			Expr(out IExpr e);
+			Expr();
 			Expect(30);
 			break;
 		}
@@ -332,24 +328,9 @@ public _XLang xlang;
 } // end Parser
 
 
-public abstract class XLangElement
+public interface IXLangElement
 {
-	public List<XLangElement> children = new List<XLangElement>();
-
-	public abstract void Accept(IXLangVisitor visitor);
-
-	public void AcceptChildren(IXLangVisitor visitor)
-	{
-		foreach(XLangElement child in children)
-		{
-			child.Accept(visitor);
-		}
-	}
-
-	public void Push(XLangElement child)
-	{
-		children.Add(child);
-	}
+	void Accept(IXLangVisitor visitor);
 }
 
 public interface IXLangVisitor
@@ -374,94 +355,94 @@ public interface IXLangVisitor
 	void Visit(_UnaryOp element);
 }
 
-public partial class _XLang : XLangElement
+public partial class _XLang : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Module : XLangElement
+public partial class _Module : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _GlblStmt : XLangElement
+public partial class _GlblStmt : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Expr : XLangElement
+public partial class _Expr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _CondExpr : XLangElement
+public partial class _CondExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _LogOrExpr : XLangElement
+public partial class _LogOrExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _LogAndExpr : XLangElement
+public partial class _LogAndExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _OrExpr : XLangElement
+public partial class _OrExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _XorExpr : XLangElement
+public partial class _XorExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _AndExpr : XLangElement
+public partial class _AndExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _EqlExpr : XLangElement
+public partial class _EqlExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _RelExpr : XLangElement
+public partial class _RelExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _ShiftExpr : XLangElement
+public partial class _ShiftExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _AddExpr : XLangElement
+public partial class _AddExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _MultExpr : XLangElement
+public partial class _MultExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _UnaryExpr : XLangElement
+public partial class _UnaryExpr : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Primary : XLangElement
+public partial class _Primary : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _UnaryOp : XLangElement
+public partial class _UnaryOp : IXLangElement
 {
-	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 

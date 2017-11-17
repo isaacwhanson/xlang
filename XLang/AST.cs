@@ -23,17 +23,13 @@ using System.Collections.Generic;
 
 namespace XLang
 {
-  public interface IExpr
+  public partial class _XLang
   {
+    public _Module module;
   }
 
-  public partial class _GlblStmt
+  public partial class _Module
   {
-    public string id;
-    public IExpr expr;
-  }
-  public partial class _CondExpr : IExpr
-  {
-    
+    public List<_GlblStmt> stmts = new List<_GlblStmt>();
   }
 }

@@ -39,21 +39,20 @@ IGNORE whitespace + newline
 // --> ParserSpecificaton
 PRODUCTIONS
   XLang =                                 (. xlang = new _XLang();          .)
-    Module<out _Module m>                 (. xlang.Push(m);                 .).
+    Module<out _Module m>                 (. xlang.module = m;              .).
 
   Module<out _Module module> =            (. module = new _Module();        .)
-     GlblStmt<out _GlblStmt s0> ";"       (. module.Push(s0);               .)
-    {GlblStmt<out _GlblStmt s1> ";"       (. module.Push(s1);               .)}.
+     GlblStmt<out _GlblStmt s0> ";"       (. module.stmts.Add(s0);          .)
+    {GlblStmt<out _GlblStmt s1> ";"       (. module.stmts.Add(s1);          .)}.
 
   GlblStmt<out _GlblStmt s> =             (. s = new _GlblStmt();           .)
-    "let" id                              (. s.id = t.val;                  .)
-     "=" Expr<out IExpr e>                (. s.expr = e;                    .).
+    "let" id "=" Expr.
 
-  Expr<out IExpr ex> =
-    CondExpr<out IExpr e>                 (. ex = e;                        .).
+  Expr =
+    CondExpr.
 
-  CondExpr<out IExpr ex> =                (. ex = new _CondExpr();          .)
-    LogOrExpr ['?' Expr<out IExpr e1> ':' CondExpr<out IExpr e2>].
+  CondExpr =
+    LogOrExpr ['?' Expr ':' CondExpr].
   LogOrExpr =
     LogAndExpr {"||" LogAndExpr}.
   LogAndExpr =
@@ -78,7 +77,7 @@ PRODUCTIONS
   UnaryExpr =
     Primary | UnaryOp UnaryExpr.
 
-  Primary = id | int | float | char | string | '(' Expr<out IExpr e> ')'.
+  Primary = id | int | float | char | string | '(' Expr ')'.
 
   UnaryOp = '&' | '*' | '+' | '-' | '~' | '!'.
 

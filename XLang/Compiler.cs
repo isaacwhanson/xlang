@@ -29,19 +29,6 @@ namespace XLang
     const int OK = 0;
     const int WARN = 1;
 
-    static _XLang Parse(string filename)
-    {
-      Contract.Ensures(Contract.Result<_XLang>() != null);
-      Scanner scanner = new Scanner(filename);
-      Parser parser = new Parser(scanner);
-      parser.Parse();
-      if (parser.errors.count != 0)
-      {
-        throw new FatalError("Unhandled Parse error!");
-      }
-      return parser.xlang;
-    }
-
     static int Main(string[] args)
     {
       if (args.Length > 0)
@@ -60,6 +47,19 @@ namespace XLang
         Console.WriteLine("No source file specified");
       }
       return WARN;
+    }
+
+    static _XLang Parse(string filename)
+    {
+      Contract.Ensures(Contract.Result<_XLang>() != null);
+      Scanner scanner = new Scanner(filename);
+      Parser parser = new Parser(scanner);
+      parser.Parse();
+      if (parser.errors.count != 0)
+      {
+        throw new FatalError("Unhandled Parse error!");
+      }
+      return parser.xlang;
     }
   }
 }

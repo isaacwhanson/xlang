@@ -709,24 +709,9 @@ const int id = 0;
 } // end Parser
 
 
-public abstract class CocoElement
+public interface ICocoElement
 {
-	public List<CocoElement> children = new List<CocoElement>();
-
-	public abstract void Accept(ICocoVisitor visitor);
-
-	public void AcceptChildren(ICocoVisitor visitor)
-	{
-		foreach(CocoElement child in children)
-		{
-			child.Accept(visitor);
-		}
-	}
-
-	public void Push(CocoElement child)
-	{
-		children.Add(child);
-	}
+	void Accept(ICocoVisitor visitor);
 }
 
 public interface ICocoVisitor
@@ -751,94 +736,94 @@ public interface ICocoVisitor
 	void Visit(_TokenFactor element);
 }
 
-public partial class _Coco : CocoElement
+public partial class _Coco : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _SetDecl : CocoElement
+public partial class _SetDecl : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _TokenDecl : CocoElement
+public partial class _TokenDecl : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _TokenExpr : CocoElement
+public partial class _TokenExpr : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Set : CocoElement
+public partial class _Set : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _AttrDecl : CocoElement
+public partial class _AttrDecl : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _SemText : CocoElement
+public partial class _SemText : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Expression : CocoElement
+public partial class _Expression : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _SimSet : CocoElement
+public partial class _SimSet : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Char : CocoElement
+public partial class _Char : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Sym : CocoElement
+public partial class _Sym : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Term : CocoElement
+public partial class _Term : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Resolver : CocoElement
+public partial class _Resolver : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Factor : CocoElement
+public partial class _Factor : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Attribs : CocoElement
+public partial class _Attribs : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Condition : CocoElement
+public partial class _Condition : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _TokenTerm : CocoElement
+public partial class _TokenTerm : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _TokenFactor : CocoElement
+public partial class _TokenFactor : ICocoElement
 {
-	public override void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 
