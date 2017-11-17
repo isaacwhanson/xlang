@@ -58,5 +58,11 @@ Global
 		$8.scope = text/x-fsharp
 		$0.XmlFormattingPolicy = $10
 		$10.scope = application/xml
+		$0.TextStylePolicy = $11
+		$11.inheritsSet = null
+		$11.scope = application/config+xml
+		$0.XmlFormattingPolicy = $12
+		$12.inheritsSet = null
+		$12.scope = application/config+xml
 	EndGlobalSection
 EndGlobal

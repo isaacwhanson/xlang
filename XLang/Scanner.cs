@@ -203,8 +203,8 @@ public class UTF8Buffer: Buffer {
 public class Scanner {
  const char EOL = '\n';
  const int eofSym = 0; /* pdt */
-	const int maxT = 35;
-	const int noSym = 35;
+	const int maxT = 33;
+	const int noSym = 33;
 
 
  public Buffer buffer; // scanner buffer
@@ -233,22 +233,24 @@ public class Scanner {
 		for (int i = 49; i <= 57; ++i) start[i] = 27;
 		start[34] = 2; 
 		start[39] = 4; 
-		start[61] = 52; 
 		start[59] = 34; 
-		start[40] = 35; 
-		start[41] = 36; 
-		start[43] = 37; 
-		start[45] = 38; 
-		start[42] = 39; 
-		start[47] = 40; 
-		start[37] = 41; 
-		start[94] = 42; 
-		start[33] = 53; 
-		start[38] = 54; 
+		start[61] = 54; 
+		start[63] = 35; 
+		start[58] = 36; 
 		start[124] = 55; 
-		start[62] = 56; 
-		start[60] = 57; 
-		start[126] = 51; 
+		start[38] = 56; 
+		start[94] = 39; 
+		start[33] = 57; 
+		start[60] = 58; 
+		start[62] = 59; 
+		start[43] = 46; 
+		start[45] = 47; 
+		start[42] = 48; 
+		start[47] = 49; 
+		start[37] = 50; 
+		start[40] = 51; 
+		start[41] = 52; 
+		start[126] = 53; 
 		start[Buffer.EOF] = -1;
 
  }
@@ -369,9 +371,7 @@ public class Scanner {
 
  void CheckLiteral() {
 		switch (t.val) {
-			case "let": t.kind = 6; break;
-			case "true": t.kind = 11; break;
-			case "false": t.kind = 12; break;
+			case "let": t.kind = 7; break;
 			default: break;
 		}
  }
@@ -542,75 +542,71 @@ public class Scanner {
 				if (ch == 39) {AddCh(); goto case 10;}
 				else {t.kind = 3; break;}
 			case 34:
-				{t.kind = 8; break;}
+				{t.kind = 6; break;}
 			case 35:
 				{t.kind = 9; break;}
 			case 36:
 				{t.kind = 10; break;}
 			case 37:
-				{t.kind = 13; break;}
+				{t.kind = 11; break;}
 			case 38:
-				{t.kind = 14; break;}
+				{t.kind = 12; break;}
 			case 39:
-				{t.kind = 15; break;}
+				{t.kind = 14; break;}
 			case 40:
 				{t.kind = 16; break;}
 			case 41:
 				{t.kind = 17; break;}
 			case 42:
-				{t.kind = 18; break;}
-			case 43:
-				{t.kind = 19; break;}
-			case 44:
 				{t.kind = 20; break;}
+			case 43:
+				{t.kind = 21; break;}
+			case 44:
+				{t.kind = 22; break;}
 			case 45:
 				{t.kind = 23; break;}
 			case 46:
-				{t.kind = 25; break;}
+				{t.kind = 24; break;}
 			case 47:
-				{t.kind = 27; break;}
+				{t.kind = 25; break;}
 			case 48:
-				{t.kind = 28; break;}
+				{t.kind = 26; break;}
 			case 49:
-				{t.kind = 29; break;}
+				{t.kind = 27; break;}
 			case 50:
-				{t.kind = 31; break;}
+				{t.kind = 28; break;}
 			case 51:
-				{t.kind = 33; break;}
+				{t.kind = 29; break;}
 			case 52:
-				recEnd = pos; recKind = 7;
-				if (ch == '=') {AddCh(); goto case 58;}
-				else {t.kind = 7; break;}
+				{t.kind = 30; break;}
 			case 53:
-				recEnd = pos; recKind = 34;
-				if (ch == '=') {AddCh(); goto case 59;}
-				else {t.kind = 34; break;}
+				{t.kind = 31; break;}
 			case 54:
-				recEnd = pos; recKind = 24;
-				if (ch == '&') {AddCh(); goto case 45;}
-				else {t.kind = 24; break;}
+				recEnd = pos; recKind = 8;
+				if (ch == '=') {AddCh(); goto case 40;}
+				else {t.kind = 8; break;}
 			case 55:
-				recEnd = pos; recKind = 26;
-				if (ch == '|') {AddCh(); goto case 46;}
-				else {t.kind = 26; break;}
+				recEnd = pos; recKind = 13;
+				if (ch == '|') {AddCh(); goto case 37;}
+				else {t.kind = 13; break;}
 			case 56:
-				recEnd = pos; recKind = 30;
-				if (ch == '>') {AddCh(); goto case 47;}
-				else if (ch == '=') {AddCh(); goto case 49;}
-				else {t.kind = 30; break;}
+				recEnd = pos; recKind = 15;
+				if (ch == '&') {AddCh(); goto case 38;}
+				else {t.kind = 15; break;}
 			case 57:
 				recEnd = pos; recKind = 32;
-				if (ch == '<') {AddCh(); goto case 48;}
-				else if (ch == '=') {AddCh(); goto case 50;}
+				if (ch == '=') {AddCh(); goto case 41;}
 				else {t.kind = 32; break;}
 			case 58:
-				recEnd = pos; recKind = 22;
-				if (ch == '=') {AddCh(); goto case 43;}
-				else {t.kind = 22; break;}
+				recEnd = pos; recKind = 18;
+				if (ch == '=') {AddCh(); goto case 42;}
+				else if (ch == '<') {AddCh(); goto case 44;}
+				else {t.kind = 18; break;}
 			case 59:
-				recEnd = pos; recKind = 21;
-				if (ch == '=') {AddCh(); goto case 44;}
-				else {t.kind = 21; break;}
+				recEnd = pos; recKind = 19;
+				if (ch == '=') {AddCh(); goto case 43;}
+				else if (ch == '>') {AddCh(); goto case 45;}
+				else {t.kind = 19; break;}
 
    }
    t.val = new String(tval, 0, tlen);

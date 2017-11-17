@@ -26,8 +26,7 @@ namespace XLang
   {
     public void Visit(_XLang element)
     {
-      // TODO: setup validator start state
-      element.AcceptChildren(this);
+      throw new NotImplementedException();
     }
 
     public void Visit(_Module element)
@@ -40,32 +39,77 @@ namespace XLang
       throw new NotImplementedException();
     }
 
-    public void Visit(_Expression element)
+    public void Visit(_Expr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_BinaryExpression element)
+    public void Visit(_CondExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_UnaryExpression element)
+    public void Visit(_LogOrExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Constant element)
+    public void Visit(_LogAndExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_BinaryOperator element)
+    public void Visit(_OrExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_UnaryOperator element)
+    public void Visit(_XorExpr element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_AndExpr element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_EqlExpr element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_RelExpr element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_ShiftExpr element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_AddExpr element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_MultExpr element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_UnaryExpr element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_Primary element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_UnaryOp element)
     {
       throw new NotImplementedException();
     }

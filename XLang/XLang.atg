@@ -42,61 +42,43 @@ PRODUCTIONS
     Module<out _Module m>                 (. xlang.Push(m);                 .).
 
   Module<out _Module module> =            (. module = new _Module();        .)
-     GlblStmt<out _GlblStmt s0>           (. module.Push(s0);               .)
-    {GlblStmt<out _GlblStmt s1>           (. module.Push(s1);               .)}.
+     GlblStmt<out _GlblStmt s0> ";"       (. module.Push(s0);               .)
+    {GlblStmt<out _GlblStmt s1> ";"       (. module.Push(s1);               .)}.
 
   GlblStmt<out _GlblStmt s> =             (. s = new _GlblStmt();           .)
-    "let" id "=" Expression ";".
+    "let" id                              (. s.id = t.val;                  .)
+     "=" Expr<out IExpr e>                (. s.expr = e;                    .).
 
-  Expression =
-      "(" Expression ")"
-    | BinaryExpression
-    | UnaryExpression
-    | Constant
-    | id
-    .
+  Expr<out IExpr ex> =
+    CondExpr<out IExpr e> (. ex = e; .).
+  CondExpr<out IExpr ex> = (. ex = new _CondExpr(); .)
+    LogOrExpr ['?' Expr<out IExpr e1> ':' CondExpr<out IExpr e2>].
+  LogOrExpr =
+    LogAndExpr {"||" LogAndExpr}.
+  LogAndExpr =
+    OrExpr {"&&" OrExpr}.
+  OrExpr =
+    XorExpr {'|' XorExpr}.
+  XorExpr =
+    AndExpr {'^' AndExpr}.
+  AndExpr =
+    EqlExpr {'&' EqlExpr}.
+  EqlExpr =
+    RelExpr {("==" | "!=") RelExpr}.
+  RelExpr =
+    ShiftExpr {('<' | '>' | "<=" | ">=") ShiftExpr}.
+  ShiftExpr =
+    AddExpr {("<<" | ">>") AddExpr}.
+  AddExpr =
+    MultExpr {('+' | '-') MultExpr}.
+  MultExpr =
+    UnaryExpr {('*' | '/' | '%') UnaryExpr}.
 
-  Constant =
-      char
-    | string
-    | int
-    | float
-    | ("true" | "false")
-    .
+  UnaryExpr =
+    Primary | UnaryOp UnaryExpr.
 
-  BinaryExpression =
-    Expression BinaryOperator Expression.
+  Primary = id | int | float | char | string | '(' Expr<out IExpr e> ')'.
 
-  UnaryExpression =
-    UnaryOperator Expression.
-
-  BinaryOperator =
-      "+"
-    | "-"
-    | "*"
-    | "/"
-    | "%"
-    | "^"
-    | "==="
-    | "!=="
-    | "!="
-    | "=="
-    | "&&"
-    | "&"
-    | "||"
-    | "|"
-    | ">>"
-    | "<<"
-    | ">="
-    | ">"
-    | "<="
-    | "<"
-    .
-
-  UnaryOperator =
-      "-"
-    | "~"
-    | "!"
-    .
+  UnaryOp = '&' | '*' | '+' | '-' | '~' | '!'.
 
 END XLang.

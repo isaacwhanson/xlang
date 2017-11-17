@@ -16,7 +16,7 @@ public class Parser {
 	public const int _char = 3;
 	public const int _float = 4;
 	public const int _int = 5;
-	public const int maxT = 35;
+	public const int maxT = 33;
 
  const bool _T = true;
  const bool _x = false;
@@ -99,110 +99,195 @@ public _XLang xlang;
 	void Module(out _Module module) {
 		module = new _Module();        
 		GlblStmt(out _GlblStmt s0);
+		Expect(6);
 		module.Push(s0);               
-		while (la.kind == 6) {
+		while (la.kind == 7) {
 			GlblStmt(out _GlblStmt s1);
+			Expect(6);
 			module.Push(s1);               
 		}
 	}
 
 	void GlblStmt(out _GlblStmt s) {
 		s = new _GlblStmt();           
-		Expect(6);
-		Expect(1);
 		Expect(7);
-		Expression();
+		Expect(1);
+		s.id = t.val;                  
 		Expect(8);
+		Expr(out IExpr e);
+		s.expr = e;                    
 	}
 
-	void Expression() {
+	void Expr(out IExpr ex) {
+		CondExpr(out IExpr e);
+		ex = e; 
+	}
+
+	void CondExpr(out IExpr ex) {
+		ex = new _CondExpr(); 
+		LogOrExpr();
 		if (la.kind == 9) {
 			Get();
-			Expression();
+			Expr(out IExpr e1);
 			Expect(10);
-		} else if (StartOf(1)) {
-			BinaryExpression();
-		} else if (la.kind == 14 || la.kind == 33 || la.kind == 34) {
-			UnaryExpression();
-		} else if (StartOf(2)) {
-			Constant();
-		} else if (la.kind == 1) {
-			Get();
-		} else SynErr(36);
+			CondExpr(out IExpr e2);
+		}
 	}
 
-	void BinaryExpression() {
-		Expression();
-		BinaryOperator();
-		Expression();
+	void LogOrExpr() {
+		LogAndExpr();
+		while (la.kind == 11) {
+			Get();
+			LogAndExpr();
+		}
 	}
 
-	void UnaryExpression() {
-		UnaryOperator();
-		Expression();
+	void LogAndExpr() {
+		OrExpr();
+		while (la.kind == 12) {
+			Get();
+			OrExpr();
+		}
 	}
 
-	void Constant() {
-		if (la.kind == 3) {
+	void OrExpr() {
+		XorExpr();
+		while (la.kind == 13) {
 			Get();
-		} else if (la.kind == 2) {
+			XorExpr();
+		}
+	}
+
+	void XorExpr() {
+		AndExpr();
+		while (la.kind == 14) {
 			Get();
-		} else if (la.kind == 5) {
+			AndExpr();
+		}
+	}
+
+	void AndExpr() {
+		EqlExpr();
+		while (la.kind == 15) {
 			Get();
-		} else if (la.kind == 4) {
-			Get();
-		} else if (la.kind == 11 || la.kind == 12) {
-			if (la.kind == 11) {
+			EqlExpr();
+		}
+	}
+
+	void EqlExpr() {
+		RelExpr();
+		while (la.kind == 16 || la.kind == 17) {
+			if (la.kind == 16) {
 				Get();
 			} else {
 				Get();
 			}
-		} else SynErr(37);
+			RelExpr();
+		}
 	}
 
-	void BinaryOperator() {
+	void RelExpr() {
+		ShiftExpr();
+		while (StartOf(1)) {
+			if (la.kind == 18) {
+				Get();
+			} else if (la.kind == 19) {
+				Get();
+			} else if (la.kind == 20) {
+				Get();
+			} else {
+				Get();
+			}
+			ShiftExpr();
+		}
+	}
+
+	void ShiftExpr() {
+		AddExpr();
+		while (la.kind == 22 || la.kind == 23) {
+			if (la.kind == 22) {
+				Get();
+			} else {
+				Get();
+			}
+			AddExpr();
+		}
+	}
+
+	void AddExpr() {
+		MultExpr();
+		while (la.kind == 24 || la.kind == 25) {
+			if (la.kind == 24) {
+				Get();
+			} else {
+				Get();
+			}
+			MultExpr();
+		}
+	}
+
+	void MultExpr() {
+		UnaryExpr();
+		while (la.kind == 26 || la.kind == 27 || la.kind == 28) {
+			if (la.kind == 26) {
+				Get();
+			} else if (la.kind == 27) {
+				Get();
+			} else {
+				Get();
+			}
+			UnaryExpr();
+		}
+	}
+
+	void UnaryExpr() {
+		if (StartOf(2)) {
+			Primary();
+		} else if (StartOf(3)) {
+			UnaryOp();
+			UnaryExpr();
+		} else SynErr(34);
+	}
+
+	void Primary() {
 		switch (la.kind) {
-		case 13: {
+		case 1: {
 			Get();
 			break;
 		}
-		case 14: {
+		case 5: {
 			Get();
 			break;
 		}
+		case 4: {
+			Get();
+			break;
+		}
+		case 3: {
+			Get();
+			break;
+		}
+		case 2: {
+			Get();
+			break;
+		}
+		case 29: {
+			Get();
+			Expr(out IExpr e);
+			Expect(30);
+			break;
+		}
+		default: SynErr(35); break;
+		}
+	}
+
+	void UnaryOp() {
+		switch (la.kind) {
 		case 15: {
 			Get();
 			break;
 		}
-		case 16: {
-			Get();
-			break;
-		}
-		case 17: {
-			Get();
-			break;
-		}
-		case 18: {
-			Get();
-			break;
-		}
-		case 19: {
-			Get();
-			break;
-		}
-		case 20: {
-			Get();
-			break;
-		}
-		case 21: {
-			Get();
-			break;
-		}
-		case 22: {
-			Get();
-			break;
-		}
-		case 23: {
+		case 26: {
 			Get();
 			break;
 		}
@@ -214,26 +299,6 @@ public _XLang xlang;
 			Get();
 			break;
 		}
-		case 26: {
-			Get();
-			break;
-		}
-		case 27: {
-			Get();
-			break;
-		}
-		case 28: {
-			Get();
-			break;
-		}
-		case 29: {
-			Get();
-			break;
-		}
-		case 30: {
-			Get();
-			break;
-		}
 		case 31: {
 			Get();
 			break;
@@ -242,18 +307,8 @@ public _XLang xlang;
 			Get();
 			break;
 		}
-		default: SynErr(38); break;
+		default: SynErr(36); break;
 		}
-	}
-
-	void UnaryOperator() {
-		if (la.kind == 14) {
-			Get();
-		} else if (la.kind == 33) {
-			Get();
-		} else if (la.kind == 34) {
-			Get();
-		} else SynErr(39);
 	}
 
 
@@ -268,9 +323,10 @@ public _XLang xlang;
  }
  
  static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
-		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_T,_x,_T, _T,_x,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_x, _x},
-		{_x,_x,_T,_T, _T,_T,_x,_x, _x,_x,_x,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x}
+		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
+		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _x,_x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_x,_T, _T,_x,_x}
 
  };
 } // end Parser
@@ -301,12 +357,21 @@ public interface IXLangVisitor
 	void Visit(_XLang element);
 	void Visit(_Module element);
 	void Visit(_GlblStmt element);
-	void Visit(_Expression element);
-	void Visit(_BinaryExpression element);
-	void Visit(_UnaryExpression element);
-	void Visit(_Constant element);
-	void Visit(_BinaryOperator element);
-	void Visit(_UnaryOperator element);
+	void Visit(_Expr element);
+	void Visit(_CondExpr element);
+	void Visit(_LogOrExpr element);
+	void Visit(_LogAndExpr element);
+	void Visit(_OrExpr element);
+	void Visit(_XorExpr element);
+	void Visit(_AndExpr element);
+	void Visit(_EqlExpr element);
+	void Visit(_RelExpr element);
+	void Visit(_ShiftExpr element);
+	void Visit(_AddExpr element);
+	void Visit(_MultExpr element);
+	void Visit(_UnaryExpr element);
+	void Visit(_Primary element);
+	void Visit(_UnaryOp element);
 }
 
 public partial class _XLang : XLangElement
@@ -324,32 +389,77 @@ public partial class _GlblStmt : XLangElement
 	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Expression : XLangElement
+public partial class _Expr : XLangElement
 {
 	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _BinaryExpression : XLangElement
+public partial class _CondExpr : XLangElement
 {
 	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _UnaryExpression : XLangElement
+public partial class _LogOrExpr : XLangElement
 {
 	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _Constant : XLangElement
+public partial class _LogAndExpr : XLangElement
 {
 	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _BinaryOperator : XLangElement
+public partial class _OrExpr : XLangElement
 {
 	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _UnaryOperator : XLangElement
+public partial class _XorExpr : XLangElement
+{
+	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _AndExpr : XLangElement
+{
+	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _EqlExpr : XLangElement
+{
+	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _RelExpr : XLangElement
+{
+	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _ShiftExpr : XLangElement
+{
+	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _AddExpr : XLangElement
+{
+	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _MultExpr : XLangElement
+{
+	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _UnaryExpr : XLangElement
+{
+	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _Primary : XLangElement
+{
+	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _UnaryOp : XLangElement
 {
 	public override void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
@@ -369,40 +479,37 @@ public class Errors {
 			case 3: s = "char expected"; break;
 			case 4: s = "float expected"; break;
 			case 5: s = "int expected"; break;
-			case 6: s = "\"let\" expected"; break;
-			case 7: s = "\"=\" expected"; break;
-			case 8: s = "\";\" expected"; break;
-			case 9: s = "\"(\" expected"; break;
-			case 10: s = "\")\" expected"; break;
-			case 11: s = "\"true\" expected"; break;
-			case 12: s = "\"false\" expected"; break;
-			case 13: s = "\"+\" expected"; break;
-			case 14: s = "\"-\" expected"; break;
-			case 15: s = "\"*\" expected"; break;
-			case 16: s = "\"/\" expected"; break;
-			case 17: s = "\"%\" expected"; break;
-			case 18: s = "\"^\" expected"; break;
-			case 19: s = "\"===\" expected"; break;
-			case 20: s = "\"!==\" expected"; break;
-			case 21: s = "\"!=\" expected"; break;
-			case 22: s = "\"==\" expected"; break;
-			case 23: s = "\"&&\" expected"; break;
-			case 24: s = "\"&\" expected"; break;
-			case 25: s = "\"||\" expected"; break;
-			case 26: s = "\"|\" expected"; break;
-			case 27: s = "\">>\" expected"; break;
-			case 28: s = "\"<<\" expected"; break;
-			case 29: s = "\">=\" expected"; break;
-			case 30: s = "\">\" expected"; break;
-			case 31: s = "\"<=\" expected"; break;
-			case 32: s = "\"<\" expected"; break;
-			case 33: s = "\"~\" expected"; break;
-			case 34: s = "\"!\" expected"; break;
-			case 35: s = "??? expected"; break;
-			case 36: s = "invalid Expression"; break;
-			case 37: s = "invalid Constant"; break;
-			case 38: s = "invalid BinaryOperator"; break;
-			case 39: s = "invalid UnaryOperator"; break;
+			case 6: s = "\";\" expected"; break;
+			case 7: s = "\"let\" expected"; break;
+			case 8: s = "\"=\" expected"; break;
+			case 9: s = "\"?\" expected"; break;
+			case 10: s = "\":\" expected"; break;
+			case 11: s = "\"||\" expected"; break;
+			case 12: s = "\"&&\" expected"; break;
+			case 13: s = "\"|\" expected"; break;
+			case 14: s = "\"^\" expected"; break;
+			case 15: s = "\"&\" expected"; break;
+			case 16: s = "\"==\" expected"; break;
+			case 17: s = "\"!=\" expected"; break;
+			case 18: s = "\"<\" expected"; break;
+			case 19: s = "\">\" expected"; break;
+			case 20: s = "\"<=\" expected"; break;
+			case 21: s = "\">=\" expected"; break;
+			case 22: s = "\"<<\" expected"; break;
+			case 23: s = "\">>\" expected"; break;
+			case 24: s = "\"+\" expected"; break;
+			case 25: s = "\"-\" expected"; break;
+			case 26: s = "\"*\" expected"; break;
+			case 27: s = "\"/\" expected"; break;
+			case 28: s = "\"%\" expected"; break;
+			case 29: s = "\"(\" expected"; break;
+			case 30: s = "\")\" expected"; break;
+			case 31: s = "\"~\" expected"; break;
+			case 32: s = "\"!\" expected"; break;
+			case 33: s = "??? expected"; break;
+			case 34: s = "invalid UnaryExpr"; break;
+			case 35: s = "invalid Primary"; break;
+			case 36: s = "invalid UnaryOp"; break;
 
      default: s = "error " + n; break;
    }
