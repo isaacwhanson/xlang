@@ -120,11 +120,11 @@ public _XLang xlang;
 
 	void Expr(out IExpr ex) {
 		CondExpr(out IExpr e);
-		ex = e; 
+		ex = e;                        
 	}
 
 	void CondExpr(out IExpr ex) {
-		ex = new _CondExpr(); 
+		ex = new _CondExpr();          
 		LogOrExpr();
 		if (la.kind == 9) {
 			Get();

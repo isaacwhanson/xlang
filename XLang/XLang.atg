@@ -50,8 +50,9 @@ PRODUCTIONS
      "=" Expr<out IExpr e>                (. s.expr = e;                    .).
 
   Expr<out IExpr ex> =
-    CondExpr<out IExpr e> (. ex = e; .).
-  CondExpr<out IExpr ex> = (. ex = new _CondExpr(); .)
+    CondExpr<out IExpr e>                 (. ex = e;                        .).
+
+  CondExpr<out IExpr ex> =                (. ex = new _CondExpr();          .)
     LogOrExpr ['?' Expr<out IExpr e1> ':' CondExpr<out IExpr e2>].
   LogOrExpr =
     LogAndExpr {"||" LogAndExpr}.
