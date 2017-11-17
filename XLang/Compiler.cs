@@ -36,7 +36,7 @@ namespace XLang
         // parse -> ast
         _XLang xlang = Parse(args[0]);
         // validate
-        ValidatingVisitor validator = new ValidatingVisitor();
+        VisitingValidator validator = new VisitingValidator();
         xlang.Accept(validator);
         // done
         Console.WriteLine("Done.");

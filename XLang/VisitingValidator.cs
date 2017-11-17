@@ -22,7 +22,7 @@ using System;
 
 namespace XLang
 {
-  public class ValidatingVisitor : IXLangVisitor
+  public class VisitingValidator : IXLangVisitor
   {
     public void Visit(_XLang element)
     {
