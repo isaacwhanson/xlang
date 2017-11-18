@@ -114,11 +114,15 @@ public _XLang xlang;
 
 	void LetStmt(out _LetStmt let_stmt) {
 		Expect(7);
-		Expect(1);
-		string id = t.val; 
+		Ident(out _Ident id);
 		Expect(8);
 		Expr(out IExpr expr);
 		let_stmt = new _LetStmt(){ id=id, expr=expr }; 
+	}
+
+	void Ident(out _Ident expr) {
+		Expect(1);
+		expr = new _Ident() { name=t.val }; 
 	}
 
 	void Expr(out IExpr expr) {
@@ -311,27 +315,27 @@ public _XLang xlang;
 		expr = null; 
 		switch (la.kind) {
 		case 1: {
-			Ident(out IExpr lhs);
+			Ident(out _Ident lhs);
 			expr = lhs; 
 			break;
 		}
 		case 2: {
-			String(out IExpr lhs);
+			String(out _String lhs);
 			expr = lhs; 
 			break;
 		}
 		case 3: {
-			Char(out IExpr lhs);
+			Char(out _Char lhs);
 			expr = lhs; 
 			break;
 		}
 		case 4: {
-			Float(out IExpr lhs);
+			Float(out _Float lhs);
 			expr = lhs; 
 			break;
 		}
 		case 5: {
-			Int(out IExpr lhs);
+			Int(out _Int lhs);
 			expr = lhs; 
 			break;
 		}
@@ -346,27 +350,22 @@ public _XLang xlang;
 		}
 	}
 
-	void Ident(out IExpr expr) {
-		Expect(1);
-		expr = new _Ident() { name=t.val }; 
-	}
-
-	void String(out IExpr expr) {
+	void String(out _String expr) {
 		Expect(2);
 		expr = new _String() { value=t.val }; 
 	}
 
-	void Char(out IExpr expr) {
+	void Char(out _Char expr) {
 		Expect(3);
 		expr = new _Char() { value=t.val }; 
 	}
 
-	void Float(out IExpr expr) {
+	void Float(out _Float expr) {
 		Expect(4);
 		expr = new _Float() { value=t.val }; 
 	}
 
-	void Int(out IExpr expr) {
+	void Int(out _Int expr) {
 		Expect(5);
 		expr = new _Int() { value=t.val }; 
 	}
@@ -402,6 +401,7 @@ public interface IXLangVisitor
 	void Visit(_Module element);
 	void Visit(_GlblStmt element);
 	void Visit(_LetStmt element);
+	void Visit(_Ident element);
 	void Visit(_Expr element);
 	void Visit(_CondExpr element);
 	void Visit(_LogOrExpr element);
@@ -416,7 +416,6 @@ public interface IXLangVisitor
 	void Visit(_MultExpr element);
 	void Visit(_UnaryExpr element);
 	void Visit(_Primary element);
-	void Visit(_Ident element);
 	void Visit(_String element);
 	void Visit(_Char element);
 	void Visit(_Float element);
@@ -439,6 +438,11 @@ public partial class _GlblStmt : IXLangElement
 }
 
 public partial class _LetStmt : IXLangElement
+{
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _Ident : IXLangElement
 {
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
@@ -509,11 +513,6 @@ public partial class _UnaryExpr : IXLangElement
 }
 
 public partial class _Primary : IXLangElement
-{
-	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
-}
-
-public partial class _Ident : IXLangElement
 {
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }

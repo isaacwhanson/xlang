@@ -31,10 +31,6 @@ namespace XLang
   public interface IExpr : IXLangElement
   { }
 
-  // PLACEHOLDER
-  public partial class _Expr : IExpr
-  { }
-
   public partial class _XLang
   {
     public _Module module;
@@ -47,7 +43,7 @@ namespace XLang
 
   public partial class _LetStmt : IGlblStmt
   {
-    public string id;
+    public _Ident id;
     public IExpr expr;
   }
 

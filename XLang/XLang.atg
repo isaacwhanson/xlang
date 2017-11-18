@@ -49,7 +49,7 @@ PRODUCTIONS
     (LetStmt<out _LetStmt let_stmt>         (. glbl_stmt = let_stmt; .)) ";".
 
   LetStmt<out _LetStmt let_stmt> =
-    "let" id                                (. string id = t.val; .)
+    "let" Ident<out _Ident id>
     "=" Expr<out IExpr expr>                (. let_stmt = new _LetStmt(){ id=id, expr=expr }; .).
 
   Expr<out IExpr expr> =
@@ -111,26 +111,26 @@ PRODUCTIONS
     UnaryExpr<out IExpr lhs>                (. expr = new _UnaryExpr() { op=op, left=lhs }; .))).
 
   Primary<out IExpr expr> =                 (. expr = null; .)
-    (Ident<out IExpr lhs>                   (. expr = lhs; .)
-    | String<out IExpr lhs>                 (. expr = lhs; .)
-    | Char<out IExpr lhs>                   (. expr = lhs; .)
-    | Float<out IExpr lhs>                  (. expr = lhs; .)
-    | Int<out IExpr lhs>                    (. expr = lhs; .)
+    (Ident<out _Ident lhs>                  (. expr = lhs; .)
+    | String<out _String lhs>               (. expr = lhs; .)
+    | Char<out _Char lhs>                   (. expr = lhs; .)
+    | Float<out _Float lhs>                 (. expr = lhs; .)
+    | Int<out _Int lhs>                     (. expr = lhs; .)
     | '(' Expr<out IExpr lhs> ')'           (. expr = lhs; .)).
 
-  Ident<out IExpr expr> =
+  Ident<out _Ident expr> =
     id                                      (. expr = new _Ident() { name=t.val }; .).
 
-  String<out IExpr expr> =
+  String<out _String expr> =
     string                                  (. expr = new _String() { value=t.val }; .).
 
-  Char<out IExpr expr> =
+  Char<out _Char expr> =
     char                                    (. expr = new _Char() { value=t.val }; .).
 
-  Int<out IExpr expr> =
+  Int<out _Int expr> =
     int                                     (. expr = new _Int() { value=t.val }; .).
 
-  Float<out IExpr expr> =
+  Float<out _Float expr> =
     float                                   (. expr = new _Float() { value=t.val }; .).
  
 END XLang.
