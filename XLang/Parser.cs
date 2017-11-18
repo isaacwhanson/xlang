@@ -1,6 +1,7 @@
 using System.Collections;
 
 
+
 using System;
 using System.Collections.Generic;
 
@@ -29,6 +30,7 @@ public class Parser {
  int errDist = minErrDist;
 
 public _XLang xlang;
+
 
 
  public Parser(Scanner scanner) {
