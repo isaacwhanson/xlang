@@ -32,21 +32,21 @@ namespace XLang
 
     public void Visit(_Module element)
     {
-      Console.WriteLine("module ( ");
+      Console.WriteLine("module");
       foreach (IStmt stmt in element.stmts)
       {
         stmt.Accept(this);
       }
-      Console.WriteLine(")");
+      Console.WriteLine("end");
     }
 
     public void Visit(_LetStmt element)
     {
-      Console.Write("\tlet (");
+      Console.Write("\tlet ");
       element.id.Accept(this);
       Console.Write(" = ");
       element.expr.Accept(this);
-      Console.WriteLine(")");
+      Console.WriteLine(";");
     }
 
     public void Visit(_Ident element)
@@ -175,12 +175,12 @@ namespace XLang
 
     public void Visit(_Float element)
     {
-      Console.Write("{0}", element.value);
+      Console.Write("{0}f", element.value);
     }
 
     public void Visit(_Int element)
     {
-      Console.Write("{0}", element.value);
+      Console.Write("{0}i", element.value);
     }
 
     public void Visit(_GlblStmt element)

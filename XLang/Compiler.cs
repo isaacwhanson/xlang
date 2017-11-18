@@ -35,12 +35,7 @@ namespace XLang
       {
         // parse -> ast
         _XLang xlang = Parse(args[0]);
-        // validate
-        //VisitingValidator validator = new VisitingValidator();
-        //xlang.Accept(validator);
         xlang.Accept(new PrintAST());
-        // done
-        Console.WriteLine("Done.");
         return OK;
       }
       else
@@ -58,7 +53,8 @@ namespace XLang
       parser.Parse();
       if (parser.errors.count != 0)
       {
-        throw new FatalError("syntax error");
+        string errMsg = String.Format("{0} syntax error(s)", parser.errors.count);
+        throw new FatalError(errMsg);
       }
       return parser.xlang;
     }
