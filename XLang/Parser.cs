@@ -107,8 +107,10 @@ public _XLang xlang;
 	}
 
 	void GlblStmt(out IStmt stmt) {
+		while (!(la.kind == 0 || la.kind == 7)) {SynErr(37); Get();}
 		LetStmt(out _LetStmt let_stmt);
 		stmt = let_stmt; 
+		while (!(la.kind == 0 || la.kind == 6)) {SynErr(38); Get();}
 		Expect(6);
 	}
 
@@ -321,7 +323,7 @@ public _XLang xlang;
 			}
 			UnaryExpr(out IExpr lhs);
 			expr = new _UnaryExpr() { op=op, left=lhs }; 
-		} else SynErr(37);
+		} else SynErr(39);
 	}
 
 	void Primary(out IExpr expr) {
@@ -359,7 +361,7 @@ public _XLang xlang;
 			expr = lhs; 
 			break;
 		}
-		default: SynErr(38); break;
+		default: SynErr(40); break;
 		}
 	}
 
@@ -394,7 +396,7 @@ public _XLang xlang;
  }
  
  static readonly bool[,] set = {
-		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+		{_T,_x,_x,_x, _x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
 		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
 		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
 		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _x,_x}
@@ -602,8 +604,10 @@ public class Errors {
 			case 34: s = "\"(\" expected"; break;
 			case 35: s = "\")\" expected"; break;
 			case 36: s = "??? expected"; break;
-			case 37: s = "invalid UnaryExpr"; break;
-			case 38: s = "invalid Primary"; break;
+			case 37: s = "this symbol not expected in GlblStmt"; break;
+			case 38: s = "this symbol not expected in GlblStmt"; break;
+			case 39: s = "invalid UnaryExpr"; break;
+			case 40: s = "invalid Primary"; break;
 
      default: s = "error " + n; break;
    }
