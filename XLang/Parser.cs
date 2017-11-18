@@ -11,7 +11,7 @@ namespace XLang {
 
 public class Parser {
 	public const int _EOF = 0;
-	public const int _id = 1;
+	public const int _ident = 1;
 	public const int _string = 2;
 	public const int _char = 3;
 	public const int _float = 4;
@@ -550,7 +550,7 @@ public class Errors {
    string s;
    switch (n) {
 			case 0: s = "EOF expected"; break;
-			case 1: s = "id expected"; break;
+			case 1: s = "ident expected"; break;
 			case 2: s = "string expected"; break;
 			case 3: s = "char expected"; break;
 			case 4: s = "float expected"; break;

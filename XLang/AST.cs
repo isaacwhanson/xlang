@@ -25,11 +25,9 @@ using System.Collections.Generic;
 
 namespace XLang
 {
-  public interface IStmt : IXLangElement
-  { }
+  public interface IStmt : IXLangElement { }
 
-  public interface IExpr : IXLangElement
-  { }
+  public interface IExpr : IXLangElement { }
 
   public partial class _XLang
   {

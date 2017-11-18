@@ -1,5 +1,7 @@
 ﻿//
-//  PrintAST.cs
+//  PrintAST
+//
+//  print AST representation to console
 //
 //  Author:
 //       Isaac W Hanson <isaac@starlig.ht>

@@ -24,7 +24,7 @@ CHARACTERS
   e           = "eE".
 
 TOKENS
-  id          = letter {letter | digit}.
+  ident       = letter {letter | digit}.
   string      = '"' {notquote | "\\\""} '"'.
   char        = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) '\''.
   float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
@@ -136,14 +136,10 @@ PRODUCTIONS
     | Int<out _Int lhs>                     (. expr = lhs; .)
     | '(' Expr<out IExpr lhs> ')'           (. expr = lhs; .)).
 
-  Ident<out _Ident expr> = id               (. expr = new _Ident() { name=t.val }; .).
-
+  Ident<out _Ident expr> = ident            (. expr = new _Ident() { name=t.val }; .).
   String<out _String expr> = string         (. expr = new _String() { value=t.val }; .).
-
   Char<out _Char expr> = char               (. expr = new _Char() { value=t.val }; .).
-
   Int<out _Int expr> = int                  (. expr = new _Int() { value=t.val }; .).
-
   Float<out _Float expr> = float            (. expr = new _Float() { value=t.val }; .).
  
 END XLang.

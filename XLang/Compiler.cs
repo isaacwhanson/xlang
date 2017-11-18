@@ -58,7 +58,7 @@ namespace XLang
       parser.Parse();
       if (parser.errors.count != 0)
       {
-        throw new FatalError("Unhandled Parse error!");
+        throw new FatalError("syntax error");
       }
       return parser.xlang;
     }
