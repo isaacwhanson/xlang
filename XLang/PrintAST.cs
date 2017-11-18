@@ -197,5 +197,14 @@ namespace XLang
     {
       throw new NotImplementedException();
     }
+
+    public void Visit(_LogXorExpr element)
+    {
+      Console.Write("(");
+      element.left.Accept(this);
+      Console.Write(" ^^ ");
+      element.right.Accept(this);
+      Console.Write(")");
+    }
   }
 }

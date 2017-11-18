@@ -61,8 +61,12 @@ PRODUCTIONS
      ':' Expr<out IExpr alternative>        (. expr = new _CondExpr() { condition=expr, consequent=consequent, alternative=alternative }; .)].
 
   LogOrExpr<out IExpr expr> =
+    LogXorExpr<out IExpr lhs>               (. expr = lhs; .)
+    {"||" LogXorExpr<out IExpr rhs>         (. expr = new _LogOrExpr() { left=expr, right=rhs }; .)}.
+
+  LogXorExpr<out IExpr expr> =
     LogAndExpr<out IExpr lhs>               (. expr = lhs; .)
-    {"||" LogAndExpr<out IExpr rhs>         (. expr = new _LogOrExpr() { left=expr, right=rhs }; .)}.
+    {"^^" LogAndExpr<out IExpr rhs>         (. expr = new _LogXorExpr() { left=expr, right=rhs }; .)}.
 
   LogAndExpr<out IExpr expr> =
     OrExpr<out IExpr lhs>                   (. expr = lhs; .)

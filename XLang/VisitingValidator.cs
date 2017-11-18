@@ -140,5 +140,10 @@ namespace XLang
     {
       throw new NotImplementedException();
     }
+
+    public void Visit(_LogXorExpr element)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

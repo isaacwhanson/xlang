@@ -58,6 +58,12 @@ namespace XLang
     public IExpr right;
   }
 
+  public partial class _LogXorExpr : IExpr
+  {
+    public IExpr left;
+    public IExpr right;
+  }
+
   public partial class _LogAndExpr : IExpr
   {
     public IExpr left;
@@ -88,8 +94,8 @@ namespace XLang
   }
   public partial class _EqlExpr : IExpr
   {
-    public IExpr left;
     public EqlOp op;
+    public IExpr left;
     public IExpr right;
   }
 
@@ -99,8 +105,8 @@ namespace XLang
   }
   public partial class _RelExpr : IExpr
   {
-    public IExpr left;
     public RelOp op;
+    public IExpr left;
     public IExpr right;
   }
 
@@ -110,8 +116,8 @@ namespace XLang
   }
   public partial class _ShiftExpr : IExpr
   {
-    public IExpr left;
     public ShiftOp op;
+    public IExpr left;
     public IExpr right;
   }
 
@@ -121,8 +127,8 @@ namespace XLang
   }
   public partial class _AddExpr : IExpr
   {
-    public IExpr left;
     public AddOp op;
+    public IExpr left;
     public IExpr right;
   }
 
@@ -132,8 +138,8 @@ namespace XLang
   }
   public partial class _MultExpr : IExpr
   {
-    public IExpr left;
     public MultOp op;
+    public IExpr left;
     public IExpr right;
   }
 
