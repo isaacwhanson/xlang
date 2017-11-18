@@ -133,7 +133,7 @@ PRODUCTIONS
     | Char<out _Char lhs>                   (. expr = lhs; .)
     | Float<out _Float lhs>                 (. expr = lhs; .)
     | Int<out _Int lhs>                     (. expr = lhs; .)
-    | '(' Expr<out IExpr lhs> ')'           (. expr = lhs; .)).
+    | '(' Expr<out IExpr lhs> WEAK ')'           (. expr = lhs; .)).
 
   Ident<out _Ident expr> = ident            (. expr = new _Ident() { name=t.val }; .).
   String<out _String expr> = string         (. expr = new _String() { value=t.val }; .).
