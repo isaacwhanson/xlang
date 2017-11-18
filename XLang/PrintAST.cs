@@ -156,7 +156,7 @@ namespace XLang
     public void Visit(_UnaryExpr element)
     {
       Console.Write("(");
-      Console.Write("{0}", element.op);
+      Console.Write("{0} ", element.op);
       element.left.Accept(this);
       Console.Write(")");
     }

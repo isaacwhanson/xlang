@@ -84,44 +84,68 @@ namespace XLang
     public IExpr right;
   }
 
+  public enum EqlOp
+  {
+    EQUAL, NOTEQUAL, HARDEQUAL, HARDNOTEQUAL
+  }
   public partial class _EqlExpr : IExpr
   {
     public IExpr left;
-    public string op;
+    public EqlOp op;
     public IExpr right;
   }
 
+  public enum RelOp
+  {
+    LESSTHAN, GREATERTHAN, LESSTHANEQUAL, GREATERTHANEQUAL
+  }
   public partial class _RelExpr : IExpr
   {
     public IExpr left;
-    public string op;
+    public RelOp op;
     public IExpr right;
   }
 
+  public enum ShiftOp
+  {
+    LEFT, RIGHT
+  }
   public partial class _ShiftExpr : IExpr
   {
     public IExpr left;
-    public string op;
+    public ShiftOp op;
     public IExpr right;
   }
 
+  public enum AddOp
+  {
+    PLUS, MINUS
+  }
   public partial class _AddExpr : IExpr
   {
     public IExpr left;
-    public string op;
+    public AddOp op;
     public IExpr right;
   }
 
+  public enum MultOp
+  {
+    TIMES, DIVIDE, MODULO
+  }
   public partial class _MultExpr : IExpr
   {
     public IExpr left;
-    public string op;
+    public MultOp op;
     public IExpr right;
   }
 
+  public enum UnaryOp
+  {
+    NEGATE, COMPLIMENT, NOT
+  }
   public partial class _UnaryExpr : IExpr
   {
-    public string op;
+    public UnaryOp op;
     public IExpr left;
   }
 

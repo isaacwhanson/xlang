@@ -82,32 +82,50 @@ PRODUCTIONS
 
   EqlExpr<out IExpr expr> =
     RelExpr<out IExpr lhs>                  (. expr = lhs; .)
-    {("==" | "!=")                          (. string op = t.val; .)
+                                           {(. EqlOp op; .)
+    ( "=="                                  (. op = EqlOp.EQUAL; .)
+    | "!="                                  (. op = EqlOp.NOTEQUAL; .)
+    | "==="                                 (. op = EqlOp.HARDEQUAL; .)
+    | "!=="                                 (. op = EqlOp.HARDNOTEQUAL; .))
     RelExpr<out IExpr rhs>                  (. expr = new _EqlExpr() { left=expr, op=op, right=rhs }; .)}.
 
   RelExpr<out IExpr expr> =
     ShiftExpr<out IExpr lhs>                (. expr = lhs; .)
-    {('<' | '>' | "<=" | ">=")              (. string op = t.val; .)
+                                           {(. RelOp op; .)
+    ( '<'                                   (. op = RelOp.LESSTHAN; .)
+    | '>'                                   (. op = RelOp.GREATERTHAN; .)
+    | "<="                                  (. op = RelOp.LESSTHANEQUAL; .)
+    | ">="                                  (. op = RelOp.GREATERTHANEQUAL; .))
     ShiftExpr<out IExpr rhs>                (. expr = new _RelExpr() { left=expr, op=op, right=rhs }; .)}.
 
   ShiftExpr<out IExpr expr> =
     AddExpr<out IExpr lhs>                  (. expr = lhs; .)
-    {("<<" | ">>")                          (. string op = t.val; .)
+                                           {(. ShiftOp op; .)
+    ( "<<"                                  (. op = ShiftOp.LEFT; .)
+    | ">>"                                  (. op = ShiftOp.RIGHT; .))
     AddExpr<out IExpr rhs>                  (. expr = new _ShiftExpr() { left=expr, op=op, right=rhs }; .)}.
 
   AddExpr<out IExpr expr> =
     MultExpr<out IExpr lhs>                 (. expr = lhs; .)
-    {('+' | '-')                            (. string op = t.val; .)
+                                           {(. AddOp op; .)
+    ( '+'                                   (. op = AddOp.PLUS; .)
+    | '-'                                   (. op = AddOp.MINUS; .))
     MultExpr<out IExpr rhs>                 (. expr = new _AddExpr() { left=expr, op=op, right=rhs }; .)}.
 
   MultExpr<out IExpr expr> =
     UnaryExpr<out IExpr lhs>                (. expr = lhs; .)
-    {('*' | '/' | '%')                      (. string op = t.val; .)
+                                           {(. MultOp op; .)
+    ( '*'                                   (. op = MultOp.TIMES; .)
+    | '/'                                   (. op = MultOp.DIVIDE; .)
+    | '%'                                   (. op = MultOp.MODULO; .))
     UnaryExpr<out IExpr rhs>                (. expr = new _MultExpr() { left=expr, op=op, right=rhs }; .)}.
 
   UnaryExpr<out IExpr expr> =               (. expr = null; .)
     (Primary<out IExpr lhs>                 (. expr = lhs; .)
-    | (('&' | '*' | '+' | '-' | '~' | '!')  (. string op = t.val; .)
+                                           |(. UnaryOp op; .)
+    (('-'                                   (. op = UnaryOp.NEGATE; .)
+    | '~'                                   (. op = UnaryOp.COMPLIMENT; .)
+    | '!'                                   (. op = UnaryOp.NOT; .))
     UnaryExpr<out IExpr lhs>                (. expr = new _UnaryExpr() { op=op, left=lhs }; .))).
 
   Primary<out IExpr expr> =                 (. expr = null; .)
