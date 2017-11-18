@@ -69,7 +69,16 @@ namespace XLang
     {
       Console.Write("(");
       element.left.Accept(this);
-      Console.Write(" || ");
+      Console.Write(" LOG_OR ");
+      element.right.Accept(this);
+      Console.Write(")");
+    }
+
+    public void Visit(_LogXorExpr element)
+    {
+      Console.Write("(");
+      element.left.Accept(this);
+      Console.Write(" LOG_XOR ");
       element.right.Accept(this);
       Console.Write(")");
     }
@@ -78,7 +87,7 @@ namespace XLang
     {
       Console.Write("(");
       element.left.Accept(this);
-      Console.Write(" && ");
+      Console.Write(" LOG_AND ");
       element.right.Accept(this);
       Console.Write(")");
     }
@@ -87,7 +96,7 @@ namespace XLang
     {
       Console.Write("(");
       element.left.Accept(this);
-      Console.Write(" | ");
+      Console.Write(" OR ");
       element.right.Accept(this);
       Console.Write(")");
     }
@@ -96,7 +105,7 @@ namespace XLang
     {
       Console.Write("(");
       element.left.Accept(this);
-      Console.Write(" ^ ");
+      Console.Write(" XOR ");
       element.right.Accept(this);
       Console.Write(")");
     }
@@ -105,7 +114,7 @@ namespace XLang
     {
       Console.Write("(");
       element.left.Accept(this);
-      Console.Write(" & ");
+      Console.Write(" AND ");
       element.right.Accept(this);
       Console.Write(")");
     }
@@ -196,15 +205,6 @@ namespace XLang
     public void Visit(_Primary element)
     {
       throw new NotImplementedException();
-    }
-
-    public void Visit(_LogXorExpr element)
-    {
-      Console.Write("(");
-      element.left.Accept(this);
-      Console.Write(" ^^ ");
-      element.right.Accept(this);
-      Console.Write(")");
     }
   }
 }

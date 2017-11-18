@@ -1,12 +1,7 @@
 /* Coco/R ATG for (C#) XLang Compiler */
-// --> Imports
 using System.Collections;
-
 COMPILER XLang
-
-// --> GlobalFieldsAndMethods
 public _XLang xlang;
-
 CHARACTERS
   lower       = 'a'..'z'.
   upper       = 'A'..'Z'.
@@ -22,21 +17,16 @@ CHARACTERS
   notapost    = ANY - '\'' - newline.
   sign        = "+-".
   e           = "eE".
-
 TOKENS
   ident       = letter {letter | digit}.
   string      = '"' {notquote | "\\\""} '"'.
   char        = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) '\''.
   float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
   int         = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
-
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO "\n"
 COMMENTS FROM "#" TO "\n"
-
 IGNORE whitespace + newline
-
-// --> ParserSpecificaton
 PRODUCTIONS
   XLang =                                   (. xlang = new _XLang(); .)
     Module<out _Module module>              (. xlang.module = module; .).
@@ -145,5 +135,4 @@ PRODUCTIONS
   Char<out _Char expr> = char               (. expr = new _Char() { value=t.val }; .).
   Int<out _Int expr> = int                  (. expr = new _Int() { value=t.val }; .).
   Float<out _Float expr> = float            (. expr = new _Float() { value=t.val }; .).
- 
 END XLang.
