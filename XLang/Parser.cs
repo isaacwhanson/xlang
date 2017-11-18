@@ -99,11 +99,9 @@ public _XLang xlang;
 	void Module(out _Module module) {
 		module = new _Module(); 
 		GlblStmt(out IGlblStmt glbl_stmt0);
-		Expect(6);
 		module.stmts.Add(glbl_stmt0); 
 		while (la.kind == 7) {
 			GlblStmt(out IGlblStmt glbl_stmt1);
-			Expect(6);
 			module.stmts.Add(glbl_stmt1); 
 		}
 	}
@@ -111,6 +109,7 @@ public _XLang xlang;
 	void GlblStmt(out IGlblStmt glbl_stmt) {
 		LetStmt(out _LetStmt let_stmt);
 		glbl_stmt = let_stmt; 
+		Expect(6);
 	}
 
 	void LetStmt(out _LetStmt let_stmt) {
@@ -134,7 +133,7 @@ public _XLang xlang;
 			Get();
 			Expr(out IExpr consequent);
 			Expect(10);
-			CondExpr(out IExpr alternative);
+			Expr(out IExpr alternative);
 			expr = new _CondExpr() { condition=expr, consequent=consequent, alternative=alternative }; 
 		}
 	}
@@ -160,29 +159,32 @@ public _XLang xlang;
 	}
 
 	void OrExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		XorExpr(out IExpr xor0);
+		XorExpr(out IExpr lhs);
+		expr = lhs; 
 		while (la.kind == 13) {
 			Get();
-			XorExpr(out IExpr xor1);
+			XorExpr(out IExpr rhs);
+			expr = new _OrExpr() { left=expr, right=rhs }; 
 		}
 	}
 
 	void XorExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		AndExpr(out IExpr and0);
+		AndExpr(out IExpr lhs);
+		expr = lhs; 
 		while (la.kind == 14) {
 			Get();
-			AndExpr(out IExpr and1);
+			AndExpr(out IExpr rhs);
+			expr = new _XorExpr() { left=expr, right=rhs }; 
 		}
 	}
 
 	void AndExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		EqlExpr(out IExpr eql0);
+		EqlExpr(out IExpr lhs);
+		expr = lhs; 
 		while (la.kind == 15) {
 			Get();
-			EqlExpr(out IExpr eql1);
+			EqlExpr(out IExpr rhs);
+			expr = new _AndExpr() { left=expr, right=rhs }; 
 		}
 	}
 
@@ -270,23 +272,23 @@ public _XLang xlang;
 	void Primary() {
 		switch (la.kind) {
 		case 1: {
-			Get();
-			break;
-		}
-		case 5: {
-			Get();
-			break;
-		}
-		case 4: {
-			Get();
-			break;
-		}
-		case 3: {
-			Get();
+			Ident(out IExpr expr);
 			break;
 		}
 		case 2: {
-			Get();
+			String(out IExpr expr);
+			break;
+		}
+		case 3: {
+			Char(out IExpr expr);
+			break;
+		}
+		case 4: {
+			Float(out IExpr expr);
+			break;
+		}
+		case 5: {
+			Int(out IExpr expr);
 			break;
 		}
 		case 29: {
@@ -327,6 +329,31 @@ public _XLang xlang;
 		}
 		default: SynErr(36); break;
 		}
+	}
+
+	void Ident(out IExpr expr) {
+		Expect(1);
+		expr = new _Ident() { name=t.val }; 
+	}
+
+	void String(out IExpr expr) {
+		Expect(2);
+		expr = new _String() { value=t.val }; 
+	}
+
+	void Char(out IExpr expr) {
+		Expect(3);
+		expr = new _Char() { value=t.val }; 
+	}
+
+	void Float(out IExpr expr) {
+		Expect(4);
+		expr = new _Float() { value=t.val }; 
+	}
+
+	void Int(out IExpr expr) {
+		Expect(5);
+		expr = new _Int() { value=t.val }; 
 	}
 
 
@@ -376,6 +403,11 @@ public interface IXLangVisitor
 	void Visit(_UnaryExpr element);
 	void Visit(_Primary element);
 	void Visit(_UnaryOp element);
+	void Visit(_Ident element);
+	void Visit(_String element);
+	void Visit(_Char element);
+	void Visit(_Float element);
+	void Visit(_Int element);
 }
 
 public partial class _XLang : IXLangElement
@@ -469,6 +501,31 @@ public partial class _Primary : IXLangElement
 }
 
 public partial class _UnaryOp : IXLangElement
+{
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _Ident : IXLangElement
+{
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _String : IXLangElement
+{
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _Char : IXLangElement
+{
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _Float : IXLangElement
+{
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _Int : IXLangElement
 {
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }

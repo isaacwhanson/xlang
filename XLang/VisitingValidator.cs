@@ -118,5 +118,30 @@ namespace XLang
     {
       throw new NotImplementedException();
     }
+
+    public void Visit(_Ident element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_Int element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_Float element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_Char element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_String element)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

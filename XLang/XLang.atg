@@ -42,11 +42,11 @@ PRODUCTIONS
     Module<out _Module module>              (. xlang.module = module; .).
 
   Module<out _Module module> =              (. module = new _Module(); .)
-     GlblStmt<out IGlblStmt glbl_stmt0> ";" (. module.stmts.Add(glbl_stmt0); .)
-    {GlblStmt<out IGlblStmt glbl_stmt1> ";" (. module.stmts.Add(glbl_stmt1); .)}.
+     GlblStmt<out IGlblStmt glbl_stmt0>     (. module.stmts.Add(glbl_stmt0); .)
+    {GlblStmt<out IGlblStmt glbl_stmt1>     (. module.stmts.Add(glbl_stmt1); .)}.
 
   GlblStmt<out IGlblStmt glbl_stmt> =
-    LetStmt<out _LetStmt let_stmt>          (. glbl_stmt = let_stmt; .).
+    (LetStmt<out _LetStmt let_stmt>         (. glbl_stmt = let_stmt; .)) ";".
 
   LetStmt<out _LetStmt let_stmt> =
     "let" id                                (. string id = t.val; .)
@@ -58,7 +58,7 @@ PRODUCTIONS
   CondExpr<out IExpr expr> =
     LogOrExpr<out IExpr lhs>                (. expr = lhs; .)
     ['?' Expr<out IExpr consequent>
-     ':' CondExpr<out IExpr alternative>    (. expr = new _CondExpr() { condition=expr, consequent=consequent, alternative=alternative }; .)].
+     ':' Expr<out IExpr alternative>        (. expr = new _CondExpr() { condition=expr, consequent=consequent, alternative=alternative }; .)].
 
   LogOrExpr<out IExpr expr> =
     LogAndExpr<out IExpr lhs>               (. expr = lhs; .)
@@ -68,36 +68,59 @@ PRODUCTIONS
     OrExpr<out IExpr lhs>                   (. expr = lhs; .)
     {"&&" OrExpr<out IExpr rhs>             (. expr = new _LogAndExpr() { left=expr, right=rhs }; .)}.
 
-  OrExpr<out IExpr expr> = (. expr = new _Expr(); .)
-    XorExpr<out IExpr xor0> {'|' XorExpr<out IExpr xor1>}.
+  OrExpr<out IExpr expr> =
+    XorExpr<out IExpr lhs>                  (. expr = lhs; .)
+    {'|' XorExpr<out IExpr rhs>             (. expr = new _OrExpr() { left=expr, right=rhs }; .)}.
 
-  XorExpr<out IExpr expr> = (. expr = new _Expr(); .)
-    AndExpr<out IExpr and0> {'^' AndExpr<out IExpr and1>}.
+  XorExpr<out IExpr expr> =
+    AndExpr<out IExpr lhs>                  (. expr = lhs; .)
+    {'^' AndExpr<out IExpr rhs>             (. expr = new _XorExpr() { left=expr, right=rhs }; .)}.
 
-  AndExpr<out IExpr expr> = (. expr = new _Expr(); .)
-    EqlExpr<out IExpr eql0> {'&' EqlExpr<out IExpr eql1>}.
+  AndExpr<out IExpr expr> =
+    EqlExpr<out IExpr lhs>                  (. expr = lhs; .)
+    {'&' EqlExpr<out IExpr rhs>             (. expr = new _AndExpr() { left=expr, right=rhs }; .)}.
 
-  EqlExpr<out IExpr expr> = (. expr = new _Expr(); .)
+  EqlExpr<out IExpr expr> =                 (. expr = new _Expr(); .)
     RelExpr<out IExpr rel0> {("==" | "!=") RelExpr<out IExpr rel1>}.
 
-  RelExpr<out IExpr expr> = (. expr = new _Expr(); .)
+  RelExpr<out IExpr expr> =                 (. expr = new _Expr(); .)
     ShiftExpr<out IExpr shift0> {('<' | '>' | "<=" | ">=") ShiftExpr<out IExpr shift1>}.
 
-  ShiftExpr<out IExpr expr> = (. expr = new _Expr(); .)
+  ShiftExpr<out IExpr expr> =               (. expr = new _Expr(); .)
     AddExpr<out IExpr add0> {("<<" | ">>") AddExpr<out IExpr add1>}.
 
-  AddExpr<out IExpr expr> = (. expr = new _Expr(); .)
+  AddExpr<out IExpr expr> =                 (. expr = new _Expr(); .)
     MultExpr<out IExpr mul0> {('+' | '-') MultExpr<out IExpr mul1>}.
 
-  MultExpr<out IExpr expr> = (. expr = new _Expr(); .)
+  MultExpr<out IExpr expr> =                (. expr = new _Expr(); .)
     UnaryExpr<out IExpr un0> {('*' | '/' | '%') UnaryExpr<out IExpr un1>}.
 
-  UnaryExpr<out IExpr expr> = (. expr = new _Expr(); .)
+  UnaryExpr<out IExpr expr> =               (. expr = new _Expr(); .)
     (Primary | UnaryOp UnaryExpr<out IExpr un0>).
 
   Primary =
-    id | int | float | char | string | '(' Expr<out IExpr expr> ')'.
+    Ident<out IExpr expr>
+    | String<out IExpr expr>
+    | Char<out IExpr expr>
+    | Float<out IExpr expr>
+    | Int<out IExpr expr>
+    | '(' Expr<out IExpr expr> ')'.
 
+  Ident<out IExpr expr> =
+    id                                      (. expr = new _Ident() { name=t.val }; .).
+
+  String<out IExpr expr> =
+    string                                  (. expr = new _String() { value=t.val }; .).
+
+  Char<out IExpr expr> =
+    char                                    (. expr = new _Char() { value=t.val }; .).
+
+  Int<out IExpr expr> =
+    int                                     (. expr = new _Int() { value=t.val }; .).
+
+  Float<out IExpr expr> =
+    float                                   (. expr = new _Float() { value=t.val }; .).
+ 
   UnaryOp = '&' | '*' | '+' | '-' | '~' | '!'.
 
 END XLang.
