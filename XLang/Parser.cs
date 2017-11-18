@@ -92,24 +92,29 @@ public _XLang xlang;
  
 	void XLang() {
 		xlang = new _XLang();          
-		Module(out _Module m);
-		xlang.module = m;              
+		Module(out _Module mod);
+		xlang.module = mod;            
 	}
 
-	void Module(out _Module module) {
-		module = new _Module();        
-		GlblStmt(out _GlblStmt s0);
+	void Module(out _Module mod) {
+		mod = new _Module();           
+		GlblStmt(out IGlblStmt stmt0);
 		Expect(6);
-		module.stmts.Add(s0);          
+		mod.stmts.Add(stmt0);          
 		while (la.kind == 7) {
-			GlblStmt(out _GlblStmt s1);
+			GlblStmt(out IGlblStmt stmt1);
 			Expect(6);
-			module.stmts.Add(s1);          
+			mod.stmts.Add(stmt1);          
 		}
 	}
 
-	void GlblStmt(out _GlblStmt s) {
-		s = new _GlblStmt();           
+	void GlblStmt(out IGlblStmt stmt) {
+		LetStmt(out _LetStmt let_stmt);
+		stmt = let_stmt;               
+	}
+
+	void LetStmt(out _LetStmt let_stmt) {
+		let_stmt = new _LetStmt();     
 		Expect(7);
 		Expect(1);
 		Expect(8);
@@ -338,6 +343,7 @@ public interface IXLangVisitor
 	void Visit(_XLang element);
 	void Visit(_Module element);
 	void Visit(_GlblStmt element);
+	void Visit(_LetStmt element);
 	void Visit(_Expr element);
 	void Visit(_CondExpr element);
 	void Visit(_LogOrExpr element);
@@ -366,6 +372,11 @@ public partial class _Module : IXLangElement
 }
 
 public partial class _GlblStmt : IXLangElement
+{
+	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+}
+
+public partial class _LetStmt : IXLangElement
 {
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }

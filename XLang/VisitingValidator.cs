@@ -113,5 +113,10 @@ namespace XLang
     {
       throw new NotImplementedException();
     }
+
+    public void Visit(_LetStmt element)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

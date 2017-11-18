@@ -30,6 +30,16 @@ namespace XLang
 
   public partial class _Module
   {
-    public List<_GlblStmt> stmts = new List<_GlblStmt>();
+    public List<IGlblStmt> stmts = new List<IGlblStmt>();
+  }
+
+  public interface IGlblStmt
+  {
+
+  }
+
+  public partial class _LetStmt : IGlblStmt
+  {
+
   }
 }
