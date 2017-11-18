@@ -674,8 +674,7 @@ const int id = 0;
 
 
  public void Parse() {
-   la = new Token();
-   la.val = "";    
+   la = new Token() { val = "" };
    Get();
 		Coco();
 		Expect(0);
@@ -828,7 +827,7 @@ public partial class _TokenFactor : ICocoElement
 
 
 public class Errors {
- public int count = 0;                                    // number of errors detected
+ public int count;                                        // number of errors detected
  public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
  public string errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
 

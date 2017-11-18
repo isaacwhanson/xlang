@@ -80,31 +80,43 @@ PRODUCTIONS
     EqlExpr<out IExpr lhs>                  (. expr = lhs; .)
     {'&' EqlExpr<out IExpr rhs>             (. expr = new _AndExpr() { left=expr, right=rhs }; .)}.
 
-  EqlExpr<out IExpr expr> =                 (. expr = new _Expr(); .)
-    RelExpr<out IExpr rel0> {("==" | "!=") RelExpr<out IExpr rel1>}.
+  EqlExpr<out IExpr expr> =
+    RelExpr<out IExpr lhs>                  (. expr = lhs; .)
+    {("==" | "!=")                          (. string op = t.val; .)
+    RelExpr<out IExpr rhs>                  (. expr = new _EqlExpr() { left=expr, op=op, right=rhs }; .)}.
 
-  RelExpr<out IExpr expr> =                 (. expr = new _Expr(); .)
-    ShiftExpr<out IExpr shift0> {('<' | '>' | "<=" | ">=") ShiftExpr<out IExpr shift1>}.
+  RelExpr<out IExpr expr> =
+    ShiftExpr<out IExpr lhs>                (. expr = lhs; .)
+    {('<' | '>' | "<=" | ">=")              (. string op = t.val; .)
+    ShiftExpr<out IExpr rhs>                (. expr = new _RelExpr() { left=expr, op=op, right=rhs }; .)}.
 
-  ShiftExpr<out IExpr expr> =               (. expr = new _Expr(); .)
-    AddExpr<out IExpr add0> {("<<" | ">>") AddExpr<out IExpr add1>}.
+  ShiftExpr<out IExpr expr> =
+    AddExpr<out IExpr lhs>                  (. expr = lhs; .)
+    {("<<" | ">>")                          (. string op = t.val; .)
+    AddExpr<out IExpr rhs>                  (. expr = new _ShiftExpr() { left=expr, op=op, right=rhs }; .)}.
 
-  AddExpr<out IExpr expr> =                 (. expr = new _Expr(); .)
-    MultExpr<out IExpr mul0> {('+' | '-') MultExpr<out IExpr mul1>}.
+  AddExpr<out IExpr expr> =
+    MultExpr<out IExpr lhs>                 (. expr = lhs; .)
+    {('+' | '-')                            (. string op = t.val; .)
+    MultExpr<out IExpr rhs>                 (. expr = new _AddExpr() { left=expr, op=op, right=rhs }; .)}.
 
-  MultExpr<out IExpr expr> =                (. expr = new _Expr(); .)
-    UnaryExpr<out IExpr un0> {('*' | '/' | '%') UnaryExpr<out IExpr un1>}.
+  MultExpr<out IExpr expr> =
+    UnaryExpr<out IExpr lhs>                (. expr = lhs; .)
+    {('*' | '/' | '%')                      (. string op = t.val; .)
+    UnaryExpr<out IExpr rhs>                (. expr = new _MultExpr() { left=expr, op=op, right=rhs }; .)}.
 
-  UnaryExpr<out IExpr expr> =               (. expr = new _Expr(); .)
-    (Primary | UnaryOp UnaryExpr<out IExpr un0>).
+  UnaryExpr<out IExpr expr> =               (. expr = null; .)
+    (Primary<out IExpr lhs>                 (. expr = lhs; .)
+    | (('&' | '*' | '+' | '-' | '~' | '!')  (. string op = t.val; .)
+    UnaryExpr<out IExpr lhs>                (. expr = new _UnaryExpr() { op=op, left=lhs }; .))).
 
-  Primary =
-    Ident<out IExpr expr>
-    | String<out IExpr expr>
-    | Char<out IExpr expr>
-    | Float<out IExpr expr>
-    | Int<out IExpr expr>
-    | '(' Expr<out IExpr expr> ')'.
+  Primary<out IExpr expr> =                 (. expr = null; .)
+    (Ident<out IExpr lhs>                   (. expr = lhs; .)
+    | String<out IExpr lhs>                 (. expr = lhs; .)
+    | Char<out IExpr lhs>                   (. expr = lhs; .)
+    | Float<out IExpr lhs>                  (. expr = lhs; .)
+    | Int<out IExpr lhs>                    (. expr = lhs; .)
+    | '(' Expr<out IExpr lhs> ')'           (. expr = lhs; .)).
 
   Ident<out IExpr expr> =
     id                                      (. expr = new _Ident() { name=t.val }; .).
@@ -121,6 +133,4 @@ PRODUCTIONS
   Float<out IExpr expr> =
     float                                   (. expr = new _Float() { value=t.val }; .).
  
-  UnaryOp = '&' | '*' | '+' | '-' | '~' | '!'.
-
 END XLang.

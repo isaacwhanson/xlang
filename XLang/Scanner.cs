@@ -248,9 +248,9 @@ public class Scanner {
 		start[42] = 48; 
 		start[47] = 49; 
 		start[37] = 50; 
-		start[40] = 51; 
-		start[41] = 52; 
-		start[126] = 53; 
+		start[126] = 51; 
+		start[40] = 52; 
+		start[41] = 53; 
 		start[Buffer.EOF] = -1;
 
  }
@@ -578,9 +578,9 @@ public class Scanner {
 			case 51:
 				{t.kind = 29; break;}
 			case 52:
-				{t.kind = 30; break;}
-			case 53:
 				{t.kind = 31; break;}
+			case 53:
+				{t.kind = 32; break;}
 			case 54:
 				recEnd = pos; recKind = 8;
 				if (ch == '=') {AddCh(); goto case 40;}
@@ -594,9 +594,9 @@ public class Scanner {
 				if (ch == '&') {AddCh(); goto case 38;}
 				else {t.kind = 15; break;}
 			case 57:
-				recEnd = pos; recKind = 32;
+				recEnd = pos; recKind = 30;
 				if (ch == '=') {AddCh(); goto case 41;}
-				else {t.kind = 32; break;}
+				else {t.kind = 30; break;}
 			case 58:
 				recEnd = pos; recKind = 18;
 				if (ch == '=') {AddCh(); goto case 42;}

@@ -1,5 +1,7 @@
 ﻿//
-//  AST.cs
+//  AST
+//
+//  partial-classes and interfaces comprising the abstract syntax tree
 //
 //  Author:
 //       Isaac W Hanson <isaac@starlig.ht>
@@ -84,6 +86,47 @@ namespace XLang
   {
     public IExpr left;
     public IExpr right;
+  }
+
+  public partial class _EqlExpr : IExpr
+  {
+    public IExpr left;
+    public string op;
+    public IExpr right;
+  }
+
+  public partial class _RelExpr : IExpr
+  {
+    public IExpr left;
+    public string op;
+    public IExpr right;
+  }
+
+  public partial class _ShiftExpr : IExpr
+  {
+    public IExpr left;
+    public string op;
+    public IExpr right;
+  }
+
+  public partial class _AddExpr : IExpr
+  {
+    public IExpr left;
+    public string op;
+    public IExpr right;
+  }
+
+  public partial class _MultExpr : IExpr
+  {
+    public IExpr left;
+    public string op;
+    public IExpr right;
+  }
+
+  public partial class _UnaryExpr : IExpr
+  {
+    public string op;
+    public IExpr left;
   }
 
   public partial class _Ident : IExpr

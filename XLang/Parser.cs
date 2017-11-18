@@ -189,21 +189,23 @@ public _XLang xlang;
 	}
 
 	void EqlExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		RelExpr(out IExpr rel0);
+		RelExpr(out IExpr lhs);
+		expr = lhs; 
 		while (la.kind == 16 || la.kind == 17) {
 			if (la.kind == 16) {
 				Get();
 			} else {
 				Get();
 			}
-			RelExpr(out IExpr rel1);
+			string op = t.val; 
+			RelExpr(out IExpr rhs);
+			expr = new _EqlExpr() { left=expr, op=op, right=rhs }; 
 		}
 	}
 
 	void RelExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		ShiftExpr(out IExpr shift0);
+		ShiftExpr(out IExpr lhs);
+		expr = lhs; 
 		while (StartOf(1)) {
 			if (la.kind == 18) {
 				Get();
@@ -214,39 +216,45 @@ public _XLang xlang;
 			} else {
 				Get();
 			}
-			ShiftExpr(out IExpr shift1);
+			string op = t.val; 
+			ShiftExpr(out IExpr rhs);
+			expr = new _RelExpr() { left=expr, op=op, right=rhs }; 
 		}
 	}
 
 	void ShiftExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		AddExpr(out IExpr add0);
+		AddExpr(out IExpr lhs);
+		expr = lhs; 
 		while (la.kind == 22 || la.kind == 23) {
 			if (la.kind == 22) {
 				Get();
 			} else {
 				Get();
 			}
-			AddExpr(out IExpr add1);
+			string op = t.val; 
+			AddExpr(out IExpr rhs);
+			expr = new _ShiftExpr() { left=expr, op=op, right=rhs }; 
 		}
 	}
 
 	void AddExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		MultExpr(out IExpr mul0);
+		MultExpr(out IExpr lhs);
+		expr = lhs; 
 		while (la.kind == 24 || la.kind == 25) {
 			if (la.kind == 24) {
 				Get();
 			} else {
 				Get();
 			}
-			MultExpr(out IExpr mul1);
+			string op = t.val; 
+			MultExpr(out IExpr rhs);
+			expr = new _AddExpr() { left=expr, op=op, right=rhs }; 
 		}
 	}
 
 	void MultExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		UnaryExpr(out IExpr un0);
+		UnaryExpr(out IExpr lhs);
+		expr = lhs; 
 		while (la.kind == 26 || la.kind == 27 || la.kind == 28) {
 			if (la.kind == 26) {
 				Get();
@@ -255,79 +263,86 @@ public _XLang xlang;
 			} else {
 				Get();
 			}
-			UnaryExpr(out IExpr un1);
+			string op = t.val; 
+			UnaryExpr(out IExpr rhs);
+			expr = new _MultExpr() { left=expr, op=op, right=rhs }; 
 		}
 	}
 
 	void UnaryExpr(out IExpr expr) {
-		expr = new _Expr(); 
+		expr = null; 
 		if (StartOf(2)) {
-			Primary();
+			Primary(out IExpr lhs);
+			expr = lhs; 
 		} else if (StartOf(3)) {
-			UnaryOp();
-			UnaryExpr(out IExpr un0);
+			switch (la.kind) {
+			case 15: {
+				Get();
+				break;
+			}
+			case 26: {
+				Get();
+				break;
+			}
+			case 24: {
+				Get();
+				break;
+			}
+			case 25: {
+				Get();
+				break;
+			}
+			case 29: {
+				Get();
+				break;
+			}
+			case 30: {
+				Get();
+				break;
+			}
+			}
+			string op = t.val; 
+			UnaryExpr(out IExpr lhs);
+			expr = new _UnaryExpr() { op=op, left=lhs }; 
 		} else SynErr(34);
 	}
 
-	void Primary() {
+	void Primary(out IExpr expr) {
+		expr = null; 
 		switch (la.kind) {
 		case 1: {
-			Ident(out IExpr expr);
+			Ident(out IExpr lhs);
+			expr = lhs; 
 			break;
 		}
 		case 2: {
-			String(out IExpr expr);
+			String(out IExpr lhs);
+			expr = lhs; 
 			break;
 		}
 		case 3: {
-			Char(out IExpr expr);
+			Char(out IExpr lhs);
+			expr = lhs; 
 			break;
 		}
 		case 4: {
-			Float(out IExpr expr);
+			Float(out IExpr lhs);
+			expr = lhs; 
 			break;
 		}
 		case 5: {
-			Int(out IExpr expr);
-			break;
-		}
-		case 29: {
-			Get();
-			Expr(out IExpr expr);
-			Expect(30);
-			break;
-		}
-		default: SynErr(35); break;
-		}
-	}
-
-	void UnaryOp() {
-		switch (la.kind) {
-		case 15: {
-			Get();
-			break;
-		}
-		case 26: {
-			Get();
-			break;
-		}
-		case 24: {
-			Get();
-			break;
-		}
-		case 25: {
-			Get();
+			Int(out IExpr lhs);
+			expr = lhs; 
 			break;
 		}
 		case 31: {
 			Get();
+			Expr(out IExpr lhs);
+			Expect(32);
+			expr = lhs; 
 			break;
 		}
-		case 32: {
-			Get();
-			break;
-		}
-		default: SynErr(36); break;
+		default: SynErr(35); break;
 		}
 	}
 
@@ -359,8 +374,7 @@ public _XLang xlang;
 
 
  public void Parse() {
-   la = new Token();
-   la.val = "";    
+   la = new Token() { val = "" };
    Get();
 		XLang();
 		Expect(0);
@@ -370,8 +384,8 @@ public _XLang xlang;
  static readonly bool[,] set = {
 		{_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
 		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
-		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _x,_x,_x},
-		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_x,_T, _T,_x,_x}
+		{_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x,_x},
+		{_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_T,_T,_x, _x,_x,_x}
 
  };
 } // end Parser
@@ -402,7 +416,6 @@ public interface IXLangVisitor
 	void Visit(_MultExpr element);
 	void Visit(_UnaryExpr element);
 	void Visit(_Primary element);
-	void Visit(_UnaryOp element);
 	void Visit(_Ident element);
 	void Visit(_String element);
 	void Visit(_Char element);
@@ -500,11 +513,6 @@ public partial class _Primary : IXLangElement
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
-public partial class _UnaryOp : IXLangElement
-{
-	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
-}
-
 public partial class _Ident : IXLangElement
 {
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
@@ -532,7 +540,7 @@ public partial class _Int : IXLangElement
 
 
 public class Errors {
- public int count = 0;                                    // number of errors detected
+ public int count;                                        // number of errors detected
  public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
  public string errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
 
@@ -568,14 +576,13 @@ public class Errors {
 			case 26: s = "\"*\" expected"; break;
 			case 27: s = "\"/\" expected"; break;
 			case 28: s = "\"%\" expected"; break;
-			case 29: s = "\"(\" expected"; break;
-			case 30: s = "\")\" expected"; break;
-			case 31: s = "\"~\" expected"; break;
-			case 32: s = "\"!\" expected"; break;
+			case 29: s = "\"~\" expected"; break;
+			case 30: s = "\"!\" expected"; break;
+			case 31: s = "\"(\" expected"; break;
+			case 32: s = "\")\" expected"; break;
 			case 33: s = "??? expected"; break;
 			case 34: s = "invalid UnaryExpr"; break;
 			case 35: s = "invalid Primary"; break;
-			case 36: s = "invalid UnaryOp"; break;
 
      default: s = "error " + n; break;
    }

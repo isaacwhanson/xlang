@@ -1,5 +1,7 @@
 ﻿//
-//  ValidatingVisitor.cs
+//  ValidatingVisitor
+//
+//  visitor responsible for first-pass symantic checking
 //
 //  Author:
 //       Isaac W Hanson <isaac@starlig.ht>
@@ -35,6 +37,11 @@ namespace XLang
     }
 
     public void Visit(_GlblStmt element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_LetStmt element)
     {
       throw new NotImplementedException();
     }
@@ -109,27 +116,12 @@ namespace XLang
       throw new NotImplementedException();
     }
 
-    public void Visit(_UnaryOp element)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Visit(_LetStmt element)
-    {
-      throw new NotImplementedException();
-    }
-
     public void Visit(_Ident element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Int element)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Visit(_Float element)
+    public void Visit(_String element)
     {
       throw new NotImplementedException();
     }
@@ -139,7 +131,12 @@ namespace XLang
       throw new NotImplementedException();
     }
 
-    public void Visit(_String element)
+    public void Visit(_Float element)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_Int element)
     {
       throw new NotImplementedException();
     }
