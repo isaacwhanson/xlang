@@ -23,10 +23,10 @@ using System.Collections.Generic;
 
 namespace XLang
 {
-  public interface IGlblStmt
+  public interface IGlblStmt : IXLangElement
   { }
 
-  public interface IExpr
+  public interface IExpr : IXLangElement
   { }
 
   // PLACEHOLDER
