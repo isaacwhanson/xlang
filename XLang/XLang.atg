@@ -30,7 +30,7 @@ TOKENS
   float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
   int         = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
 
-COMMENTS FROM "/*" TO "*/"
+COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO "\n"
 COMMENTS FROM "#" TO "\n"
 
