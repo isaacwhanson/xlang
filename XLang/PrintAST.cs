@@ -51,7 +51,7 @@ namespace XLang
 
     public void Visit(_Ident element)
     {
-      Console.Write("@{0}", element.name);
+      Console.Write("@{0}", element.token.val);
     }
 
     public void Visit(_CondExpr element)
@@ -174,22 +174,22 @@ namespace XLang
 
     public void Visit(_String element)
     {
-      Console.Write("{0}", element.value);
+      Console.Write("{0}", element.token.val);
     }
 
     public void Visit(_Char element)
     {
-      Console.Write("{0}", element.value);
+      Console.Write("{0}", element.token.val);
     }
 
     public void Visit(_Float element)
     {
-      Console.Write("{0}f", element.value);
+      Console.Write("{0}f", element.token.val);
     }
 
     public void Visit(_Int element)
     {
-      Console.Write("{0}i", element.value);
+      Console.Write("{0}i", element.token.val);
     }
 
     public void Visit(_GlblStmt element)

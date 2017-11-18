@@ -91,13 +91,13 @@ public _XLang xlang;
 
  
 	void XLang() {
-		xlang = new _XLang(); 
+		xlang = new _XLang(t); 
 		Module(out _Module module);
 		xlang.module = module; 
 	}
 
 	void Module(out _Module module) {
-		module = new _Module(); 
+		module = new _Module(t); 
 		GlblStmt(out IStmt stmt0);
 		module.stmts.Add(stmt0); 
 		while (la.kind == 7) {
@@ -119,12 +119,12 @@ public _XLang xlang;
 		Ident(out _Ident id);
 		Expect(8);
 		Expr(out IExpr expr);
-		let_stmt = new _LetStmt(){ id=id, expr=expr }; 
+		let_stmt = new _LetStmt(t){ id=id, expr=expr }; 
 	}
 
 	void Ident(out _Ident expr) {
 		Expect(1);
-		expr = new _Ident() { name=t.val }; 
+		expr = new _Ident(t); 
 	}
 
 	void Expr(out IExpr expr) {
@@ -140,7 +140,7 @@ public _XLang xlang;
 			Expr(out IExpr consequent);
 			Expect(10);
 			Expr(out IExpr alternative);
-			expr = new _CondExpr() { condition=expr, consequent=consequent, alternative=alternative }; 
+			expr = new _CondExpr(t) { condition=expr, consequent=consequent, alternative=alternative }; 
 		}
 	}
 
@@ -150,7 +150,7 @@ public _XLang xlang;
 		while (la.kind == 11) {
 			Get();
 			LogXorExpr(out IExpr rhs);
-			expr = new _LogOrExpr() { left=expr, right=rhs }; 
+			expr = new _LogOrExpr(t) { left=expr, right=rhs }; 
 		}
 	}
 
@@ -160,7 +160,7 @@ public _XLang xlang;
 		while (la.kind == 12) {
 			Get();
 			LogAndExpr(out IExpr rhs);
-			expr = new _LogXorExpr() { left=expr, right=rhs }; 
+			expr = new _LogXorExpr(t) { left=expr, right=rhs }; 
 		}
 	}
 
@@ -170,7 +170,7 @@ public _XLang xlang;
 		while (la.kind == 13) {
 			Get();
 			OrExpr(out IExpr rhs);
-			expr = new _LogAndExpr() { left=expr, right=rhs }; 
+			expr = new _LogAndExpr(t) { left=expr, right=rhs }; 
 		}
 	}
 
@@ -180,7 +180,7 @@ public _XLang xlang;
 		while (la.kind == 14) {
 			Get();
 			XorExpr(out IExpr rhs);
-			expr = new _OrExpr() { left=expr, right=rhs }; 
+			expr = new _OrExpr(t) { left=expr, right=rhs }; 
 		}
 	}
 
@@ -190,7 +190,7 @@ public _XLang xlang;
 		while (la.kind == 15) {
 			Get();
 			AndExpr(out IExpr rhs);
-			expr = new _XorExpr() { left=expr, right=rhs }; 
+			expr = new _XorExpr(t) { left=expr, right=rhs }; 
 		}
 	}
 
@@ -200,7 +200,7 @@ public _XLang xlang;
 		while (la.kind == 16) {
 			Get();
 			EqlExpr(out IExpr rhs);
-			expr = new _AndExpr() { left=expr, right=rhs }; 
+			expr = new _AndExpr(t) { left=expr, right=rhs }; 
 		}
 	}
 
@@ -223,7 +223,7 @@ public _XLang xlang;
 				op = EqlOp.HARDNOTEQUAL; 
 			}
 			RelExpr(out IExpr rhs);
-			expr = new _EqlExpr() { left=expr, op=op, right=rhs }; 
+			expr = new _EqlExpr(t) { left=expr, op=op, right=rhs }; 
 		}
 	}
 
@@ -246,7 +246,7 @@ public _XLang xlang;
 				op = RelOp.GREATERTHANEQUAL; 
 			}
 			ShiftExpr(out IExpr rhs);
-			expr = new _RelExpr() { left=expr, op=op, right=rhs }; 
+			expr = new _RelExpr(t) { left=expr, op=op, right=rhs }; 
 		}
 	}
 
@@ -263,7 +263,7 @@ public _XLang xlang;
 				op = ShiftOp.RIGHT; 
 			}
 			AddExpr(out IExpr rhs);
-			expr = new _ShiftExpr() { left=expr, op=op, right=rhs }; 
+			expr = new _ShiftExpr(t) { left=expr, op=op, right=rhs }; 
 		}
 	}
 
@@ -280,7 +280,7 @@ public _XLang xlang;
 				op = AddOp.MINUS; 
 			}
 			MultExpr(out IExpr rhs);
-			expr = new _AddExpr() { left=expr, op=op, right=rhs }; 
+			expr = new _AddExpr(t) { left=expr, op=op, right=rhs }; 
 		}
 	}
 
@@ -300,7 +300,7 @@ public _XLang xlang;
 				op = MultOp.MODULO; 
 			}
 			UnaryExpr(out IExpr rhs);
-			expr = new _MultExpr() { left=expr, op=op, right=rhs }; 
+			expr = new _MultExpr(t) { left=expr, op=op, right=rhs }; 
 		}
 	}
 
@@ -322,7 +322,7 @@ public _XLang xlang;
 				op = UnaryOp.NOT; 
 			}
 			UnaryExpr(out IExpr lhs);
-			expr = new _UnaryExpr() { op=op, left=lhs }; 
+			expr = new _UnaryExpr(t) { op=op, left=lhs }; 
 		} else SynErr(39);
 	}
 
@@ -367,22 +367,22 @@ public _XLang xlang;
 
 	void String(out _String expr) {
 		Expect(2);
-		expr = new _String() { value=t.val }; 
+		expr = new _String(t); 
 	}
 
 	void Char(out _Char expr) {
 		Expect(3);
-		expr = new _Char() { value=t.val }; 
+		expr = new _Char(t); 
 	}
 
 	void Float(out _Float expr) {
 		Expect(4);
-		expr = new _Float() { value=t.val }; 
+		expr = new _Float(t); 
 	}
 
 	void Int(out _Int expr) {
 		Expect(5);
-		expr = new _Int() { value=t.val }; 
+		expr = new _Int(t); 
 	}
 
 
@@ -441,121 +441,169 @@ public interface IXLangVisitor
 
 public partial class _XLang : IXLangElement
 {
+	public Token token;
+	public _XLang(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Module : IXLangElement
 {
+	public Token token;
+	public _Module(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _GlblStmt : IXLangElement
 {
+	public Token token;
+	public _GlblStmt(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _LetStmt : IXLangElement
 {
+	public Token token;
+	public _LetStmt(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Ident : IXLangElement
 {
+	public Token token;
+	public _Ident(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Expr : IXLangElement
 {
+	public Token token;
+	public _Expr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _CondExpr : IXLangElement
 {
+	public Token token;
+	public _CondExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _LogOrExpr : IXLangElement
 {
+	public Token token;
+	public _LogOrExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _LogXorExpr : IXLangElement
 {
+	public Token token;
+	public _LogXorExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _LogAndExpr : IXLangElement
 {
+	public Token token;
+	public _LogAndExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _OrExpr : IXLangElement
 {
+	public Token token;
+	public _OrExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _XorExpr : IXLangElement
 {
+	public Token token;
+	public _XorExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _AndExpr : IXLangElement
 {
+	public Token token;
+	public _AndExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _EqlExpr : IXLangElement
 {
+	public Token token;
+	public _EqlExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _RelExpr : IXLangElement
 {
+	public Token token;
+	public _RelExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _ShiftExpr : IXLangElement
 {
+	public Token token;
+	public _ShiftExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _AddExpr : IXLangElement
 {
+	public Token token;
+	public _AddExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _MultExpr : IXLangElement
 {
+	public Token token;
+	public _MultExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _UnaryExpr : IXLangElement
 {
+	public Token token;
+	public _UnaryExpr(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Primary : IXLangElement
 {
+	public Token token;
+	public _Primary(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _String : IXLangElement
 {
+	public Token token;
+	public _String(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Char : IXLangElement
 {
+	public Token token;
+	public _Char(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Float : IXLangElement
 {
+	public Token token;
+	public _Float(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Int : IXLangElement
 {
+	public Token token;
+	public _Int(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 

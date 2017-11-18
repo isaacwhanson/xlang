@@ -395,6 +395,8 @@ namespace at.jku.ssw.Coco
       {
         gen.WriteLine("\npublic partial class _{0} : I{1}Element", sym.name, tab.gramSy.name);
         gen.WriteLine("{");
+        gen.WriteLine("\tpublic Token token;");
+        gen.WriteLine("\tpublic _{0}(Token t) {{ this.token = t; }}", sym.name);
         gen.WriteLine("\tpublic void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
         gen.WriteLine("}");
       }

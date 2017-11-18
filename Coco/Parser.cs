@@ -737,91 +737,127 @@ public interface ICocoVisitor
 
 public partial class _Coco : ICocoElement
 {
+	public Token token;
+	public _Coco(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _SetDecl : ICocoElement
 {
+	public Token token;
+	public _SetDecl(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _TokenDecl : ICocoElement
 {
+	public Token token;
+	public _TokenDecl(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _TokenExpr : ICocoElement
 {
+	public Token token;
+	public _TokenExpr(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Set : ICocoElement
 {
+	public Token token;
+	public _Set(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _AttrDecl : ICocoElement
 {
+	public Token token;
+	public _AttrDecl(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _SemText : ICocoElement
 {
+	public Token token;
+	public _SemText(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Expression : ICocoElement
 {
+	public Token token;
+	public _Expression(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _SimSet : ICocoElement
 {
+	public Token token;
+	public _SimSet(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Char : ICocoElement
 {
+	public Token token;
+	public _Char(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Sym : ICocoElement
 {
+	public Token token;
+	public _Sym(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Term : ICocoElement
 {
+	public Token token;
+	public _Term(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Resolver : ICocoElement
 {
+	public Token token;
+	public _Resolver(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Factor : ICocoElement
 {
+	public Token token;
+	public _Factor(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Attribs : ICocoElement
 {
+	public Token token;
+	public _Attribs(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _Condition : ICocoElement
 {
+	public Token token;
+	public _Condition(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _TokenTerm : ICocoElement
 {
+	public Token token;
+	public _TokenTerm(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
 public partial class _TokenFactor : ICocoElement
 {
+	public Token token;
+	public _TokenFactor(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 

@@ -33,10 +33,10 @@ COMMENTS FROM "#" TO "\n"
 IGNORE whitespace + newline
 
 PRODUCTIONS
-  XLang =                                   (. xlang = new _XLang(); .)
+  XLang =                                   (. xlang = new _XLang(t); .)
     Module<out _Module module>              (. xlang.module = module; .).
 
-  Module<out _Module module> =              (. module = new _Module(); .)
+  Module<out _Module module> =              (. module = new _Module(t); .)
      GlblStmt<out IStmt stmt0>              (. module.stmts.Add(stmt0); .)
     {GlblStmt<out IStmt stmt1>              (. module.stmts.Add(stmt1); .)}.
 
@@ -45,7 +45,7 @@ PRODUCTIONS
 
   LetStmt<out _LetStmt let_stmt> =
     "let" Ident<out _Ident id>
-    "=" Expr<out IExpr expr>                (. let_stmt = new _LetStmt(){ id=id, expr=expr }; .).
+    "=" Expr<out IExpr expr>                (. let_stmt = new _LetStmt(t){ id=id, expr=expr }; .).
 
   Expr<out IExpr expr> =
     CondExpr<out IExpr lhs>                 (. expr = lhs; .).
@@ -53,31 +53,31 @@ PRODUCTIONS
   CondExpr<out IExpr expr> =
     LogOrExpr<out IExpr lhs>                (. expr = lhs; .)
     ['?' Expr<out IExpr consequent>
-     ':' Expr<out IExpr alternative>        (. expr = new _CondExpr() { condition=expr, consequent=consequent, alternative=alternative }; .)].
+     ':' Expr<out IExpr alternative>        (. expr = new _CondExpr(t) { condition=expr, consequent=consequent, alternative=alternative }; .)].
 
   LogOrExpr<out IExpr expr> =
     LogXorExpr<out IExpr lhs>               (. expr = lhs; .)
-    {"||" LogXorExpr<out IExpr rhs>         (. expr = new _LogOrExpr() { left=expr, right=rhs }; .)}.
+    {"||" LogXorExpr<out IExpr rhs>         (. expr = new _LogOrExpr(t) { left=expr, right=rhs }; .)}.
 
   LogXorExpr<out IExpr expr> =
     LogAndExpr<out IExpr lhs>               (. expr = lhs; .)
-    {"^^" LogAndExpr<out IExpr rhs>         (. expr = new _LogXorExpr() { left=expr, right=rhs }; .)}.
+    {"^^" LogAndExpr<out IExpr rhs>         (. expr = new _LogXorExpr(t) { left=expr, right=rhs }; .)}.
 
   LogAndExpr<out IExpr expr> =
     OrExpr<out IExpr lhs>                   (. expr = lhs; .)
-    {"&&" OrExpr<out IExpr rhs>             (. expr = new _LogAndExpr() { left=expr, right=rhs }; .)}.
+    {"&&" OrExpr<out IExpr rhs>             (. expr = new _LogAndExpr(t) { left=expr, right=rhs }; .)}.
 
   OrExpr<out IExpr expr> =
     XorExpr<out IExpr lhs>                  (. expr = lhs; .)
-    {'|' XorExpr<out IExpr rhs>             (. expr = new _OrExpr() { left=expr, right=rhs }; .)}.
+    {'|' XorExpr<out IExpr rhs>             (. expr = new _OrExpr(t) { left=expr, right=rhs }; .)}.
 
   XorExpr<out IExpr expr> =
     AndExpr<out IExpr lhs>                  (. expr = lhs; .)
-    {'^' AndExpr<out IExpr rhs>             (. expr = new _XorExpr() { left=expr, right=rhs }; .)}.
+    {'^' AndExpr<out IExpr rhs>             (. expr = new _XorExpr(t) { left=expr, right=rhs }; .)}.
 
   AndExpr<out IExpr expr> =
     EqlExpr<out IExpr lhs>                  (. expr = lhs; .)
-    {'&' EqlExpr<out IExpr rhs>             (. expr = new _AndExpr() { left=expr, right=rhs }; .)}.
+    {'&' EqlExpr<out IExpr rhs>             (. expr = new _AndExpr(t) { left=expr, right=rhs }; .)}.
 
   EqlExpr<out IExpr expr> =
     RelExpr<out IExpr lhs>                  (. expr = lhs; .)
@@ -86,7 +86,7 @@ PRODUCTIONS
     | "!="                                  (. op = EqlOp.NOTEQUAL; .)
     | "==="                                 (. op = EqlOp.HARDEQUAL; .)
     | "!=="                                 (. op = EqlOp.HARDNOTEQUAL; .))
-    RelExpr<out IExpr rhs>                  (. expr = new _EqlExpr() { left=expr, op=op, right=rhs }; .)}.
+    RelExpr<out IExpr rhs>                  (. expr = new _EqlExpr(t) { left=expr, op=op, right=rhs }; .)}.
 
   RelExpr<out IExpr expr> =
     ShiftExpr<out IExpr lhs>                (. expr = lhs; .)
@@ -95,21 +95,21 @@ PRODUCTIONS
     | '>'                                   (. op = RelOp.GREATERTHAN; .)
     | "<="                                  (. op = RelOp.LESSTHANEQUAL; .)
     | ">="                                  (. op = RelOp.GREATERTHANEQUAL; .))
-    ShiftExpr<out IExpr rhs>                (. expr = new _RelExpr() { left=expr, op=op, right=rhs }; .)}.
+    ShiftExpr<out IExpr rhs>                (. expr = new _RelExpr(t) { left=expr, op=op, right=rhs }; .)}.
 
   ShiftExpr<out IExpr expr> =
     AddExpr<out IExpr lhs>                  (. expr = lhs; .)
                                            {(. ShiftOp op; .)
     ( "<<"                                  (. op = ShiftOp.LEFT; .)
     | ">>"                                  (. op = ShiftOp.RIGHT; .))
-    AddExpr<out IExpr rhs>                  (. expr = new _ShiftExpr() { left=expr, op=op, right=rhs }; .)}.
+    AddExpr<out IExpr rhs>                  (. expr = new _ShiftExpr(t) { left=expr, op=op, right=rhs }; .)}.
 
   AddExpr<out IExpr expr> =
     MultExpr<out IExpr lhs>                 (. expr = lhs; .)
                                            {(. AddOp op; .)
     ( '+'                                   (. op = AddOp.PLUS; .)
     | '-'                                   (. op = AddOp.MINUS; .))
-    MultExpr<out IExpr rhs>                 (. expr = new _AddExpr() { left=expr, op=op, right=rhs }; .)}.
+    MultExpr<out IExpr rhs>                 (. expr = new _AddExpr(t) { left=expr, op=op, right=rhs }; .)}.
 
   MultExpr<out IExpr expr> =
     UnaryExpr<out IExpr lhs>                (. expr = lhs; .)
@@ -117,7 +117,7 @@ PRODUCTIONS
     ( '*'                                   (. op = MultOp.TIMES; .)
     | '/'                                   (. op = MultOp.DIVIDE; .)
     | '%'                                   (. op = MultOp.MODULO; .))
-    UnaryExpr<out IExpr rhs>                (. expr = new _MultExpr() { left=expr, op=op, right=rhs }; .)}.
+    UnaryExpr<out IExpr rhs>                (. expr = new _MultExpr(t) { left=expr, op=op, right=rhs }; .)}.
 
   UnaryExpr<out IExpr expr> =               (. expr = null; .)
     (Primary<out IExpr lhs>                 (. expr = lhs; .)
@@ -125,7 +125,7 @@ PRODUCTIONS
     (('-'                                   (. op = UnaryOp.NEGATE; .)
     | '~'                                   (. op = UnaryOp.COMPLIMENT; .)
     | '!'                                   (. op = UnaryOp.NOT; .))
-    UnaryExpr<out IExpr lhs>                (. expr = new _UnaryExpr() { op=op, left=lhs }; .))).
+    UnaryExpr<out IExpr lhs>                (. expr = new _UnaryExpr(t) { op=op, left=lhs }; .))).
 
   Primary<out IExpr expr> =                 (. expr = null; .)
     (Ident<out _Ident lhs>                  (. expr = lhs; .)
@@ -133,12 +133,12 @@ PRODUCTIONS
     | Char<out _Char lhs>                   (. expr = lhs; .)
     | Float<out _Float lhs>                 (. expr = lhs; .)
     | Int<out _Int lhs>                     (. expr = lhs; .)
-    | '(' Expr<out IExpr lhs> WEAK ')'           (. expr = lhs; .)).
+    | '(' Expr<out IExpr lhs> WEAK ')'      (. expr = lhs; .)).
 
-  Ident<out _Ident expr> = ident            (. expr = new _Ident() { name=t.val }; .).
-  String<out _String expr> = string         (. expr = new _String() { value=t.val }; .).
-  Char<out _Char expr> = char               (. expr = new _Char() { value=t.val }; .).
-  Int<out _Int expr> = int                  (. expr = new _Int() { value=t.val }; .).
-  Float<out _Float expr> = float            (. expr = new _Float() { value=t.val }; .).
+  Ident<out _Ident expr> = ident            (. expr = new _Ident(t); .).
+  String<out _String expr> = string         (. expr = new _String(t); .).
+  Char<out _Char expr> = char               (. expr = new _Char(t); .).
+  Int<out _Int expr> = int                  (. expr = new _Int(t); .).
+  Float<out _Float expr> = float            (. expr = new _Float(t); .).
 
 END XLang.

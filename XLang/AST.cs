@@ -155,26 +155,21 @@ namespace XLang
 
   public partial class _Ident : IExpr
   {
-    public string name;
   }
 
   public partial class _Int : IExpr
   {
-    public string value;
   }
 
   public partial class _Float : IExpr
   {
-    public string value;
   }
 
   public partial class _Char : IExpr
   {
-    public string value;
   }
 
   public partial class _String : IExpr
   {
-    public string value;
   }
 }
