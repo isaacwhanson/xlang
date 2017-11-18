@@ -23,6 +23,16 @@ using System.Collections.Generic;
 
 namespace XLang
 {
+  public interface IGlblStmt
+  { }
+
+  public interface IExpr
+  { }
+
+  // PLACEHOLDER
+  public partial class _Expr : IExpr
+  { }
+
   public partial class _XLang
   {
     public _Module module;
@@ -33,29 +43,21 @@ namespace XLang
     public List<IGlblStmt> stmts = new List<IGlblStmt>();
   }
 
-  public interface IGlblStmt
-  {
-
-  }
-
   public partial class _LetStmt : IGlblStmt
   {
     public string id;
     public IExpr expr;
   }
 
-  public interface IExpr
-  {
-
-  }
-
-  // PLACEHOLDER
-  public partial class _Expr : IExpr
-  { }
-
   public partial class _CondExpr : IExpr
   {
-    public IExpr cond;
+    public IExpr condition;
+    public IExpr consequent;
+    public IExpr alternative;
+  }
+
+  public partial class _LogOrExpr : IExpr
+  {
     public IExpr left;
     public IExpr right;
   }

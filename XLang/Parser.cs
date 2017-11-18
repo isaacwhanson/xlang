@@ -100,11 +100,11 @@ public _XLang xlang;
 		module = new _Module();        
 		GlblStmt(out IGlblStmt glbl_stmt0);
 		Expect(6);
-		module.stmts.Add(glbl_stmt0);       
+		module.stmts.Add(glbl_stmt0);  
 		while (la.kind == 7) {
 			GlblStmt(out IGlblStmt glbl_stmt1);
 			Expect(6);
-			module.stmts.Add(glbl_stmt1);       
+			module.stmts.Add(glbl_stmt1);  
 		}
 	}
 
@@ -114,41 +114,53 @@ public _XLang xlang;
 	}
 
 	void LetStmt(out _LetStmt let_stmt) {
-		let_stmt = new _LetStmt();     
 		Expect(7);
 		Expect(1);
-		let_stmt.id = t.val;           
+		string id = t.val;             
 		Expect(8);
 		Expr(out IExpr expr);
-		let_stmt.expr = expr;          
+		let_stmt = new _LetStmt()
+		{
+		id=id,
+		expr=expr
+		};                             
 	}
 
 	void Expr(out IExpr expr) {
-		CondExpr(out IExpr cond);
-		expr = cond;                   
+		CondExpr(out IExpr lhs);
+		expr = lhs;                    
 	}
 
 	void CondExpr(out IExpr expr) {
-		LogOrExpr(out IExpr log_or);
-		expr = log_or;                 
+		LogOrExpr(out IExpr lhs);
+		expr = lhs;                    
 		if (la.kind == 9) {
 			Get();
-			_CondExpr e = new _CondExpr(){ cond = log_or };
-			expr = e;                      
-			Expr(out IExpr left);
-			e.left = left;                 
+			Expr(out IExpr consequent);
 			Expect(10);
-			CondExpr(out IExpr right);
-			e.right = right;               
+			CondExpr(out IExpr alternative);
+			_CondExpr cond = new _CondExpr()
+			{
+			condition=lhs,
+			consequent=consequent,
+			alternative=alternative
+			};
+			expr = cond;                   
 		}
 	}
 
 	void LogOrExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		LogAndExpr(out IExpr log_and0);
+		LogAndExpr(out IExpr lhs);
+		expr = lhs;                    
 		while (la.kind == 11) {
 			Get();
-			LogAndExpr(out IExpr log_and1);
+			LogAndExpr(out IExpr rhs);
+			_LogOrExpr log_or = new _LogOrExpr()
+			{
+			left=expr,
+			right=rhs
+			};
+			expr = log_or;                 
 		}
 	}
 
