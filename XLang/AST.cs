@@ -61,4 +61,10 @@ namespace XLang
     public IExpr left;
     public IExpr right;
   }
+
+  public partial class _LogAndExpr : IExpr
+  {
+    public IExpr left;
+    public IExpr right;
+  }
 }

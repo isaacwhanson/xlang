@@ -91,85 +91,71 @@ public _XLang xlang;
 
  
 	void XLang() {
-		xlang = new _XLang();          
+		xlang = new _XLang(); 
 		Module(out _Module module);
-		xlang.module = module;         
+		xlang.module = module; 
 	}
 
 	void Module(out _Module module) {
-		module = new _Module();        
+		module = new _Module(); 
 		GlblStmt(out IGlblStmt glbl_stmt0);
 		Expect(6);
-		module.stmts.Add(glbl_stmt0);  
+		module.stmts.Add(glbl_stmt0); 
 		while (la.kind == 7) {
 			GlblStmt(out IGlblStmt glbl_stmt1);
 			Expect(6);
-			module.stmts.Add(glbl_stmt1);  
+			module.stmts.Add(glbl_stmt1); 
 		}
 	}
 
 	void GlblStmt(out IGlblStmt glbl_stmt) {
 		LetStmt(out _LetStmt let_stmt);
-		glbl_stmt = let_stmt;          
+		glbl_stmt = let_stmt; 
 	}
 
 	void LetStmt(out _LetStmt let_stmt) {
 		Expect(7);
 		Expect(1);
-		string id = t.val;             
+		string id = t.val; 
 		Expect(8);
 		Expr(out IExpr expr);
-		let_stmt = new _LetStmt()
-		{
-		id=id,
-		expr=expr
-		};                             
+		let_stmt = new _LetStmt(){ id=id, expr=expr }; 
 	}
 
 	void Expr(out IExpr expr) {
 		CondExpr(out IExpr lhs);
-		expr = lhs;                    
+		expr = lhs; 
 	}
 
 	void CondExpr(out IExpr expr) {
 		LogOrExpr(out IExpr lhs);
-		expr = lhs;                    
+		expr = lhs; 
 		if (la.kind == 9) {
 			Get();
 			Expr(out IExpr consequent);
 			Expect(10);
 			CondExpr(out IExpr alternative);
-			_CondExpr cond = new _CondExpr()
-			{
-			condition=lhs,
-			consequent=consequent,
-			alternative=alternative
-			};
-			expr = cond;                   
+			expr = new _CondExpr() { condition=expr, consequent=consequent, alternative=alternative }; 
 		}
 	}
 
 	void LogOrExpr(out IExpr expr) {
 		LogAndExpr(out IExpr lhs);
-		expr = lhs;                    
+		expr = lhs; 
 		while (la.kind == 11) {
 			Get();
 			LogAndExpr(out IExpr rhs);
-			_LogOrExpr log_or = new _LogOrExpr()
-			{
-			left=expr,
-			right=rhs
-			};
-			expr = log_or;                 
+			expr = new _LogOrExpr() { left=expr, right=rhs }; 
 		}
 	}
 
 	void LogAndExpr(out IExpr expr) {
-		expr = new _Expr(); 
-		OrExpr(out IExpr or0);
+		OrExpr(out IExpr lhs);
+		expr = lhs; 
 		while (la.kind == 12) {
 			Get();
-			OrExpr(out IExpr or1);
+			OrExpr(out IExpr rhs);
+			expr = new _LogAndExpr() { left=expr, right=rhs }; 
 		}
 	}
 

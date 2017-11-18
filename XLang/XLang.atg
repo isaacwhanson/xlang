@@ -38,49 +38,35 @@ IGNORE whitespace + newline
 
 // --> ParserSpecificaton
 PRODUCTIONS
-  XLang =                                   (. xlang = new _XLang();          .)
-    Module<out _Module module>              (. xlang.module = module;         .).
+  XLang =                                   (. xlang = new _XLang(); .)
+    Module<out _Module module>              (. xlang.module = module; .).
 
-  Module<out _Module module> =              (. module = new _Module();        .)
-     GlblStmt<out IGlblStmt glbl_stmt0> ";" (. module.stmts.Add(glbl_stmt0);  .)
-    {GlblStmt<out IGlblStmt glbl_stmt1> ";" (. module.stmts.Add(glbl_stmt1);  .)}.
+  Module<out _Module module> =              (. module = new _Module(); .)
+     GlblStmt<out IGlblStmt glbl_stmt0> ";" (. module.stmts.Add(glbl_stmt0); .)
+    {GlblStmt<out IGlblStmt glbl_stmt1> ";" (. module.stmts.Add(glbl_stmt1); .)}.
 
   GlblStmt<out IGlblStmt glbl_stmt> =
-    LetStmt<out _LetStmt let_stmt>          (. glbl_stmt = let_stmt;          .).
+    LetStmt<out _LetStmt let_stmt>          (. glbl_stmt = let_stmt; .).
 
   LetStmt<out _LetStmt let_stmt> =
-    "let" id                                (. string id = t.val;             .)
-    "=" Expr<out IExpr expr>                (. let_stmt = new _LetStmt()
-                                               {
-                                                id=id,
-                                                expr=expr
-                                               };                             .).
+    "let" id                                (. string id = t.val; .)
+    "=" Expr<out IExpr expr>                (. let_stmt = new _LetStmt(){ id=id, expr=expr }; .).
 
   Expr<out IExpr expr> =
-    CondExpr<out IExpr lhs>                 (. expr = lhs;                    .).
+    CondExpr<out IExpr lhs>                 (. expr = lhs; .).
 
-  CondExpr<out IExpr expr> = 
-    LogOrExpr<out IExpr lhs>                (. expr = lhs;                    .)
+  CondExpr<out IExpr expr> =
+    LogOrExpr<out IExpr lhs>                (. expr = lhs; .)
     ['?' Expr<out IExpr consequent>
-    ':' CondExpr<out IExpr alternative>     (. _CondExpr cond = new _CondExpr()
-                                               {
-                                                condition=lhs,
-                                                consequent=consequent,
-                                                alternative=alternative
-                                               };
-                                               expr = cond;                   .)].
+     ':' CondExpr<out IExpr alternative>    (. expr = new _CondExpr() { condition=expr, consequent=consequent, alternative=alternative }; .)].
 
   LogOrExpr<out IExpr expr> =
-    LogAndExpr<out IExpr lhs>               (. expr = lhs;                    .)
-    {"||" LogAndExpr<out IExpr rhs>         (. _LogOrExpr log_or = new _LogOrExpr()
-                                               {
-                                                left=expr,
-                                                right=rhs
-                                               };
-                                               expr = log_or;                 .)}.
+    LogAndExpr<out IExpr lhs>               (. expr = lhs; .)
+    {"||" LogAndExpr<out IExpr rhs>         (. expr = new _LogOrExpr() { left=expr, right=rhs }; .)}.
 
-  LogAndExpr<out IExpr expr> = (. expr = new _Expr(); .)
-    OrExpr<out IExpr or0> {"&&" OrExpr<out IExpr or1>}.
+  LogAndExpr<out IExpr expr> =
+    OrExpr<out IExpr lhs>                   (. expr = lhs; .)
+    {"&&" OrExpr<out IExpr rhs>             (. expr = new _LogAndExpr() { left=expr, right=rhs }; .)}.
 
   OrExpr<out IExpr expr> = (. expr = new _Expr(); .)
     XorExpr<out IExpr xor0> {'|' XorExpr<out IExpr xor1>}.
