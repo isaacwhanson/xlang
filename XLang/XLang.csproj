@@ -126,6 +126,7 @@
     <Compile Include="Scanner.cs" />
     <Compile Include="VisitingValidator.cs" />
     <Compile Include="AST.cs" />
+    <Compile Include="PrintAST.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="C.atg" />
