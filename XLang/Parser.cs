@@ -98,17 +98,17 @@ public _XLang xlang;
 
 	void Module(out _Module module) {
 		module = new _Module(); 
-		GlblStmt(out IGlblStmt glbl_stmt0);
-		module.stmts.Add(glbl_stmt0); 
+		GlblStmt(out IStmt stmt0);
+		module.stmts.Add(stmt0); 
 		while (la.kind == 7) {
-			GlblStmt(out IGlblStmt glbl_stmt1);
-			module.stmts.Add(glbl_stmt1); 
+			GlblStmt(out IStmt stmt1);
+			module.stmts.Add(stmt1); 
 		}
 	}
 
-	void GlblStmt(out IGlblStmt glbl_stmt) {
+	void GlblStmt(out IStmt stmt) {
 		LetStmt(out _LetStmt let_stmt);
-		glbl_stmt = let_stmt; 
+		stmt = let_stmt; 
 		Expect(6);
 	}
 

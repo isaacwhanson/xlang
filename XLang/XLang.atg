@@ -42,11 +42,11 @@ PRODUCTIONS
     Module<out _Module module>              (. xlang.module = module; .).
 
   Module<out _Module module> =              (. module = new _Module(); .)
-     GlblStmt<out IGlblStmt glbl_stmt0>     (. module.stmts.Add(glbl_stmt0); .)
-    {GlblStmt<out IGlblStmt glbl_stmt1>     (. module.stmts.Add(glbl_stmt1); .)}.
+     GlblStmt<out IStmt stmt0>              (. module.stmts.Add(stmt0); .)
+    {GlblStmt<out IStmt stmt1>              (. module.stmts.Add(stmt1); .)}.
 
-  GlblStmt<out IGlblStmt glbl_stmt> =
-    (LetStmt<out _LetStmt let_stmt>         (. glbl_stmt = let_stmt; .)) ";".
+  GlblStmt<out IStmt stmt> =
+    (LetStmt<out _LetStmt let_stmt>         (. stmt = let_stmt; .)) ";".
 
   LetStmt<out _LetStmt let_stmt> =
     "let" Ident<out _Ident id>
@@ -118,19 +118,14 @@ PRODUCTIONS
     | Int<out _Int lhs>                     (. expr = lhs; .)
     | '(' Expr<out IExpr lhs> ')'           (. expr = lhs; .)).
 
-  Ident<out _Ident expr> =
-    id                                      (. expr = new _Ident() { name=t.val }; .).
+  Ident<out _Ident expr> = id               (. expr = new _Ident() { name=t.val }; .).
 
-  String<out _String expr> =
-    string                                  (. expr = new _String() { value=t.val }; .).
+  String<out _String expr> = string         (. expr = new _String() { value=t.val }; .).
 
-  Char<out _Char expr> =
-    char                                    (. expr = new _Char() { value=t.val }; .).
+  Char<out _Char expr> = char               (. expr = new _Char() { value=t.val }; .).
 
-  Int<out _Int expr> =
-    int                                     (. expr = new _Int() { value=t.val }; .).
+  Int<out _Int expr> = int                  (. expr = new _Int() { value=t.val }; .).
 
-  Float<out _Float expr> =
-    float                                   (. expr = new _Float() { value=t.val }; .).
+  Float<out _Float expr> = float            (. expr = new _Float() { value=t.val }; .).
  
 END XLang.

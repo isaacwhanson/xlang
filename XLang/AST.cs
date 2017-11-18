@@ -25,7 +25,7 @@ using System.Collections.Generic;
 
 namespace XLang
 {
-  public interface IGlblStmt : IXLangElement
+  public interface IStmt : IXLangElement
   { }
 
   public interface IExpr : IXLangElement
@@ -38,10 +38,10 @@ namespace XLang
 
   public partial class _Module
   {
-    public List<IGlblStmt> stmts = new List<IGlblStmt>();
+    public List<IStmt> stmts = new List<IStmt>();
   }
 
-  public partial class _LetStmt : IGlblStmt
+  public partial class _LetStmt : IStmt
   {
     public _Ident id;
     public IExpr expr;

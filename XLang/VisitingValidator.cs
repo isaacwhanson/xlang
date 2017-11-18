@@ -46,6 +46,11 @@ namespace XLang
       throw new NotImplementedException();
     }
 
+    public void Visit(_Ident element)
+    {
+      throw new NotImplementedException();
+    }
+
     public void Visit(_Expr element)
     {
       throw new NotImplementedException();
@@ -112,11 +117,6 @@ namespace XLang
     }
 
     public void Visit(_Primary element)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Visit(_Ident element)
     {
       throw new NotImplementedException();
     }
