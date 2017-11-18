@@ -38,49 +38,65 @@ IGNORE whitespace + newline
 
 // --> ParserSpecificaton
 PRODUCTIONS
-  XLang =                                 (. xlang = new _XLang();          .)
-    Module<out _Module mod>               (. xlang.module = mod;            .).
+  XLang =                                   (. xlang = new _XLang();          .)
+    Module<out _Module module>              (. xlang.module = module;         .).
 
-  Module<out _Module mod> =               (. mod = new _Module();           .)
-     GlblStmt<out IGlblStmt stmt0> ";"    (. mod.stmts.Add(stmt0);          .)
-    {GlblStmt<out IGlblStmt stmt1> ";"    (. mod.stmts.Add(stmt1);          .)}.
+  Module<out _Module module> =              (. module = new _Module();        .)
+     GlblStmt<out IGlblStmt glbl_stmt0> ";" (. module.stmts.Add(glbl_stmt0);       .)
+    {GlblStmt<out IGlblStmt glbl_stmt1> ";" (. module.stmts.Add(glbl_stmt1);       .)}.
 
-  GlblStmt<out IGlblStmt stmt> =
-    LetStmt<out _LetStmt let_stmt>        (. stmt = let_stmt;               .).
+  GlblStmt<out IGlblStmt glbl_stmt> =
+    LetStmt<out _LetStmt let_stmt>          (. glbl_stmt = let_stmt;          .).
 
-  LetStmt<out _LetStmt let_stmt> =        (. let_stmt = new _LetStmt();     .)
-    "let" id "=" Expr.
+  LetStmt<out _LetStmt let_stmt> =          (. let_stmt = new _LetStmt();     .)
+    "let" id                                (. let_stmt.id = t.val;           .)
+    "=" Expr<out IExpr expr>                (. let_stmt.expr = expr;          .).
 
-  Expr =
-    CondExpr.
+  Expr<out IExpr expr> =
+    CondExpr<out IExpr cond>                (. expr = cond;                   .).
 
-  CondExpr =
-    LogOrExpr ['?' Expr ':' CondExpr].
-  LogOrExpr =
-    LogAndExpr {"||" LogAndExpr}.
-  LogAndExpr =
-    OrExpr {"&&" OrExpr}.
-  OrExpr =
-    XorExpr {'|' XorExpr}.
-  XorExpr =
-    AndExpr {'^' AndExpr}.
-  AndExpr =
-    EqlExpr {'&' EqlExpr}.
-  EqlExpr =
-    RelExpr {("==" | "!=") RelExpr}.
-  RelExpr =
-    ShiftExpr {('<' | '>' | "<=" | ">=") ShiftExpr}.
-  ShiftExpr =
-    AddExpr {("<<" | ">>") AddExpr}.
-  AddExpr =
-    MultExpr {('+' | '-') MultExpr}.
-  MultExpr =
-    UnaryExpr {('*' | '/' | '%') UnaryExpr}.
+  CondExpr<out IExpr expr> = 
+    LogOrExpr<out IExpr log_or>             (. expr = log_or;                 .)
+    ['?'                                    (. _CondExpr e = new _CondExpr(){ cond = log_or };
+                                               expr = e;                      .)
+    Expr<out IExpr left>                    (. e.left = left;                 .)
+    ':' CondExpr<out IExpr right>           (. e.right = right;               .)].
 
-  UnaryExpr =
-    Primary | UnaryOp UnaryExpr.
+  LogOrExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    LogAndExpr<out IExpr log_and0> {"||" LogAndExpr<out IExpr log_and1>}.
 
-  Primary = id | int | float | char | string | '(' Expr ')'.
+  LogAndExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    OrExpr<out IExpr or0> {"&&" OrExpr<out IExpr or1>}.
+
+  OrExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    XorExpr<out IExpr xor0> {'|' XorExpr<out IExpr xor1>}.
+
+  XorExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    AndExpr<out IExpr and0> {'^' AndExpr<out IExpr and1>}.
+
+  AndExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    EqlExpr<out IExpr eql0> {'&' EqlExpr<out IExpr eql1>}.
+
+  EqlExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    RelExpr<out IExpr rel0> {("==" | "!=") RelExpr<out IExpr rel1>}.
+
+  RelExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    ShiftExpr<out IExpr shift0> {('<' | '>' | "<=" | ">=") ShiftExpr<out IExpr shift1>}.
+
+  ShiftExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    AddExpr<out IExpr add0> {("<<" | ">>") AddExpr<out IExpr add1>}.
+
+  AddExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    MultExpr<out IExpr mul0> {('+' | '-') MultExpr<out IExpr mul1>}.
+
+  MultExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    UnaryExpr<out IExpr un0> {('*' | '/' | '%') UnaryExpr<out IExpr un1>}.
+
+  UnaryExpr<out IExpr expr> = (. expr = new _Expr(); .)
+    (Primary | UnaryOp UnaryExpr<out IExpr un0>).
+
+  Primary =
+    id | int | float | char | string | '(' Expr<out IExpr expr> ')'.
 
   UnaryOp = '&' | '*' | '+' | '-' | '~' | '!'.
 

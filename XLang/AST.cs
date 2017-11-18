@@ -40,6 +40,23 @@ namespace XLang
 
   public partial class _LetStmt : IGlblStmt
   {
+    public string id;
+    public IExpr expr;
+  }
 
+  public interface IExpr
+  {
+
+  }
+
+  // PLACEHOLDER
+  public partial class _Expr : IExpr
+  { }
+
+  public partial class _CondExpr : IExpr
+  {
+    public IExpr cond;
+    public IExpr left;
+    public IExpr right;
   }
 }

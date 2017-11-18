@@ -92,103 +92,118 @@ public _XLang xlang;
  
 	void XLang() {
 		xlang = new _XLang();          
-		Module(out _Module mod);
-		xlang.module = mod;            
+		Module(out _Module module);
+		xlang.module = module;         
 	}
 
-	void Module(out _Module mod) {
-		mod = new _Module();           
-		GlblStmt(out IGlblStmt stmt0);
+	void Module(out _Module module) {
+		module = new _Module();        
+		GlblStmt(out IGlblStmt glbl_stmt0);
 		Expect(6);
-		mod.stmts.Add(stmt0);          
+		module.stmts.Add(glbl_stmt0);       
 		while (la.kind == 7) {
-			GlblStmt(out IGlblStmt stmt1);
+			GlblStmt(out IGlblStmt glbl_stmt1);
 			Expect(6);
-			mod.stmts.Add(stmt1);          
+			module.stmts.Add(glbl_stmt1);       
 		}
 	}
 
-	void GlblStmt(out IGlblStmt stmt) {
+	void GlblStmt(out IGlblStmt glbl_stmt) {
 		LetStmt(out _LetStmt let_stmt);
-		stmt = let_stmt;               
+		glbl_stmt = let_stmt;          
 	}
 
 	void LetStmt(out _LetStmt let_stmt) {
 		let_stmt = new _LetStmt();     
 		Expect(7);
 		Expect(1);
+		let_stmt.id = t.val;           
 		Expect(8);
-		Expr();
+		Expr(out IExpr expr);
+		let_stmt.expr = expr;          
 	}
 
-	void Expr() {
-		CondExpr();
+	void Expr(out IExpr expr) {
+		CondExpr(out IExpr cond);
+		expr = cond;                   
 	}
 
-	void CondExpr() {
-		LogOrExpr();
+	void CondExpr(out IExpr expr) {
+		LogOrExpr(out IExpr log_or);
+		expr = log_or;                 
 		if (la.kind == 9) {
 			Get();
-			Expr();
+			_CondExpr e = new _CondExpr(){ cond = log_or };
+			expr = e;                      
+			Expr(out IExpr left);
+			e.left = left;                 
 			Expect(10);
-			CondExpr();
+			CondExpr(out IExpr right);
+			e.right = right;               
 		}
 	}
 
-	void LogOrExpr() {
-		LogAndExpr();
+	void LogOrExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		LogAndExpr(out IExpr log_and0);
 		while (la.kind == 11) {
 			Get();
-			LogAndExpr();
+			LogAndExpr(out IExpr log_and1);
 		}
 	}
 
-	void LogAndExpr() {
-		OrExpr();
+	void LogAndExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		OrExpr(out IExpr or0);
 		while (la.kind == 12) {
 			Get();
-			OrExpr();
+			OrExpr(out IExpr or1);
 		}
 	}
 
-	void OrExpr() {
-		XorExpr();
+	void OrExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		XorExpr(out IExpr xor0);
 		while (la.kind == 13) {
 			Get();
-			XorExpr();
+			XorExpr(out IExpr xor1);
 		}
 	}
 
-	void XorExpr() {
-		AndExpr();
+	void XorExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		AndExpr(out IExpr and0);
 		while (la.kind == 14) {
 			Get();
-			AndExpr();
+			AndExpr(out IExpr and1);
 		}
 	}
 
-	void AndExpr() {
-		EqlExpr();
+	void AndExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		EqlExpr(out IExpr eql0);
 		while (la.kind == 15) {
 			Get();
-			EqlExpr();
+			EqlExpr(out IExpr eql1);
 		}
 	}
 
-	void EqlExpr() {
-		RelExpr();
+	void EqlExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		RelExpr(out IExpr rel0);
 		while (la.kind == 16 || la.kind == 17) {
 			if (la.kind == 16) {
 				Get();
 			} else {
 				Get();
 			}
-			RelExpr();
+			RelExpr(out IExpr rel1);
 		}
 	}
 
-	void RelExpr() {
-		ShiftExpr();
+	void RelExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		ShiftExpr(out IExpr shift0);
 		while (StartOf(1)) {
 			if (la.kind == 18) {
 				Get();
@@ -199,36 +214,39 @@ public _XLang xlang;
 			} else {
 				Get();
 			}
-			ShiftExpr();
+			ShiftExpr(out IExpr shift1);
 		}
 	}
 
-	void ShiftExpr() {
-		AddExpr();
+	void ShiftExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		AddExpr(out IExpr add0);
 		while (la.kind == 22 || la.kind == 23) {
 			if (la.kind == 22) {
 				Get();
 			} else {
 				Get();
 			}
-			AddExpr();
+			AddExpr(out IExpr add1);
 		}
 	}
 
-	void AddExpr() {
-		MultExpr();
+	void AddExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		MultExpr(out IExpr mul0);
 		while (la.kind == 24 || la.kind == 25) {
 			if (la.kind == 24) {
 				Get();
 			} else {
 				Get();
 			}
-			MultExpr();
+			MultExpr(out IExpr mul1);
 		}
 	}
 
-	void MultExpr() {
-		UnaryExpr();
+	void MultExpr(out IExpr expr) {
+		expr = new _Expr(); 
+		UnaryExpr(out IExpr un0);
 		while (la.kind == 26 || la.kind == 27 || la.kind == 28) {
 			if (la.kind == 26) {
 				Get();
@@ -237,16 +255,17 @@ public _XLang xlang;
 			} else {
 				Get();
 			}
-			UnaryExpr();
+			UnaryExpr(out IExpr un1);
 		}
 	}
 
-	void UnaryExpr() {
+	void UnaryExpr(out IExpr expr) {
+		expr = new _Expr(); 
 		if (StartOf(2)) {
 			Primary();
 		} else if (StartOf(3)) {
 			UnaryOp();
-			UnaryExpr();
+			UnaryExpr(out IExpr un0);
 		} else SynErr(34);
 	}
 
@@ -274,7 +293,7 @@ public _XLang xlang;
 		}
 		case 29: {
 			Get();
-			Expr();
+			Expr(out IExpr expr);
 			Expect(30);
 			break;
 		}
