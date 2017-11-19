@@ -24,138 +24,119 @@ using LLVMSharp;
 
 namespace XLang
 {
-  public class LLVMVisitor : IXLangVisitor
+  public class LLVMVisitor : XLangVisitor
   {
-    private readonly LLVMModuleRef module;
-    private readonly LLVMBuilderRef builder;
+    private LLVMModuleRef module;
+    private LLVMBuilderRef builder;
     private readonly Dictionary<string, LLVMValueRef> namedValues = new Dictionary<string, LLVMValueRef>();
     private readonly Stack<LLVMValueRef> valueStack = new Stack<LLVMValueRef>();
 
-    public LLVMVisitor()
+    public override void Visit(_XLang element)
     {
-      module = LLVM.ModuleCreateWithName("xlang");
       builder = LLVM.CreateBuilder();
-    }
-
-    public void Visit(_XLang element)
-    {
       element.module.Accept(this);
     }
 
-    public void Visit(_Module element)
+    public override void Visit(_Module element)
     {
+      module = LLVM.ModuleCreateWithName("xlang");
       foreach (IStmt stmt in element.stmts)
       {
         stmt.Accept(this);
       }
     }
 
-    public void Visit(_GlblStmt element)
+    public override void Visit(_LetStmt element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_LetStmt element)
+    public override void Visit(_Ident element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Ident element)
+    public override void Visit(_CondExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Expr element)
+    public override void Visit(_LogOrExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_CondExpr element)
+    public override void Visit(_LogXorExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_LogOrExpr element)
+    public override void Visit(_LogAndExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_LogXorExpr element)
+    public override void Visit(_OrExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_LogAndExpr element)
+    public override void Visit(_XorExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_OrExpr element)
+    public override void Visit(_AndExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_XorExpr element)
+    public override void Visit(_EqlExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_AndExpr element)
+    public override void Visit(_RelExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_EqlExpr element)
+    public override void Visit(_ShiftExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_RelExpr element)
+    public override void Visit(_AddExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_ShiftExpr element)
+    public override void Visit(_MultExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_AddExpr element)
+    public override void Visit(_UnaryExpr element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_MultExpr element)
+    public override void Visit(_String element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_UnaryExpr element)
+    public override void Visit(_Char element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Primary element)
+    public override void Visit(_Float element)
     {
       throw new NotImplementedException();
     }
 
-    public void Visit(_String element)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Visit(_Char element)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Visit(_Float element)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Visit(_Int element)
+    public override void Visit(_Int element)
     {
       throw new NotImplementedException();
     }

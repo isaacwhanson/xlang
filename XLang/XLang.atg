@@ -1,5 +1,4 @@
 /* Coco/R ATG for (C#) XLang Compiler */
-using System.Collections;
 
 COMPILER XLang
 public _XLang xlang;

@@ -23,14 +23,14 @@
 using System;
 namespace XLang
 {
-  public class PrintAST : IXLangVisitor
+  public class PrintAST : XLangVisitor
   {
-    public void Visit(_XLang element)
+    public override void Visit(_XLang element)
     {
       element.module.Accept(this);
     }
 
-    public void Visit(_Module element)
+    public override void Visit(_Module element)
     {
       Console.WriteLine("module");
       foreach (IStmt stmt in element.stmts)
@@ -40,7 +40,7 @@ namespace XLang
       Console.WriteLine("end");
     }
 
-    public void Visit(_LetStmt element)
+    public override void Visit(_LetStmt element)
     {
       Console.Write("\tlet ");
       element.id.Accept(this);
@@ -49,12 +49,12 @@ namespace XLang
       Console.WriteLine(";");
     }
 
-    public void Visit(_Ident element)
+    public override void Visit(_Ident element)
     {
       Console.Write("@{0}", element.token.val);
     }
 
-    public void Visit(_CondExpr element)
+    public override void Visit(_CondExpr element)
     {
       Console.Write("(");
       element.condition.Accept(this);
@@ -65,7 +65,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_LogOrExpr element)
+    public override void Visit(_LogOrExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -74,7 +74,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_LogXorExpr element)
+    public override void Visit(_LogXorExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -83,7 +83,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_LogAndExpr element)
+    public override void Visit(_LogAndExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -92,7 +92,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_OrExpr element)
+    public override void Visit(_OrExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -101,7 +101,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_XorExpr element)
+    public override void Visit(_XorExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -110,7 +110,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_AndExpr element)
+    public override void Visit(_AndExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -119,7 +119,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_EqlExpr element)
+    public override void Visit(_EqlExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -128,7 +128,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_RelExpr element)
+    public override void Visit(_RelExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -137,7 +137,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_ShiftExpr element)
+    public override void Visit(_ShiftExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -146,7 +146,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_AddExpr element)
+    public override void Visit(_AddExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -155,7 +155,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_MultExpr element)
+    public override void Visit(_MultExpr element)
     {
       Console.Write("(");
       element.left.Accept(this);
@@ -164,7 +164,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_UnaryExpr element)
+    public override void Visit(_UnaryExpr element)
     {
       Console.Write("(");
       Console.Write("{0} ", element.op);
@@ -172,39 +172,24 @@ namespace XLang
       Console.Write(")");
     }
 
-    public void Visit(_String element)
+    public override void Visit(_String element)
     {
       Console.Write("{0}", element.token.val);
     }
 
-    public void Visit(_Char element)
+    public override void Visit(_Char element)
     {
       Console.Write("{0}", element.token.val);
     }
 
-    public void Visit(_Float element)
+    public override void Visit(_Float element)
     {
       Console.Write("{0}f", element.token.val);
     }
 
-    public void Visit(_Int element)
+    public override void Visit(_Int element)
     {
       Console.Write("{0}i", element.token.val);
-    }
-
-    public void Visit(_GlblStmt element)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Visit(_Expr element)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void Visit(_Primary element)
-    {
-      throw new NotImplementedException();
     }
   }
 }

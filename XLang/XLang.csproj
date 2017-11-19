@@ -127,6 +127,7 @@
     <Compile Include="AST.cs" />
     <Compile Include="PrintAST.cs" />
     <Compile Include="LLVMVisitor.cs" />
+    <Compile Include="XLangVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="C.atg" />
