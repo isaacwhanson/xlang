@@ -104,7 +104,8 @@ public _XLang xlang;
    }
  }
 
- 
+#pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
+
 	void XLang() {
     xlang = new _XLang(t); 
     Module(out _Module module);
@@ -131,16 +132,16 @@ public _XLang xlang;
 
 	void LetStmt(out _LetStmt let_stmt) {
     Expect(7);
-    Ident(out _Ident id);
+    Ident(out _Ident ident);
     Expect(8);
     Token token = t; 
     Expr(out IExpr expr);
-    let_stmt = new _LetStmt(token){ id=id, expr=expr }; 
+    let_stmt = new _LetStmt(token){ ident=ident, expr=expr }; 
 	}
 
-	void Ident(out _Ident expr) {
+	void Ident(out _Ident term) {
     Expect(1);
-    expr = new _Ident(t); 
+    term = new _Ident(t); 
 	}
 
 	void Expr(out IExpr expr) {
@@ -394,27 +395,29 @@ public _XLang xlang;
     }
 	}
 
-	void String(out _String expr) {
+	void String(out _String term) {
     Expect(2);
-    expr = new _String(t); 
+    term = new _String(t); 
 	}
 
-	void Char(out _Char expr) {
+	void Char(out _Char term) {
     Expect(3);
-    expr = new _Char(t); 
+    term = new _Char(t); 
 	}
 
-	void Float(out _Float expr) {
+	void Float(out _Float term) {
     Expect(4);
-    expr = new _Float(t); 
+    term = new _Float(t); 
 	}
 
-	void Int(out _Int expr) {
+	void Int(out _Int term) {
     Expect(5);
-    expr = new _Int(t); 
+    term = new _Int(t); 
 	}
 
 
+
+#pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
 
  public void Parse() {
     la = new Token { val = "" };
@@ -434,6 +437,7 @@ public _XLang xlang;
 } // end Parser
 
 #pragma warning disable RECS0001
+
 
 public interface IXLangElement
 {
@@ -635,6 +639,7 @@ public partial class _Int : IXLangElement
 	public _Int(Token t) { this.token = t; }
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
+
 
 #pragma warning restore RECS0001 // Class is declared partial but has only one part
 

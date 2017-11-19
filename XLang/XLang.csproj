@@ -26,7 +26,7 @@
         <Command>
           <type>Custom</type>
           <name>Coco/R</name>
-          <command>mono ${SolutionDir}/Coco/bin/${ProjectConfigName}/Coco.exe XLang.atg -namespace XLang -frames ${SolutionDir}/Coco/bin/${ProjectConfigName}</command>
+          <command>mono ${SolutionDir}/Coco/bin/${ProjectConfigName}/Coco.exe XLang.atg -namespace XLang -frames ${SolutionDir}/Coco</command>
           <workingdir>${ProjectDir}</workingdir>
         </Command>
       </CustomCommands>

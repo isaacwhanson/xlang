@@ -62,9 +62,9 @@ PRODUCTIONS
     (LetStmt<out _LetStmt let_stmt>         (. stmt = let_stmt; .)) SYNC ";".
 
   LetStmt<out _LetStmt let_stmt> =
-    "let" Ident<out _Ident id>
+    "let" Ident<out _Ident ident>
     "="                                     (. Token token = t; .)
-     Expr<out IExpr expr>                   (. let_stmt = new _LetStmt(token){ id=id, expr=expr }; .).
+     Expr<out IExpr expr>                   (. let_stmt = new _LetStmt(token){ ident=ident, expr=expr }; .).
 
   Expr<out IExpr expr> =
     CondExpr<out IExpr lhs>                 (. expr = lhs; .).
@@ -161,10 +161,10 @@ PRODUCTIONS
     | Int<out _Int lhs>                     (. expr = lhs; .)
     | '(' Expr<out IExpr lhs> WEAK ')'      (. expr = lhs; .)).
 
-  Ident<out _Ident expr> = ident            (. expr = new _Ident(t); .).
-  String<out _String expr> = string         (. expr = new _String(t); .).
-  Char<out _Char expr> = char               (. expr = new _Char(t); .).
-  Int<out _Int expr> = int                  (. expr = new _Int(t); .).
-  Float<out _Float expr> = float            (. expr = new _Float(t); .).
+  Ident<out _Ident term> = ident            (. term = new _Ident(t); .).
+  String<out _String term> = string         (. term = new _String(t); .).
+  Char<out _Char term> = char               (. term = new _Char(t); .).
+  Int<out _Int term> = int                  (. term = new _Int(t); .).
+  Float<out _Float term> = float            (. term = new _Float(t); .).
 
 END XLang.

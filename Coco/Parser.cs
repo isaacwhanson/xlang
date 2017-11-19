@@ -108,7 +108,8 @@ const int id = 0;
    }
  }
 
- 
+#pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
+
 	void Coco() {
     Symbol sym; Graph g, g1, g2; string gramName; CharSet s; int beg, line; 
     if (StartOf(1)) {
@@ -672,6 +673,8 @@ const int id = 0;
 
 
 
+#pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
+
  public void Parse() {
     la = new Token { val = "" };
     Get();
@@ -706,6 +709,7 @@ const int id = 0;
 } // end Parser
 
 #pragma warning disable RECS0001
+
 
 public interface ICocoElement
 {
@@ -859,6 +863,7 @@ public partial class _TokenFactor : ICocoElement
 	public _TokenFactor(Token t) { this.token = t; }
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
+
 
 #pragma warning restore RECS0001 // Class is declared partial but has only one part
 
