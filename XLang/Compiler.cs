@@ -38,10 +38,7 @@ namespace XLang
         xlang.Accept(new PrintAST());
         return OK;
       }
-      else
-      {
-        Console.WriteLine("No source file specified");
-      }
+      Console.WriteLine("No source file specified");
       return WARN;
     }
 

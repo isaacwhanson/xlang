@@ -26,13 +26,13 @@ namespace XLang
 {
   public class LLVMVisitor : XLangVisitor
   {
-    private LLVMModuleRef module;
-    private LLVMBuilderRef builder;
-    private readonly Dictionary<string, LLVMValueRef> namedValues = new Dictionary<string, LLVMValueRef>();
-    private readonly Stack<LLVMValueRef> valueStack = new Stack<LLVMValueRef>();
+    LLVMModuleRef module;
+    LLVMBuilderRef builder;
+    readonly Dictionary<string, LLVMValueRef> namedValues = new Dictionary<string, LLVMValueRef>();
+    readonly Stack<LLVMValueRef> valueStack = new Stack<LLVMValueRef>();
 
-    private readonly LLVMBool LLVMFalse = new LLVMBool(0);
-    private readonly LLVMBool LLVMTrue = new LLVMBool(1);
+    readonly LLVMBool LLVMFalse = new LLVMBool(0);
+    readonly LLVMBool LLVMTrue = new LLVMBool(1);
 
     public override void Visit(_XLang element)
     {
