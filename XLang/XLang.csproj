@@ -24,13 +24,8 @@
     <CustomCommands>
       <CustomCommands>
         <Command>
-          <type>BeforeBuild</type>
-          <command>mono ${SolutionDir}/Coco/bin/${ProjectConfigName}/Coco.exe XLang.atg -namespace XLang -frames ${SolutionDir}/Coco/bin/${ProjectConfigName}</command>
-          <workingdir>${ProjectDir}</workingdir>
-        </Command>
-        <Command>
           <type>Custom</type>
-          <name>Coco</name>
+          <name>Coco/R</name>
           <command>mono ${SolutionDir}/Coco/bin/${ProjectConfigName}/Coco.exe XLang.atg -namespace XLang -frames ${SolutionDir}/Coco/bin/${ProjectConfigName}</command>
           <workingdir>${ProjectDir}</workingdir>
         </Command>

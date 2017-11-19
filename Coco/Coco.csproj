@@ -25,7 +25,7 @@
       <CustomCommands>
         <Command>
           <type>Custom</type>
-          <name>Coco</name>
+          <name>Coco/R</name>
           <command>mono bin/${ProjectConfigName}/Coco.exe Coco.atg -namespace at.jku.ssw.Coco</command>
           <workingdir>${ProjectDir}</workingdir>
         </Command>
