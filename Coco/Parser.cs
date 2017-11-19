@@ -705,6 +705,7 @@ const int id = 0;
  };
 } // end Parser
 
+#pragma warning disable RECS0001
 
 public interface ICocoElement
 {
@@ -859,6 +860,7 @@ public partial class _TokenFactor : ICocoElement
 	public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
 }
 
+#pragma warning restore RECS0001 // Class is declared partial but has only one part
 
 public class Errors {
  public int count;                                        // number of errors detected

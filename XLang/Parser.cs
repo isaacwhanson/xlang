@@ -419,6 +419,7 @@ public _XLang xlang;
  };
 } // end Parser
 
+#pragma warning disable RECS0001
 
 public interface IXLangElement
 {
@@ -621,6 +622,7 @@ public partial class _Int : IXLangElement
 	public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
 }
 
+#pragma warning restore RECS0001 // Class is declared partial but has only one part
 
 public class Errors {
  public int count;                                        // number of errors detected

@@ -114,7 +114,9 @@ public class Parser {
  };
 } // end Parser
 
+#pragma warning disable RECS0001
 -->custom
+#pragma warning restore RECS0001 // Class is declared partial but has only one part
 
 public class Errors {
  public int count;                                        // number of errors detected
