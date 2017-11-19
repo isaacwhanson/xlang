@@ -60,7 +60,7 @@ namespace at.jku.ssw.Coco
 
     void Indent(int n)
     {
-      for (int i = 1; i <= n; i++) gen.Write('\t');
+      for (int i = 1; i <= n; i++) gen.Write("  ");
     }
 
 
@@ -462,7 +462,7 @@ namespace at.jku.ssw.Coco
       g.CopyFramePart("-->declarations"); CopySourcePart(tab.semDeclPos, 0);
       g.CopyFramePart("-->pragmas"); GenCodePragmas();
       g.CopyFramePart("-->productions"); GenProductions();
-      g.CopyFramePart("-->parseRoot"); gen.WriteLine("\t\t{0}();", tab.gramSy.name); if (tab.checkEOF) gen.WriteLine("\t\tExpect(0);");
+      g.CopyFramePart("-->parseRoot"); gen.WriteLine("\t\t{0}();", tab.gramSy.name); if (tab.checkEOF) gen.Write("\t\tExpect(0);");
       g.CopyFramePart("-->initialization"); InitSets();
       g.CopyFramePart("-->custom"); GenNodes();
       g.CopyFramePart("-->errors"); gen.Write(err);

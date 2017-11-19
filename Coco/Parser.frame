@@ -104,8 +104,8 @@ public class Parser {
 -->productions
 
  public void Parse() {
-   la = new Token() { val = "" };
-   Get();
+    la = new Token() { val = "" };
+    Get();
 -->parseRoot
  }
  

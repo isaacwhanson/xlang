@@ -1,5 +1,5 @@
 ﻿//
-//  Compiler.cs
+//  Compiler
 //
 //  Author:
 //       Isaac W Hanson <isaac@starlig.ht>

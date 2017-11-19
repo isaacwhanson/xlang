@@ -247,7 +247,7 @@ public class Scanner {
  
  char[] tval = new char[128]; // text of current token
  int tlen;         // length of current token
- 
+
  static Scanner() {
    start = new Dictionary<int, int>(128);
 -->initialization

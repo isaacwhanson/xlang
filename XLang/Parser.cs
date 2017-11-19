@@ -27,6 +27,25 @@ public class Parser {
 
 public _XLang xlang;
 
+  /*Author:
+       Isaac W Hanson <isaac@starlig.ht>
+
+  Copyright (c) 2017
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+
 
 
  public Parser(Scanner scanner) {
@@ -87,308 +106,307 @@ public _XLang xlang;
 
  
 	void XLang() {
-		xlang = new _XLang(t); 
-		Module(out _Module module);
-		xlang.module = module; 
+    xlang = new _XLang(t); 
+    Module(out _Module module);
+    xlang.module = module; 
 	}
 
 	void Module(out _Module module) {
-		module = new _Module(t); 
-		GlblStmt(out IStmt stmt0);
-		module.stmts.Add(stmt0); 
-		while (la.kind == 7) {
-			GlblStmt(out IStmt stmt1);
-			module.stmts.Add(stmt1); 
-		}
+    module = new _Module(t); 
+    GlblStmt(out IStmt stmt0);
+    module.stmts.Add(stmt0); 
+    while (la.kind == 7) {
+      GlblStmt(out IStmt stmt1);
+      module.stmts.Add(stmt1); 
+    }
 	}
 
 	void GlblStmt(out IStmt stmt) {
-		while (!(la.kind == 0 || la.kind == 7)) {SynErr(37); Get();}
-		LetStmt(out _LetStmt let_stmt);
-		stmt = let_stmt; 
-		while (!(la.kind == 0 || la.kind == 6)) {SynErr(38); Get();}
-		Expect(6);
+    while (!(la.kind == 0 || la.kind == 7)) {SynErr(37); Get();}
+    LetStmt(out _LetStmt let_stmt);
+    stmt = let_stmt; 
+    while (!(la.kind == 0 || la.kind == 6)) {SynErr(38); Get();}
+    Expect(6);
 	}
 
 	void LetStmt(out _LetStmt let_stmt) {
-		Expect(7);
-		Ident(out _Ident id);
-		Expect(8);
-		Expr(out IExpr expr);
-		let_stmt = new _LetStmt(t){ id=id, expr=expr }; 
+    Expect(7);
+    Ident(out _Ident id);
+    Expect(8);
+    Expr(out IExpr expr);
+    let_stmt = new _LetStmt(t){ id=id, expr=expr }; 
 	}
 
 	void Ident(out _Ident expr) {
-		Expect(1);
-		expr = new _Ident(t); 
+    Expect(1);
+    expr = new _Ident(t); 
 	}
 
 	void Expr(out IExpr expr) {
-		CondExpr(out IExpr lhs);
-		expr = lhs; 
+    CondExpr(out IExpr lhs);
+    expr = lhs; 
 	}
 
 	void CondExpr(out IExpr expr) {
-		LogOrExpr(out IExpr lhs);
-		expr = lhs; 
-		if (la.kind == 9) {
-			Get();
-			Expr(out IExpr consequent);
-			Expect(10);
-			Expr(out IExpr alternative);
-			expr = new _CondExpr(t) { condition=expr, consequent=consequent, alternative=alternative }; 
-		}
+    LogOrExpr(out IExpr lhs);
+    expr = lhs; 
+    if (la.kind == 9) {
+      Get();
+      Expr(out IExpr consequent);
+      Expect(10);
+      Expr(out IExpr alternative);
+      expr = new _CondExpr(t) { condition=expr, consequent=consequent, alternative=alternative }; 
+    }
 	}
 
 	void LogOrExpr(out IExpr expr) {
-		LogXorExpr(out IExpr lhs);
-		expr = lhs; 
-		while (la.kind == 11) {
-			Get();
-			LogXorExpr(out IExpr rhs);
-			expr = new _LogOrExpr(t) { left=expr, right=rhs }; 
-		}
+    LogXorExpr(out IExpr lhs);
+    expr = lhs; 
+    while (la.kind == 11) {
+      Get();
+      LogXorExpr(out IExpr rhs);
+      expr = new _LogOrExpr(t) { left=expr, right=rhs }; 
+    }
 	}
 
 	void LogXorExpr(out IExpr expr) {
-		LogAndExpr(out IExpr lhs);
-		expr = lhs; 
-		while (la.kind == 12) {
-			Get();
-			LogAndExpr(out IExpr rhs);
-			expr = new _LogXorExpr(t) { left=expr, right=rhs }; 
-		}
+    LogAndExpr(out IExpr lhs);
+    expr = lhs; 
+    while (la.kind == 12) {
+      Get();
+      LogAndExpr(out IExpr rhs);
+      expr = new _LogXorExpr(t) { left=expr, right=rhs }; 
+    }
 	}
 
 	void LogAndExpr(out IExpr expr) {
-		OrExpr(out IExpr lhs);
-		expr = lhs; 
-		while (la.kind == 13) {
-			Get();
-			OrExpr(out IExpr rhs);
-			expr = new _LogAndExpr(t) { left=expr, right=rhs }; 
-		}
+    OrExpr(out IExpr lhs);
+    expr = lhs; 
+    while (la.kind == 13) {
+      Get();
+      OrExpr(out IExpr rhs);
+      expr = new _LogAndExpr(t) { left=expr, right=rhs }; 
+    }
 	}
 
 	void OrExpr(out IExpr expr) {
-		XorExpr(out IExpr lhs);
-		expr = lhs; 
-		while (la.kind == 14) {
-			Get();
-			XorExpr(out IExpr rhs);
-			expr = new _OrExpr(t) { left=expr, right=rhs }; 
-		}
+    XorExpr(out IExpr lhs);
+    expr = lhs; 
+    while (la.kind == 14) {
+      Get();
+      XorExpr(out IExpr rhs);
+      expr = new _OrExpr(t) { left=expr, right=rhs }; 
+    }
 	}
 
 	void XorExpr(out IExpr expr) {
-		AndExpr(out IExpr lhs);
-		expr = lhs; 
-		while (la.kind == 15) {
-			Get();
-			AndExpr(out IExpr rhs);
-			expr = new _XorExpr(t) { left=expr, right=rhs }; 
-		}
+    AndExpr(out IExpr lhs);
+    expr = lhs; 
+    while (la.kind == 15) {
+      Get();
+      AndExpr(out IExpr rhs);
+      expr = new _XorExpr(t) { left=expr, right=rhs }; 
+    }
 	}
 
 	void AndExpr(out IExpr expr) {
-		EqlExpr(out IExpr lhs);
-		expr = lhs; 
-		while (la.kind == 16) {
-			Get();
-			EqlExpr(out IExpr rhs);
-			expr = new _AndExpr(t) { left=expr, right=rhs }; 
-		}
+    EqlExpr(out IExpr lhs);
+    expr = lhs; 
+    while (la.kind == 16) {
+      Get();
+      EqlExpr(out IExpr rhs);
+      expr = new _AndExpr(t) { left=expr, right=rhs }; 
+    }
 	}
 
 	void EqlExpr(out IExpr expr) {
-		RelExpr(out IExpr lhs);
-		expr = lhs; 
-		while (StartOf(1)) {
-			EqlOp op; 
-			if (la.kind == 17) {
-				Get();
-				op = EqlOp.EQUAL; 
-			} else if (la.kind == 18) {
-				Get();
-				op = EqlOp.NOTEQUAL; 
-			} else if (la.kind == 19) {
-				Get();
-				op = EqlOp.HARDEQUAL; 
-			} else {
-				Get();
-				op = EqlOp.HARDNOTEQUAL; 
-			}
-			RelExpr(out IExpr rhs);
-			expr = new _EqlExpr(t) { left=expr, op=op, right=rhs }; 
-		}
+    RelExpr(out IExpr lhs);
+    expr = lhs; 
+    while (StartOf(1)) {
+      EqlOp op; 
+      if (la.kind == 17) {
+        Get();
+        op = EqlOp.EQUAL; 
+      } else if (la.kind == 18) {
+        Get();
+        op = EqlOp.NOTEQUAL; 
+      } else if (la.kind == 19) {
+        Get();
+        op = EqlOp.HARDEQUAL; 
+      } else {
+        Get();
+        op = EqlOp.HARDNOTEQUAL; 
+      }
+      RelExpr(out IExpr rhs);
+      expr = new _EqlExpr(t) { left=expr, op=op, right=rhs }; 
+    }
 	}
 
 	void RelExpr(out IExpr expr) {
-		ShiftExpr(out IExpr lhs);
-		expr = lhs; 
-		while (StartOf(2)) {
-			RelOp op; 
-			if (la.kind == 21) {
-				Get();
-				op = RelOp.LESSTHAN; 
-			} else if (la.kind == 22) {
-				Get();
-				op = RelOp.GREATERTHAN; 
-			} else if (la.kind == 23) {
-				Get();
-				op = RelOp.LESSTHANEQUAL; 
-			} else {
-				Get();
-				op = RelOp.GREATERTHANEQUAL; 
-			}
-			ShiftExpr(out IExpr rhs);
-			expr = new _RelExpr(t) { left=expr, op=op, right=rhs }; 
-		}
+    ShiftExpr(out IExpr lhs);
+    expr = lhs; 
+    while (StartOf(2)) {
+      RelOp op; 
+      if (la.kind == 21) {
+        Get();
+        op = RelOp.LESSTHAN; 
+      } else if (la.kind == 22) {
+        Get();
+        op = RelOp.GREATERTHAN; 
+      } else if (la.kind == 23) {
+        Get();
+        op = RelOp.LESSTHANEQUAL; 
+      } else {
+        Get();
+        op = RelOp.GREATERTHANEQUAL; 
+      }
+      ShiftExpr(out IExpr rhs);
+      expr = new _RelExpr(t) { left=expr, op=op, right=rhs }; 
+    }
 	}
 
 	void ShiftExpr(out IExpr expr) {
-		AddExpr(out IExpr lhs);
-		expr = lhs; 
-		while (la.kind == 25 || la.kind == 26) {
-			ShiftOp op; 
-			if (la.kind == 25) {
-				Get();
-				op = ShiftOp.LEFT; 
-			} else {
-				Get();
-				op = ShiftOp.RIGHT; 
-			}
-			AddExpr(out IExpr rhs);
-			expr = new _ShiftExpr(t) { left=expr, op=op, right=rhs }; 
-		}
+    AddExpr(out IExpr lhs);
+    expr = lhs; 
+    while (la.kind == 25 || la.kind == 26) {
+      ShiftOp op; 
+      if (la.kind == 25) {
+        Get();
+        op = ShiftOp.LEFT; 
+      } else {
+        Get();
+        op = ShiftOp.RIGHT; 
+      }
+      AddExpr(out IExpr rhs);
+      expr = new _ShiftExpr(t) { left=expr, op=op, right=rhs }; 
+    }
 	}
 
 	void AddExpr(out IExpr expr) {
-		MultExpr(out IExpr lhs);
-		expr = lhs; 
-		while (la.kind == 27 || la.kind == 28) {
-			AddOp op; 
-			if (la.kind == 27) {
-				Get();
-				op = AddOp.PLUS; 
-			} else {
-				Get();
-				op = AddOp.MINUS; 
-			}
-			MultExpr(out IExpr rhs);
-			expr = new _AddExpr(t) { left=expr, op=op, right=rhs }; 
-		}
+    MultExpr(out IExpr lhs);
+    expr = lhs; 
+    while (la.kind == 27 || la.kind == 28) {
+      AddOp op; 
+      if (la.kind == 27) {
+        Get();
+        op = AddOp.PLUS; 
+      } else {
+        Get();
+        op = AddOp.MINUS; 
+      }
+      MultExpr(out IExpr rhs);
+      expr = new _AddExpr(t) { left=expr, op=op, right=rhs }; 
+    }
 	}
 
 	void MultExpr(out IExpr expr) {
-		UnaryExpr(out IExpr lhs);
-		expr = lhs; 
-		while (la.kind == 29 || la.kind == 30 || la.kind == 31) {
-			MultOp op; 
-			if (la.kind == 29) {
-				Get();
-				op = MultOp.TIMES; 
-			} else if (la.kind == 30) {
-				Get();
-				op = MultOp.DIVIDE; 
-			} else {
-				Get();
-				op = MultOp.MODULO; 
-			}
-			UnaryExpr(out IExpr rhs);
-			expr = new _MultExpr(t) { left=expr, op=op, right=rhs }; 
-		}
+    UnaryExpr(out IExpr lhs);
+    expr = lhs; 
+    while (la.kind == 29 || la.kind == 30 || la.kind == 31) {
+      MultOp op; 
+      if (la.kind == 29) {
+        Get();
+        op = MultOp.TIMES; 
+      } else if (la.kind == 30) {
+        Get();
+        op = MultOp.DIVIDE; 
+      } else {
+        Get();
+        op = MultOp.MODULO; 
+      }
+      UnaryExpr(out IExpr rhs);
+      expr = new _MultExpr(t) { left=expr, op=op, right=rhs }; 
+    }
 	}
 
 	void UnaryExpr(out IExpr expr) {
-		expr = null; 
-		if (StartOf(3)) {
-			Primary(out IExpr lhs);
-			expr = lhs; 
-		} else if (la.kind == 28 || la.kind == 32 || la.kind == 33) {
-			UnaryOp op; 
-			if (la.kind == 28) {
-				Get();
-				op = UnaryOp.NEGATE; 
-			} else if (la.kind == 32) {
-				Get();
-				op = UnaryOp.COMPLIMENT; 
-			} else {
-				Get();
-				op = UnaryOp.NOT; 
-			}
-			UnaryExpr(out IExpr lhs);
-			expr = new _UnaryExpr(t) { op=op, left=lhs }; 
-		} else SynErr(39);
+    expr = null; 
+    if (StartOf(3)) {
+      Primary(out IExpr lhs);
+      expr = lhs; 
+    } else if (la.kind == 28 || la.kind == 32 || la.kind == 33) {
+      UnaryOp op; 
+      if (la.kind == 28) {
+        Get();
+        op = UnaryOp.NEGATE; 
+      } else if (la.kind == 32) {
+        Get();
+        op = UnaryOp.COMPLIMENT; 
+      } else {
+        Get();
+        op = UnaryOp.NOT; 
+      }
+      UnaryExpr(out IExpr lhs);
+      expr = new _UnaryExpr(t) { op=op, left=lhs }; 
+    } else SynErr(39);
 	}
 
 	void Primary(out IExpr expr) {
-		expr = null; 
-		switch (la.kind) {
-		case 1: {
-			Ident(out _Ident lhs);
-			expr = lhs; 
-			break;
-		}
-		case 2: {
-			String(out _String lhs);
-			expr = lhs; 
-			break;
-		}
-		case 3: {
-			Char(out _Char lhs);
-			expr = lhs; 
-			break;
-		}
-		case 4: {
-			Float(out _Float lhs);
-			expr = lhs; 
-			break;
-		}
-		case 5: {
-			Int(out _Int lhs);
-			expr = lhs; 
-			break;
-		}
-		case 34: {
-			Get();
-			Expr(out IExpr lhs);
-			ExpectWeak(35, 4);
-			expr = lhs; 
-			break;
-		}
-		default: SynErr(40); break;
-		}
+    expr = null; 
+    switch (la.kind) {
+    case 1: {
+      Ident(out _Ident lhs);
+      expr = lhs; 
+    	break;
+    }
+    case 2: {
+      String(out _String lhs);
+      expr = lhs; 
+    	break;
+    }
+    case 3: {
+      Char(out _Char lhs);
+      expr = lhs; 
+    	break;
+    }
+    case 4: {
+      Float(out _Float lhs);
+      expr = lhs; 
+    	break;
+    }
+    case 5: {
+      Int(out _Int lhs);
+      expr = lhs; 
+    	break;
+    }
+    case 34: {
+      Get();
+      Expr(out IExpr lhs);
+      ExpectWeak(35, 4);
+      expr = lhs; 
+    	break;
+    }
+    default: SynErr(40); break;
+    }
 	}
 
 	void String(out _String expr) {
-		Expect(2);
-		expr = new _String(t); 
+    Expect(2);
+    expr = new _String(t); 
 	}
 
 	void Char(out _Char expr) {
-		Expect(3);
-		expr = new _Char(t); 
+    Expect(3);
+    expr = new _Char(t); 
 	}
 
 	void Float(out _Float expr) {
-		Expect(4);
-		expr = new _Float(t); 
+    Expect(4);
+    expr = new _Float(t); 
 	}
 
 	void Int(out _Int expr) {
-		Expect(5);
-		expr = new _Int(t); 
+    Expect(5);
+    expr = new _Int(t); 
 	}
 
 
 
  public void Parse() {
-   la = new Token() { val = "" };
-   Get();
+    la = new Token() { val = "" };
+    Get();
 		XLang();
 		Expect(0);
-
  }
  
  static readonly bool[,] set = {

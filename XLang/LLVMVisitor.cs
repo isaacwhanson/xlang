@@ -1,10 +1,10 @@
 ﻿//
-//  LLVMVisitor.cs
+//  LLVMVisitor
 //
 //  Author:
-//       ihanson <>
+//       Isaac W Hanson <isaac@starlig.ht>
 //
-//  Copyright (c) 2017 ${CopyrightHolder}
+//  Copyright (c) 2017
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,9 @@ namespace XLang
     private LLVMBuilderRef builder;
     private readonly Dictionary<string, LLVMValueRef> namedValues = new Dictionary<string, LLVMValueRef>();
     private readonly Stack<LLVMValueRef> valueStack = new Stack<LLVMValueRef>();
+
+    private readonly LLVMBool LLVMFalse = new LLVMBool(0);
+    private readonly LLVMBool LLVMTrue = new LLVMBool(1);
 
     public override void Visit(_XLang element)
     {
@@ -138,7 +141,9 @@ namespace XLang
 
     public override void Visit(_Int element)
     {
-      throw new NotImplementedException();
+      Int64.TryParse(element.token.val, out Int64 val);
+      LLVMValueRef val_ref = LLVM.ConstInt(LLVM.Int64Type(), (ulong)val, LLVMTrue);
+      this.valueStack.Push(val_ref);
     }
   }
 }
