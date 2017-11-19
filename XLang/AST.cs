@@ -20,14 +20,10 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-using System;
 using System.Collections.Generic;
 
 namespace XLang
 {
-  public interface IStmt : IXLangElement { }
-
-  public interface IExpr : IXLangElement { }
 
   public partial class _XLang
   {
@@ -39,11 +35,15 @@ namespace XLang
     public List<IStmt> stmts = new List<IStmt>();
   }
 
+  public interface IStmt : IXLangElement { }
+
   public partial class _LetStmt : IStmt
   {
     public _Ident id;
     public IExpr expr;
   }
+
+  public interface IExpr : IXLangElement { }
 
   public partial class _CondExpr : IExpr
   {
@@ -153,23 +153,13 @@ namespace XLang
     public IExpr left;
   }
 
-  public partial class _Ident : IExpr
-  {
-  }
+  public partial class _Ident : IExpr { }
 
-  public partial class _Int : IExpr
-  {
-  }
+  public partial class _Int : IExpr { }
 
-  public partial class _Float : IExpr
-  {
-  }
+  public partial class _Float : IExpr { }
 
-  public partial class _Char : IExpr
-  {
-  }
+  public partial class _Char : IExpr { }
 
-  public partial class _String : IExpr
-  {
-  }
+  public partial class _String : IExpr { }
 }

@@ -42,7 +42,7 @@ namespace XLang
 
     public override void Visit(_Module element)
     {
-      module = LLVM.ModuleCreateWithName("xlang");
+      module = LLVM.ModuleCreateWithName(".xlang");
       foreach (IStmt stmt in element.stmts)
       {
         stmt.Accept(this);
@@ -136,14 +136,16 @@ namespace XLang
 
     public override void Visit(_Float element)
     {
-      throw new NotImplementedException();
+      Double val = Double.Parse(element.token.val);
+      LLVMValueRef val_ref = LLVM.ConstReal(LLVM.DoubleType(), val);
+      valueStack.Push(val_ref);
     }
 
     public override void Visit(_Int element)
     {
-      Int64.TryParse(element.token.val, out Int64 val);
+      Int64 val = Int64.Parse(element.token.val);
       LLVMValueRef val_ref = LLVM.ConstInt(LLVM.Int64Type(), (ulong)val, LLVMTrue);
-      this.valueStack.Push(val_ref);
+      valueStack.Push(val_ref);
     }
   }
 }
