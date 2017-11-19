@@ -673,7 +673,7 @@ const int id = 0;
 
 
  public void Parse() {
-    la = new Token() { val = "" };
+    la = new Token { val = "" };
     Get();
 		Coco();
 		Expect(0);

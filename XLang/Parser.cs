@@ -133,8 +133,9 @@ public _XLang xlang;
     Expect(7);
     Ident(out _Ident id);
     Expect(8);
+    Token token = t; 
     Expr(out IExpr expr);
-    let_stmt = new _LetStmt(t){ id=id, expr=expr }; 
+    let_stmt = new _LetStmt(token){ id=id, expr=expr }; 
 	}
 
 	void Ident(out _Ident expr) {
@@ -152,10 +153,11 @@ public _XLang xlang;
     expr = lhs; 
     if (la.kind == 9) {
       Get();
+      Token token = t; 
       Expr(out IExpr consequent);
       Expect(10);
       Expr(out IExpr alternative);
-      expr = new _CondExpr(t) { condition=expr, consequent=consequent, alternative=alternative }; 
+      expr = new _CondExpr(token) { condition=expr, consequent=consequent, alternative=alternative }; 
     }
 	}
 
@@ -164,8 +166,9 @@ public _XLang xlang;
     expr = lhs; 
     while (la.kind == 11) {
       Get();
+      Token token = t; 
       LogXorExpr(out IExpr rhs);
-      expr = new _LogOrExpr(t) { left=expr, right=rhs }; 
+      expr = new _LogOrExpr(token) { left=expr, right=rhs }; 
     }
 	}
 
@@ -174,8 +177,9 @@ public _XLang xlang;
     expr = lhs; 
     while (la.kind == 12) {
       Get();
+      Token token = t; 
       LogAndExpr(out IExpr rhs);
-      expr = new _LogXorExpr(t) { left=expr, right=rhs }; 
+      expr = new _LogXorExpr(token) { left=expr, right=rhs }; 
     }
 	}
 
@@ -184,8 +188,9 @@ public _XLang xlang;
     expr = lhs; 
     while (la.kind == 13) {
       Get();
+      Token token = t; 
       OrExpr(out IExpr rhs);
-      expr = new _LogAndExpr(t) { left=expr, right=rhs }; 
+      expr = new _LogAndExpr(token) { left=expr, right=rhs }; 
     }
 	}
 
@@ -194,8 +199,9 @@ public _XLang xlang;
     expr = lhs; 
     while (la.kind == 14) {
       Get();
+      Token token = t; 
       XorExpr(out IExpr rhs);
-      expr = new _OrExpr(t) { left=expr, right=rhs }; 
+      expr = new _OrExpr(token) { left=expr, right=rhs }; 
     }
 	}
 
@@ -204,8 +210,9 @@ public _XLang xlang;
     expr = lhs; 
     while (la.kind == 15) {
       Get();
+      Token token = t; 
       AndExpr(out IExpr rhs);
-      expr = new _XorExpr(t) { left=expr, right=rhs }; 
+      expr = new _XorExpr(token) { left=expr, right=rhs }; 
     }
 	}
 
@@ -214,8 +221,9 @@ public _XLang xlang;
     expr = lhs; 
     while (la.kind == 16) {
       Get();
+      Token token = t; 
       EqlExpr(out IExpr rhs);
-      expr = new _AndExpr(t) { left=expr, right=rhs }; 
+      expr = new _AndExpr(token) { left=expr, right=rhs }; 
     }
 	}
 
@@ -237,8 +245,9 @@ public _XLang xlang;
         Get();
         op = EqlOp.HARDNOTEQUAL; 
       }
+      Token token = t; 
       RelExpr(out IExpr rhs);
-      expr = new _EqlExpr(t) { left=expr, op=op, right=rhs }; 
+      expr = new _EqlExpr(token) { op=op, left=expr, right=rhs }; 
     }
 	}
 
@@ -260,8 +269,9 @@ public _XLang xlang;
         Get();
         op = RelOp.GREATERTHANEQUAL; 
       }
+      Token token = t; 
       ShiftExpr(out IExpr rhs);
-      expr = new _RelExpr(t) { left=expr, op=op, right=rhs }; 
+      expr = new _RelExpr(token) { op=op, left=expr, right=rhs }; 
     }
 	}
 
@@ -277,8 +287,9 @@ public _XLang xlang;
         Get();
         op = ShiftOp.RIGHT; 
       }
+      Token token = t; 
       AddExpr(out IExpr rhs);
-      expr = new _ShiftExpr(t) { left=expr, op=op, right=rhs }; 
+      expr = new _ShiftExpr(token) { op=op, left=expr, right=rhs }; 
     }
 	}
 
@@ -294,8 +305,9 @@ public _XLang xlang;
         Get();
         op = AddOp.MINUS; 
       }
+      Token token = t; 
       MultExpr(out IExpr rhs);
-      expr = new _AddExpr(t) { left=expr, op=op, right=rhs }; 
+      expr = new _AddExpr(token) { op=op, left=expr, right=rhs }; 
     }
 	}
 
@@ -314,8 +326,9 @@ public _XLang xlang;
         Get();
         op = MultOp.MODULO; 
       }
+      Token token = t; 
       UnaryExpr(out IExpr rhs);
-      expr = new _MultExpr(t) { left=expr, op=op, right=rhs }; 
+      expr = new _MultExpr(token) { op=op, left=expr, right=rhs }; 
     }
 	}
 
@@ -336,8 +349,9 @@ public _XLang xlang;
         Get();
         op = UnaryOp.NOT; 
       }
+      Token token = t; 
       UnaryExpr(out IExpr lhs);
-      expr = new _UnaryExpr(t) { op=op, left=lhs }; 
+      expr = new _UnaryExpr(token) { op=op, left=lhs }; 
     } else SynErr(39);
 	}
 
@@ -403,7 +417,7 @@ public _XLang xlang;
 
 
  public void Parse() {
-    la = new Token() { val = "" };
+    la = new Token { val = "" };
     Get();
 		XLang();
 		Expect(0);
