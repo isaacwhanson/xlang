@@ -329,7 +329,7 @@ public _XLang xlang;
     void UnaryExpr(out IExpr expr) {
       expr = null;
       if (StartOf(1)) {
-        Primative(out IExpr lhs);
+        Primitive(out IExpr lhs);
         expr = lhs;
       } else if (la.kind == 28 || la.kind == 32 || la.kind == 33) {
         UnaryOp op;
@@ -349,7 +349,7 @@ public _XLang xlang;
       } else SynErr(44);
     }
 
-    void Primative(out IExpr expr) {
+    void Primitive(out IExpr expr) {
       expr = null;
       switch (la.kind) {
         case 1: {
@@ -488,7 +488,7 @@ public _XLang xlang;
     void Visit(_AddExpr element);
     void Visit(_MultExpr element);
     void Visit(_UnaryExpr element);
-    void Visit(_Primative element);
+    void Visit(_Primitive element);
     void Visit(_String element);
     void Visit(_Char element);
     void Visit(_Float element);
@@ -611,9 +611,9 @@ public _XLang xlang;
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Primative : IXLangElement {
+  public partial class _Primitive : IXLangElement {
     public Token token;
-    public _Primative(Token t) { this.token = t; }
+    public _Primitive(Token t) { this.token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
@@ -709,7 +709,7 @@ public _XLang xlang;
         case 42: s = "this symbol not expected in GlblStmt"; break;
         case 43: s = "this symbol not expected in GlblStmt"; break;
         case 44: s = "invalid UnaryExpr"; break;
-        case 45: s = "invalid Primative"; break;
+        case 45: s = "invalid Primitive"; break;
         case 46: s = "invalid Bool"; break;
 
         default: s = "error " + n; break;

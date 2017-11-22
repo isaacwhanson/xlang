@@ -146,14 +146,14 @@ PRODUCTIONS
     UnaryExpr<out IExpr rhs>                (. expr = new _MultExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   UnaryExpr<out IExpr expr> =               (. expr = null;.)
-    (Primative<out IExpr lhs>               (. expr = lhs;.)
+    (Primitive<out IExpr lhs>               (. expr = lhs;.)
                                            |(. UnaryOp op;.)
     (('-'                                   (. op = UnaryOp.NEGATE;.)
     | '~'                                   (. op = UnaryOp.COMPLIMENT;.)
     | '!'                                   (. op = UnaryOp.NOT;.)) (. Token token = t;.)
     UnaryExpr<out IExpr lhs>                (. expr = new _UnaryExpr(token) { op = op, left = lhs };.))).
 
-  Primative<out IExpr expr> =               (. expr = null;.)
+  Primitive<out IExpr expr> =               (. expr = null;.)
     ( Ident<out _Ident lhs>                 (. expr = lhs;.)
     | String<out _String lhs>               (. expr = lhs;.)
     | Char<out _Char lhs>                   (. expr = lhs;.)

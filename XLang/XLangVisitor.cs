@@ -59,7 +59,7 @@ namespace XLang {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Primative element) {
+    public void Visit(_Primitive element) {
       throw new NotImplementedException();
     }
 #pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar
