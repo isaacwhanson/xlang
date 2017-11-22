@@ -20,10 +20,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 using System;
-namespace XLang
-{
-  public abstract class XLangVisitor : IXLangVisitor
-  {
+
+namespace XLang {
+
+  public abstract class XLangVisitor : IXLangVisitor {
+
     public abstract void Visit(_XLang element);
     public abstract void Visit(_Module element);
     public abstract void Visit(_LetStmt element);
@@ -49,18 +50,15 @@ namespace XLang
 
     /* there will be no elements with these types :) */
 #pragma warning disable RECS0083 // Shows NotImplementedException throws in the quick task bar
-    public void Visit(_GlblStmt element)
-    {
+    public void Visit(_GlblStmt element) {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Expr element)
-    {
+    public void Visit(_Expr element) {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Primary element)
-    {
+    public void Visit(_Primary element) {
       throw new NotImplementedException();
     }
 #pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar

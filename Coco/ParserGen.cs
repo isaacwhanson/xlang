@@ -30,11 +30,9 @@ using System.IO;
 using System.Collections;
 using System.Text;
 
-namespace at.jku.ssw.Coco
-{
+namespace at.jku.ssw.Coco {
 
-  public class ParserGen
-  {
+  public class ParserGen {
 
     const int maxTerm = 3;      // sets of size < maxTerm are enumerated
     const char CR = '\r';
@@ -58,19 +56,15 @@ namespace at.jku.ssw.Coco
     readonly Errors errors;
     readonly Buffer buffer;
 
-    void Indent(int n)
-    {
+    void Indent(int n) {
       for (int i = 1; i <= n; i++) gen.Write("  ");
     }
 
 
-    bool Overlaps(BitArray s1, BitArray s2)
-    {
+    bool Overlaps(BitArray s1, BitArray s2) {
       int len = s1.Count;
-      for (int i = 0; i < len; ++i)
-      {
-        if (s1[i] && s2[i])
-        {
+      for (int i = 0; i < len; ++i) {
+        if (s1[i] && s2[i]) {
           return true;
         }
       }
@@ -78,14 +72,12 @@ namespace at.jku.ssw.Coco
     }
 
     // use a switch if more than 5 alternatives and none starts with a resolver, and no LL1 warning
-    bool UseSwitch(Node p)
-    {
+    bool UseSwitch(Node p) {
       BitArray s1, s2;
       if (p.typ != Node.alt) return false;
       int nAlts = 0;
       s1 = new BitArray(tab.terminals.Count);
-      while (p != null)
-      {
+      while (p != null) {
         s2 = tab.Expected0(p.sub, curSy);
         // must not optimize with switch statement, if there are ll1 warnings
         if (Overlaps(s1, s2)) { return false; }
@@ -98,28 +90,22 @@ namespace at.jku.ssw.Coco
       return nAlts > 5;
     }
 
-    void CopySourcePart(Position pos, int indent)
-    {
+    void CopySourcePart(Position pos, int indent) {
       // Copy text described by pos from atg to gen
       int ch, i;
-      if (pos != null)
-      {
+      if (pos != null) {
         buffer.Pos = pos.beg; ch = buffer.Read();
-        if (tab.emitLines)
-        {
+        if (tab.emitLines) {
           gen.WriteLine();
           gen.WriteLine("#line {0} \"{1}\"", pos.line, tab.srcName);
         }
         Indent(indent);
-        while (buffer.Pos <= pos.end)
-        {
-          while (ch == CR || ch == LF)
-          {  // eol is either CR or CRLF or LF
+        while (buffer.Pos <= pos.end) {
+          while (ch == CR || ch == LF) {  // eol is either CR or CRLF or LF
             gen.WriteLine(); Indent(indent);
             if (ch == CR) ch = buffer.Read(); // skip CR
             if (ch == LF) ch = buffer.Read(); // skip LF
-            for (i = 1; i <= pos.col && (ch == ' ' || ch == '\t'); i++)
-            {
+            for (i = 1; i <= pos.col && (ch == ' ' || ch == '\t'); i++) {
               // skip blanks at beginning of line
               ch = buffer.Read();
             }
@@ -133,12 +119,10 @@ namespace at.jku.ssw.Coco
       }
     }
 
-    void GenErrorMsg(int errTyp, Symbol sym)
-    {
+    void GenErrorMsg(int errTyp, Symbol sym) {
       errorNr++;
       err.Write("        case " + errorNr + ": s = \"");
-      switch (errTyp)
-      {
+      switch (errTyp) {
         case tErr:
           if (sym.name[0] == '"') err.Write(tab.Escape(sym.name) + " expected");
           else err.Write(sym.name + " expected");
@@ -151,180 +135,139 @@ namespace at.jku.ssw.Coco
       err.WriteLine("\"; break;");
     }
 
-    int NewCondSet(BitArray s)
-    {
+    int NewCondSet(BitArray s) {
       for (int i = 1; i < symSet.Count; i++) // skip symSet[0] (reserved for union of SYNC sets)
         if (Sets.Equals(s, (BitArray)symSet[i])) return i;
       symSet.Add(s.Clone());
       return symSet.Count - 1;
     }
 
-    void GenCond(BitArray s, Node p)
-    {
+    void GenCond(BitArray s, Node p) {
       if (p.typ == Node.rslv) CopySourcePart(p.pos, 0);
-      else
-      {
+      else {
         int n = Sets.Elements(s);
         if (n == 0) gen.Write("false"); // happens if an ANY set matches no symbol
         else if (n <= maxTerm)
-          foreach (Symbol sym in tab.terminals)
-          {
-            if (s[sym.n])
-            {
+          foreach (Symbol sym in tab.terminals) {
+            if (s[sym.n]) {
               gen.Write("la.kind == {0}", sym.n);
               --n;
               if (n > 0) gen.Write(" || ");
             }
-          }
-        else
+          } else
           gen.Write("StartOf({0})", NewCondSet(s));
       }
     }
 
-    void PutCaseLabels(BitArray s)
-    {
+    void PutCaseLabels(BitArray s) {
       foreach (Symbol sym in tab.terminals)
-        if (s[sym.n]) gen.Write("case {0}: ", sym.n);
+        if (s[sym.n]) gen.Write("  case {0}: ", sym.n);
     }
 
-    void GenCode(Node p, int indent, BitArray isChecked)
-    {
+    void GenCode(Node p, int indent, BitArray isChecked) {
       Node p2;
       BitArray s1, s2;
-      while (p != null)
-      {
-        switch (p.typ)
-        {
-          case Node.nt:
-            {
+      while (p != null) {
+        switch (p.typ) {
+          case Node.nt: {
               Indent(indent);
               gen.Write(p.sym.name + "(");
               CopySourcePart(p.pos, 0);
               gen.WriteLine(");");
               break;
             }
-          case Node.t:
-            {
+          case Node.t: {
               Indent(indent);
               // assert: if isChecked[p.sym.n] is true, then isChecked contains only p.sym.n
               if (isChecked[p.sym.n]) gen.WriteLine("Get();");
               else gen.WriteLine("Expect({0});", p.sym.n);
               break;
             }
-          case Node.wt:
-            {
+          case Node.wt: {
               Indent(indent);
               s1 = tab.Expected(p.next, curSy);
               s1.Or(tab.allSyncSets);
               gen.WriteLine("ExpectWeak({0}, {1});", p.sym.n, NewCondSet(s1));
               break;
             }
-          case Node.any:
-            {
+          case Node.any: {
               Indent(indent);
               int acc = Sets.Elements(p.set);
-              if (tab.terminals.Count == (acc + 1) || (acc > 0 && Sets.Equals(p.set, isChecked)))
-              {
+              if (tab.terminals.Count == (acc + 1) || (acc > 0 && Sets.Equals(p.set, isChecked))) {
                 // either this ANY accepts any terminal (the + 1 = end of file), or exactly what's allowed here
                 gen.WriteLine("Get();");
-              }
-              else
-              {
+              } else {
                 GenErrorMsg(altErr, curSy);
-                if (acc > 0)
-                {
+                if (acc > 0) {
                   gen.Write("if ("); GenCond(p.set, p); gen.WriteLine(") Get(); else SynErr({0});", errorNr);
-                }
-                else gen.WriteLine("SynErr({0}); // ANY node that matches no symbol", errorNr);
+                } else gen.WriteLine("SynErr({0}); // ANY node that matches no symbol", errorNr);
               }
               break;
             }
           case Node.eps: break; // nothing
           case Node.rslv: break; // nothing
-          case Node.sem:
-            {
+          case Node.sem: {
               CopySourcePart(p.pos, indent);
               break;
             }
-          case Node.sync:
-            {
+          case Node.sync: {
               Indent(indent);
               GenErrorMsg(syncErr, curSy);
               s1 = (BitArray)p.set.Clone();
-              gen.Write("while (!("); GenCond(s1, p); gen.Write(")) {");
-              gen.Write("SynErr({0}); Get();", errorNr); gen.WriteLine("}");
+              gen.Write("while (!("); GenCond(s1, p); gen.Write(")) { ");
+              gen.Write("SynErr({0}); Get();", errorNr); gen.WriteLine(" }");
               break;
             }
-          case Node.alt:
-            {
+          case Node.alt: {
               s1 = tab.First(p);
               bool equal = Sets.Equals(s1, isChecked);
               bool useSwitch = UseSwitch(p);
               if (useSwitch) { Indent(indent); gen.WriteLine("switch (la.kind) {"); }
               p2 = p;
-              while (p2 != null)
-              {
+              while (p2 != null) {
                 s1 = tab.Expected(p2.sub, curSy);
                 Indent(indent);
-                if (useSwitch)
-                {
+                if (useSwitch) {
                   PutCaseLabels(s1); gen.WriteLine("{");
-                }
-                else if (p2 == p)
-                {
+                } else if (p2 == p) {
                   gen.Write("if ("); GenCond(s1, p2.sub); gen.WriteLine(") {");
-                }
-                else if (p2.down == null && equal)
-                {
+                } else if (p2.down == null && equal) {
                   gen.WriteLine("} else {");
-                }
-                else
-                {
+                } else {
                   gen.Write("} else if ("); GenCond(s1, p2.sub); gen.WriteLine(") {");
                 }
-                GenCode(p2.sub, indent + 1, s1);
-                if (useSwitch)
-                {
-                  Indent(indent); gen.WriteLine("  break;");
-                  Indent(indent); gen.WriteLine("}");
+                GenCode(p2.sub, indent + (useSwitch ? 3 : 1), s1);
+                if (useSwitch) {
+                  Indent(indent); gen.WriteLine("      break;");
+                  Indent(indent); gen.WriteLine("    }");
                 }
                 p2 = p2.down;
               }
               Indent(indent);
-              if (equal)
-              {
+              if (equal) {
                 gen.WriteLine("}");
-              }
-              else
-              {
+              } else {
                 GenErrorMsg(altErr, curSy);
-                if (useSwitch)
-                {
-                  gen.WriteLine("default: SynErr({0}); break;", errorNr);
+                if (useSwitch) {
+                  gen.WriteLine("  default: SynErr({0}); break;", errorNr);
                   Indent(indent); gen.WriteLine("}");
-                }
-                else
-                {
+                } else {
                   gen.Write("} "); gen.WriteLine("else SynErr({0});", errorNr);
                 }
               }
               break;
             }
-          case Node.iter:
-            {
+          case Node.iter: {
               Indent(indent);
               p2 = p.sub;
               gen.Write("while (");
-              if (p2.typ == Node.wt)
-              {
+              if (p2.typ == Node.wt) {
                 s1 = tab.Expected(p2.next, curSy);
                 s2 = tab.Expected(p.next, curSy);
                 gen.Write("WeakSeparator({0},{1},{2}) ", p2.sym.n, NewCondSet(s1), NewCondSet(s2));
                 s1 = new BitArray(tab.terminals.Count);  // for inner structure
                 if (p2.up || p2.next == null) p2 = null; else p2 = p2.next;
-              }
-              else
-              {
+              } else {
                 s1 = tab.First(p2);
                 GenCond(s1, p2);
               }
@@ -350,47 +293,38 @@ namespace at.jku.ssw.Coco
       }
     }
 
-    void GenTokens()
-    {
-      foreach (Symbol sym in tab.terminals)
-      {
+    void GenTokens() {
+      foreach (Symbol sym in tab.terminals) {
         if (Char.IsLetter(sym.name[0]))
           gen.WriteLine("    public const int _{0} = {1};", sym.name, sym.n);
       }
     }
 
-    void GenPragmas()
-    {
-      foreach (Symbol sym in tab.pragmas)
-      {
+    void GenPragmas() {
+      foreach (Symbol sym in tab.pragmas) {
         gen.WriteLine("    public const int _{0} = {1};", sym.name, sym.n);
       }
     }
 
-    void GenCodePragmas()
-    {
-      foreach (Symbol sym in tab.pragmas)
-      {
+    void GenCodePragmas() {
+      foreach (Symbol sym in tab.pragmas) {
         gen.WriteLine("        if (la.kind == {0}) {{", sym.n);
         CopySourcePart(sym.semPos, 4);
         gen.WriteLine("        }");
       }
     }
 
-    void GenNodes()
-    {
+    void GenNodes() {
       string gram = tab.gramSy.name;
       gen.WriteLine("  public interface I{0}Element {{", gram);
       gen.WriteLine("    void Accept(I{0}Visitor visitor);", gram);
       gen.WriteLine("  }");
       gen.WriteLine("\n  public interface I{0}Visitor {{", tab.gramSy.name);
-      foreach (Symbol sym in tab.nonterminals)
-      {
+      foreach (Symbol sym in tab.nonterminals) {
         gen.WriteLine("    void Visit(_{0} element);", sym.name);
       }
       gen.WriteLine("  }");
-      foreach (Symbol sym in tab.nonterminals)
-      {
+      foreach (Symbol sym in tab.nonterminals) {
         gen.WriteLine("\n  public partial class _{0} : I{1}Element {{", sym.name, tab.gramSy.name);
         gen.WriteLine("    public Token token;");
         gen.WriteLine("    public _{0}(Token t) {{ this.token = t; }}", sym.name);
@@ -399,10 +333,8 @@ namespace at.jku.ssw.Coco
       }
     }
 
-    void GenProductions()
-    {
-      foreach (Symbol sym in tab.nonterminals)
-      {
+    void GenProductions() {
+      foreach (Symbol sym in tab.nonterminals) {
         curSy = sym;
         gen.Write("    void {0}(", sym.name);
         CopySourcePart(sym.attrPos, 0);
@@ -413,15 +345,12 @@ namespace at.jku.ssw.Coco
       }
     }
 
-    void InitSets()
-    {
-      for (int i = 0; i < symSet.Count; i++)
-      {
+    void InitSets() {
+      for (int i = 0; i < symSet.Count; i++) {
         BitArray s = (BitArray)symSet[i];
         gen.Write("    {");
         int j = 0;
-        foreach (Symbol sym in tab.terminals)
-        {
+        foreach (Symbol sym in tab.terminals) {
           if (s[sym.n]) gen.Write("_T,"); else gen.Write("_x,");
           ++j;
           if (j % 4 == 0) gen.Write(" ");
@@ -430,8 +359,7 @@ namespace at.jku.ssw.Coco
       }
     }
 
-    public void WriteParser()
-    {
+    public void WriteParser() {
       Generator g = new Generator(tab);
       int oldPos = buffer.Pos;  // Pos is modified by CopySourcePart
       symSet.Add(tab.allSyncSets);
@@ -447,8 +375,7 @@ namespace at.jku.ssw.Coco
       if (usingPos != null) { CopySourcePart(usingPos, 0); gen.WriteLine(); }
       g.CopyFramePart("-->namespace");
       /* AW open namespace, if it exists */
-      if (!string.IsNullOrEmpty(tab.nsName))
-      {
+      if (!string.IsNullOrEmpty(tab.nsName)) {
         gen.WriteLine("namespace {0} {{", tab.nsName);
       }
       g.CopyFramePart("-->constants");
@@ -469,8 +396,7 @@ namespace at.jku.ssw.Coco
       buffer.Pos = oldPos;
     }
 
-    public void WriteStatistics()
-    {
+    public void WriteStatistics() {
       trace.WriteLine();
       trace.WriteLine("{0} terminals", tab.terminals.Count);
       trace.WriteLine("{0} symbols", tab.terminals.Count + tab.pragmas.Count +
@@ -479,8 +405,7 @@ namespace at.jku.ssw.Coco
       trace.WriteLine("{0} sets", symSet.Count);
     }
 
-    public ParserGen(Parser parser)
-    {
+    public ParserGen(Parser parser) {
       tab = parser.tab;
       errors = parser.errors;
       trace = parser.trace;

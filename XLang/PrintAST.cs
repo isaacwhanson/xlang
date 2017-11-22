@@ -22,27 +22,21 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 using System;
-namespace XLang
-{
-  public class PrintAST : XLangVisitor
-  {
-    public override void Visit(_XLang element)
-    {
+namespace XLang {
+  public class PrintAST : XLangVisitor {
+    public override void Visit(_XLang element) {
       element.module.Accept(this);
     }
 
-    public override void Visit(_Module element)
-    {
+    public override void Visit(_Module element) {
       Console.WriteLine("module");
-      foreach (IStmt stmt in element.stmts)
-      {
+      foreach (IStmt stmt in element.stmts) {
         stmt.Accept(this);
       }
       Console.WriteLine("end");
     }
 
-    public override void Visit(_LetStmt element)
-    {
+    public override void Visit(_LetStmt element) {
       Console.Write("\tlet ");
       element.ident.Accept(this);
       Console.Write(" = ");
@@ -50,13 +44,11 @@ namespace XLang
       Console.WriteLine(";");
     }
 
-    public override void Visit(_Ident element)
-    {
+    public override void Visit(_Ident element) {
       Console.Write("@{0}", element.token.val);
     }
 
-    public override void Visit(_CondExpr element)
-    {
+    public override void Visit(_CondExpr element) {
       Console.Write("(");
       element.condition.Accept(this);
       Console.Write(" ? ");
@@ -66,8 +58,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_LogOrExpr element)
-    {
+    public override void Visit(_LogOrExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" LOG_OR ");
@@ -75,8 +66,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_LogXorExpr element)
-    {
+    public override void Visit(_LogXorExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" LOG_XOR ");
@@ -84,8 +74,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_LogAndExpr element)
-    {
+    public override void Visit(_LogAndExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" LOG_AND ");
@@ -93,8 +82,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_OrExpr element)
-    {
+    public override void Visit(_OrExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" OR ");
@@ -102,8 +90,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_XorExpr element)
-    {
+    public override void Visit(_XorExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" XOR ");
@@ -111,8 +98,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_AndExpr element)
-    {
+    public override void Visit(_AndExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" AND ");
@@ -120,8 +106,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_EqlExpr element)
-    {
+    public override void Visit(_EqlExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" {0} ", element.op);
@@ -129,8 +114,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_RelExpr element)
-    {
+    public override void Visit(_RelExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" {0} ", element.op);
@@ -138,8 +122,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_ShiftExpr element)
-    {
+    public override void Visit(_ShiftExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" {0} ", element.op);
@@ -147,8 +130,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_AddExpr element)
-    {
+    public override void Visit(_AddExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" {0} ", element.op);
@@ -156,8 +138,7 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_MultExpr element)
-    {
+    public override void Visit(_MultExpr element) {
       Console.Write("(");
       element.left.Accept(this);
       Console.Write(" {0} ", element.op);
@@ -165,36 +146,30 @@ namespace XLang
       Console.Write(")");
     }
 
-    public override void Visit(_UnaryExpr element)
-    {
+    public override void Visit(_UnaryExpr element) {
       Console.Write("(");
       Console.Write("{0} ", element.op);
       element.left.Accept(this);
       Console.Write(")");
     }
 
-    public override void Visit(_String element)
-    {
+    public override void Visit(_String element) {
       Console.Write("{0}", element.token.val);
     }
 
-    public override void Visit(_Char element)
-    {
+    public override void Visit(_Char element) {
       Console.Write("{0}", element.token.val);
     }
 
-    public override void Visit(_Float element)
-    {
+    public override void Visit(_Float element) {
       Console.Write("{0}f", element.token.val);
     }
 
-    public override void Visit(_Int element)
-    {
+    public override void Visit(_Int element) {
       Console.Write("{0}i", element.token.val);
     }
 
-    public override void Visit(_Array element)
-    {
+    public override void Visit(_Array element) {
       throw new NotImplementedException();
     }
   }

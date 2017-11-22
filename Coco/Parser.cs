@@ -21,7 +21,7 @@ namespace at.jku.ssw.Coco {
     const int minErrDist = 2;
 
     public Scanner scanner;
-    public Errors  errors;
+    public Errors errors;
 
     public Token t;    // last recognized token
     public Token la;   // lookahead token
@@ -47,17 +47,17 @@ const int id = 0;
       errors = new Errors();
     }
 
-    void SynErr (int n) {
+    void SynErr(int n) {
       if (errDist >= minErrDist) errors.SynErr(la.line, la.col, n);
       errDist = 0;
     }
 
-    public void SemErr (string msg) {
+    public void SemErr(string msg) {
       if (errDist >= minErrDist) errors.SemErr(t.line, t.col, msg);
       errDist = 0;
     }
 
-    void Get () {
+    void Get() {
       for (;;) {
         t = la;
         la = scanner.Scan();
@@ -73,15 +73,15 @@ const int id = 0;
       }
     }
 
-    void Expect (int n) {
-      if (la.kind==n) Get(); else { SynErr(n); }
+    void Expect(int n) {
+      if (la.kind == n) Get(); else { SynErr(n); }
     }
 
-    bool StartOf (int s) {
+    bool StartOf(int s) {
       return set[s, la.kind];
     }
 
-    void ExpectWeak (int n, int follow) {
+    void ExpectWeak(int n, int follow) {
       if (la.kind == n) Get();
       else {
         SynErr(n);
@@ -91,9 +91,7 @@ const int id = 0;
 
     bool WeakSeparator(int n, int syFol, int repFol) {
       int kind = la.kind;
-      if (kind == n) {Get(); return true;}
-      else if (StartOf(repFol)) {return false;}
-      else {
+      if (kind == n) { Get(); return true; } else if (StartOf(repFol)) { return false; } else {
         SynErr(n);
         while (!(set[syFol, kind] || set[repFol, kind] || set[0, kind])) {
           Get();
@@ -166,7 +164,7 @@ const int id = 0;
         Set(out s);
         tab.ignored.Or(s); 
       }
-      while (!(la.kind == 0 || la.kind == 16)) {SynErr(42); Get();}
+      while (!(la.kind == 0 || la.kind == 16)) { SynErr(42); Get(); }
       Expect(16);
       if (genScanner) dfa.MakeDeterministic();
       tab.DeleteNodes();
@@ -265,7 +263,7 @@ const int id = 0;
       }
       tokenString = null;
       
-      while (!(StartOf(5))) {SynErr(43); Get();}
+      while (!(StartOf(5))) { SynErr(43); Get(); }
       if (la.kind == 17) {
         Get();
         TokenExpr(out g);
@@ -478,90 +476,90 @@ const int id = 0;
       g = null;
       
       switch (la.kind) {
-      case 1: case 3: case 5: case 29: {
-        if (la.kind == 29) {
-          Get();
-          weak = true; 
-        }
-        Sym(out name, out kind);
-        Symbol sym = tab.FindSym(name);
-        if (sym == null && kind == str)
-         sym = tab.literals[name] as Symbol;
-        bool undef = sym == null;
-        if (undef) {
-         if (kind == id)
-           sym = tab.NewSym(Node.nt, name, 0);  // forward nt
-         else if (genScanner) { 
-           sym = tab.NewSym(Node.t, name, t.line);
-           dfa.MatchLiteral(sym.name, sym);
-         } else {  // undefined string in production
-           SemErr("undefined string in production");
-           sym = tab.eofSy;  // dummy
-         }
-        }
-        int typ = sym.typ;
-        if (typ != Node.t && typ != Node.nt)
-         SemErr("this symbol kind is not allowed in a production");
-        if (weak)
-         if (typ == Node.t) typ = Node.wt;
-         else SemErr("only terminals may be weak");
-        Node p = tab.NewNode(typ, sym, t.line);
-        g = new Graph(p);
-        
-        if (la.kind == 24 || la.kind == 26) {
-          Attribs(p);
-          if (kind != id) SemErr("a literal must not have attributes"); 
-        }
-        if (undef)
-         sym.attrPos = p.pos;  // dummy
-        else if ((p.pos == null) != (sym.attrPos == null))
-         SemErr("attribute mismatch between declaration and use of this symbol");
-        
-        break;
-      }
-      case 30: {
-        Get();
-        Expression(out g);
-        Expect(31);
-        break;
-      }
-      case 32: {
-        Get();
-        Expression(out g);
-        Expect(33);
-        tab.MakeOption(g); 
-        break;
-      }
-      case 34: {
-        Get();
-        Expression(out g);
-        Expect(35);
-        tab.MakeIteration(g); 
-        break;
-      }
-      case 39: {
-        SemText(out pos);
-        Node p = tab.NewNode(Node.sem, null, 0);
-        p.pos = pos;
-        g = new Graph(p);
-        
-        break;
-      }
-      case 23: {
-        Get();
-        Node p = tab.NewNode(Node.any, null, 0);  // p.set is set in tab.SetupAnys
-        g = new Graph(p);
-        
-        break;
-      }
-      case 36: {
-        Get();
-        Node p = tab.NewNode(Node.sync, null, 0);
-        g = new Graph(p);
-        
-        break;
-      }
-      default: SynErr(49); break;
+        case 1:   case 3:   case 5:   case 29: {
+            if (la.kind == 29) {
+              Get();
+              weak = true; 
+            }
+            Sym(out name, out kind);
+            Symbol sym = tab.FindSym(name);
+            if (sym == null && kind == str)
+             sym = tab.literals[name] as Symbol;
+            bool undef = sym == null;
+            if (undef) {
+             if (kind == id)
+               sym = tab.NewSym(Node.nt, name, 0);  // forward nt
+             else if (genScanner) { 
+               sym = tab.NewSym(Node.t, name, t.line);
+               dfa.MatchLiteral(sym.name, sym);
+             } else {  // undefined string in production
+               SemErr("undefined string in production");
+               sym = tab.eofSy;  // dummy
+             }
+            }
+            int typ = sym.typ;
+            if (typ != Node.t && typ != Node.nt)
+             SemErr("this symbol kind is not allowed in a production");
+            if (weak)
+             if (typ == Node.t) typ = Node.wt;
+             else SemErr("only terminals may be weak");
+            Node p = tab.NewNode(typ, sym, t.line);
+            g = new Graph(p);
+            
+            if (la.kind == 24 || la.kind == 26) {
+              Attribs(p);
+              if (kind != id) SemErr("a literal must not have attributes"); 
+            }
+            if (undef)
+             sym.attrPos = p.pos;  // dummy
+            else if ((p.pos == null) != (sym.attrPos == null))
+             SemErr("attribute mismatch between declaration and use of this symbol");
+            
+            break;
+          }
+        case 30: {
+            Get();
+            Expression(out g);
+            Expect(31);
+            break;
+          }
+        case 32: {
+            Get();
+            Expression(out g);
+            Expect(33);
+            tab.MakeOption(g); 
+            break;
+          }
+        case 34: {
+            Get();
+            Expression(out g);
+            Expect(35);
+            tab.MakeIteration(g); 
+            break;
+          }
+        case 39: {
+            SemText(out pos);
+            Node p = tab.NewNode(Node.sem, null, 0);
+            p.pos = pos;
+            g = new Graph(p);
+            
+            break;
+          }
+        case 23: {
+            Get();
+            Node p = tab.NewNode(Node.any, null, 0);  // p.set is set in tab.SetupAnys
+            g = new Graph(p);
+            
+            break;
+          }
+        case 36: {
+            Get();
+            Node p = tab.NewNode(Node.sync, null, 0);
+            g = new Graph(p);
+            
+            break;
+          }
+        default: SynErr(49); break;
       }
       if (g == null) // invalid start of Factor
        g = new Graph(tab.NewNode(Node.eps, null, 0));
@@ -846,7 +844,7 @@ const int id = 0;
     public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
     public string errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
 
-    public virtual void SynErr (int line, int col, int n) {
+    public virtual void SynErr(int line, int col, int n) {
       string s;
       switch (n) {
         case 0: s = "EOF expected"; break;
@@ -908,17 +906,17 @@ const int id = 0;
       count++;
     }
 
-    public virtual void SemErr (int line, int col, string s) {
+    public virtual void SemErr(int line, int col, string s) {
       errorStream.WriteLine(errMsgFormat, line, col, s);
       count++;
     }
 
-    public virtual void SemErr (string s) {
+    public virtual void SemErr(string s) {
       errorStream.WriteLine(s);
       count++;
     }
 
-    public virtual void Warning (int line, int col, string s) {
+    public virtual void Warning(int line, int col, string s) {
       errorStream.WriteLine(errMsgFormat, line, col, s);
     }
 
@@ -927,7 +925,7 @@ const int id = 0;
     }
   } // Errors
 
-  public class FatalError: Exception {
-   public FatalError(string m): base(m) {}
+  public class FatalError : Exception {
+    public FatalError(string m) : base(m) { }
   }
 }

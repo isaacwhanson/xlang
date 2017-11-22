@@ -23,10 +23,10 @@ using System;
 using System.Collections.Generic;
 using LLVMSharp;
 
-namespace XLang
-{
-  public class LLVMVisitor : XLangVisitor
-  {
+namespace XLang {
+
+  public class LLVMVisitor : XLangVisitor {
+
     LLVMModuleRef module;
     LLVMBuilderRef builder;
     readonly Dictionary<string, LLVMValueRef> namedValues = new Dictionary<string, LLVMValueRef>();
@@ -35,121 +35,98 @@ namespace XLang
     readonly LLVMBool LLVMFalse = new LLVMBool(0);
     readonly LLVMBool LLVMTrue = new LLVMBool(1);
 
-    public override void Visit(_XLang element)
-    {
+    public override void Visit(_XLang element) {
       builder = LLVM.CreateBuilder();
       element.module.Accept(this);
     }
 
-    public override void Visit(_Module element)
-    {
+    public override void Visit(_Module element) {
       module = LLVM.ModuleCreateWithName(".xlang");
-      foreach (IStmt stmt in element.stmts)
-      {
+      foreach (IStmt stmt in element.stmts) {
         stmt.Accept(this);
       }
     }
 
-    public override void Visit(_LetStmt element)
-    {
+    public override void Visit(_LetStmt element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_Ident element)
-    {
+    public override void Visit(_Ident element) {
       string ident = element.token.val;
       throw new NotImplementedException();
     }
 
-    public override void Visit(_CondExpr element)
-    {
+    public override void Visit(_CondExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_LogOrExpr element)
-    {
+    public override void Visit(_LogOrExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_LogXorExpr element)
-    {
+    public override void Visit(_LogXorExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_LogAndExpr element)
-    {
+    public override void Visit(_LogAndExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_OrExpr element)
-    {
+    public override void Visit(_OrExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_XorExpr element)
-    {
+    public override void Visit(_XorExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_AndExpr element)
-    {
+    public override void Visit(_AndExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_EqlExpr element)
-    {
+    public override void Visit(_EqlExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_RelExpr element)
-    {
+    public override void Visit(_RelExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_ShiftExpr element)
-    {
+    public override void Visit(_ShiftExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_AddExpr element)
-    {
+    public override void Visit(_AddExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_MultExpr element)
-    {
+    public override void Visit(_MultExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_UnaryExpr element)
-    {
+    public override void Visit(_UnaryExpr element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_String element)
-    {
+    public override void Visit(_String element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_Char element)
-    {
+    public override void Visit(_Char element) {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_Float element)
-    {
+    public override void Visit(_Float element) {
       valueStack.Push(LLVM.ConstReal(LLVM.DoubleType(), Double.Parse(element.token.val)));
     }
 
-    public override void Visit(_Int element)
-    {
+    public override void Visit(_Int element) {
       Int64 val = Int64.Parse(element.token.val);
       LLVMValueRef val_ref = LLVM.ConstInt(LLVM.Int64Type(), (ulong)val, LLVMTrue);
       valueStack.Push(val_ref);
     }
 
-    public override void Visit(_Array element)
-    {
+    public override void Visit(_Array element) {
       throw new NotImplementedException();
     }
   }

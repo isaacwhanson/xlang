@@ -16,31 +16,31 @@ namespace XLang {
     const int minErrDist = 2;
 
     public Scanner scanner;
-    public Errors  errors;
+    public Errors errors;
 
     public Token t;    // last recognized token
     public Token la;   // lookahead token
     int errDist = minErrDist;
 public _XLang xlang;
 
-  /*Author:
-       Isaac W Hanson <isaac@starlig.ht>
+    /*Author:
+         Isaac W Hanson <isaac@starlig.ht>
 
-  Copyright (c) 2017
+    Copyright (c) 2017
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    */
 
 
 
@@ -49,17 +49,17 @@ public _XLang xlang;
       errors = new Errors();
     }
 
-    void SynErr (int n) {
+    void SynErr(int n) {
       if (errDist >= minErrDist) errors.SynErr(la.line, la.col, n);
       errDist = 0;
     }
 
-    public void SemErr (string msg) {
+    public void SemErr(string msg) {
       if (errDist >= minErrDist) errors.SemErr(t.line, t.col, msg);
       errDist = 0;
     }
 
-    void Get () {
+    void Get() {
       for (;;) {
         t = la;
         la = scanner.Scan();
@@ -69,15 +69,15 @@ public _XLang xlang;
       }
     }
 
-    void Expect (int n) {
-      if (la.kind==n) Get(); else { SynErr(n); }
+    void Expect(int n) {
+      if (la.kind == n) Get(); else { SynErr(n); }
     }
 
-    bool StartOf (int s) {
+    bool StartOf(int s) {
       return set[s, la.kind];
     }
 
-    void ExpectWeak (int n, int follow) {
+    void ExpectWeak(int n, int follow) {
       if (la.kind == n) Get();
       else {
         SynErr(n);
@@ -87,9 +87,7 @@ public _XLang xlang;
 
     bool WeakSeparator(int n, int syFol, int repFol) {
       int kind = la.kind;
-      if (kind == n) {Get(); return true;}
-      else if (StartOf(repFol)) {return false;}
-      else {
+      if (kind == n) { Get(); return true; } else if (StartOf(repFol)) { return false; } else {
         SynErr(n);
         while (!(set[syFol, kind] || set[repFol, kind] || set[0, kind])) {
           Get();
@@ -102,26 +100,26 @@ public _XLang xlang;
 #pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
 
     void XLang() {
-      xlang = new _XLang(t); 
+      xlang = new _XLang(t);
       Module(out _Module module);
-      xlang.module = module; 
+      xlang.module = module;
     }
 
     void Module(out _Module module) {
-      module = new _Module(t); 
+      module = new _Module(t);
       GlblStmt(out IStmt stmt0);
-      module.stmts.Add(stmt0); 
+      module.stmts.Add(stmt0);
       while (la.kind == 7) {
         GlblStmt(out IStmt stmt1);
-        module.stmts.Add(stmt1); 
+        module.stmts.Add(stmt1);
       }
     }
 
     void GlblStmt(out IStmt stmt) {
-      while (!(la.kind == 0 || la.kind == 7)) {SynErr(40); Get();}
+      while (!(la.kind == 0 || la.kind == 7)) { SynErr(40); Get(); }
       LetStmt(out _LetStmt let_stmt);
-      stmt = let_stmt; 
-      while (!(la.kind == 0 || la.kind == 6)) {SynErr(41); Get();}
+      stmt = let_stmt;
+      while (!(la.kind == 0 || la.kind == 6)) { SynErr(41); Get(); }
       Expect(6);
     }
 
@@ -129,302 +127,302 @@ public _XLang xlang;
       Expect(7);
       Ident(out _Ident ident);
       Expect(8);
-      Token token = t; 
+      Token token = t;
       Expr(out IExpr expr);
-      let_stmt = new _LetStmt(token){ ident=ident, expr=expr }; 
+      let_stmt = new _LetStmt(token) { ident = ident, expr = expr };
     }
 
     void Ident(out _Ident term) {
       Expect(1);
-      term = new _Ident(t); 
+      term = new _Ident(t);
     }
 
     void Expr(out IExpr expr) {
       CondExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
     }
 
     void CondExpr(out IExpr expr) {
       LogOrExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       if (la.kind == 9) {
         Get();
-        Token token = t; 
+        Token token = t;
         Expr(out IExpr consequent);
         Expect(10);
         Expr(out IExpr alternative);
-        expr = new _CondExpr(token) { condition=expr, consequent=consequent, alternative=alternative }; 
+        expr = new _CondExpr(token) { condition = expr, consequent = consequent, alternative = alternative };
       }
     }
 
     void LogOrExpr(out IExpr expr) {
       LogXorExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (la.kind == 11) {
         Get();
-        Token token = t; 
+        Token token = t;
         LogXorExpr(out IExpr rhs);
-        expr = new _LogOrExpr(token) { left=expr, right=rhs }; 
+        expr = new _LogOrExpr(token) { left = expr, right = rhs };
       }
     }
 
     void LogXorExpr(out IExpr expr) {
       LogAndExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (la.kind == 12) {
         Get();
-        Token token = t; 
+        Token token = t;
         LogAndExpr(out IExpr rhs);
-        expr = new _LogXorExpr(token) { left=expr, right=rhs }; 
+        expr = new _LogXorExpr(token) { left = expr, right = rhs };
       }
     }
 
     void LogAndExpr(out IExpr expr) {
       OrExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (la.kind == 13) {
         Get();
-        Token token = t; 
+        Token token = t;
         OrExpr(out IExpr rhs);
-        expr = new _LogAndExpr(token) { left=expr, right=rhs }; 
+        expr = new _LogAndExpr(token) { left = expr, right = rhs };
       }
     }
 
     void OrExpr(out IExpr expr) {
       XorExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (la.kind == 14) {
         Get();
-        Token token = t; 
+        Token token = t;
         XorExpr(out IExpr rhs);
-        expr = new _OrExpr(token) { left=expr, right=rhs }; 
+        expr = new _OrExpr(token) { left = expr, right = rhs };
       }
     }
 
     void XorExpr(out IExpr expr) {
       AndExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (la.kind == 15) {
         Get();
-        Token token = t; 
+        Token token = t;
         AndExpr(out IExpr rhs);
-        expr = new _XorExpr(token) { left=expr, right=rhs }; 
+        expr = new _XorExpr(token) { left = expr, right = rhs };
       }
     }
 
     void AndExpr(out IExpr expr) {
       EqlExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (la.kind == 16) {
         Get();
-        Token token = t; 
+        Token token = t;
         EqlExpr(out IExpr rhs);
-        expr = new _AndExpr(token) { left=expr, right=rhs }; 
+        expr = new _AndExpr(token) { left = expr, right = rhs };
       }
     }
 
     void EqlExpr(out IExpr expr) {
       RelExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (StartOf(1)) {
-        EqlOp op; 
+        EqlOp op;
         if (la.kind == 17) {
           Get();
-          op = EqlOp.EQUAL; 
+          op = EqlOp.EQUAL;
         } else if (la.kind == 18) {
           Get();
-          op = EqlOp.NOTEQUAL; 
+          op = EqlOp.NOTEQUAL;
         } else if (la.kind == 19) {
           Get();
-          op = EqlOp.HARDEQUAL; 
+          op = EqlOp.HARDEQUAL;
         } else {
           Get();
-          op = EqlOp.HARDNOTEQUAL; 
+          op = EqlOp.HARDNOTEQUAL;
         }
-        Token token = t; 
+        Token token = t;
         RelExpr(out IExpr rhs);
-        expr = new _EqlExpr(token) { op=op, left=expr, right=rhs }; 
+        expr = new _EqlExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
     void RelExpr(out IExpr expr) {
       ShiftExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (StartOf(2)) {
-        RelOp op; 
+        RelOp op;
         if (la.kind == 21) {
           Get();
-          op = RelOp.LESSTHAN; 
+          op = RelOp.LESSTHAN;
         } else if (la.kind == 22) {
           Get();
-          op = RelOp.GREATERTHAN; 
+          op = RelOp.GREATERTHAN;
         } else if (la.kind == 23) {
           Get();
-          op = RelOp.LESSTHANEQUAL; 
+          op = RelOp.LESSTHANEQUAL;
         } else {
           Get();
-          op = RelOp.GREATERTHANEQUAL; 
+          op = RelOp.GREATERTHANEQUAL;
         }
-        Token token = t; 
+        Token token = t;
         ShiftExpr(out IExpr rhs);
-        expr = new _RelExpr(token) { op=op, left=expr, right=rhs }; 
+        expr = new _RelExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
     void ShiftExpr(out IExpr expr) {
       AddExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (la.kind == 25 || la.kind == 26) {
-        ShiftOp op; 
+        ShiftOp op;
         if (la.kind == 25) {
           Get();
-          op = ShiftOp.LEFT; 
+          op = ShiftOp.LEFT;
         } else {
           Get();
-          op = ShiftOp.RIGHT; 
+          op = ShiftOp.RIGHT;
         }
-        Token token = t; 
+        Token token = t;
         AddExpr(out IExpr rhs);
-        expr = new _ShiftExpr(token) { op=op, left=expr, right=rhs }; 
+        expr = new _ShiftExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
     void AddExpr(out IExpr expr) {
       MultExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (la.kind == 27 || la.kind == 28) {
-        AddOp op; 
+        AddOp op;
         if (la.kind == 27) {
           Get();
-          op = AddOp.PLUS; 
+          op = AddOp.PLUS;
         } else {
           Get();
-          op = AddOp.MINUS; 
+          op = AddOp.MINUS;
         }
-        Token token = t; 
+        Token token = t;
         MultExpr(out IExpr rhs);
-        expr = new _AddExpr(token) { op=op, left=expr, right=rhs }; 
+        expr = new _AddExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
     void MultExpr(out IExpr expr) {
       UnaryExpr(out IExpr lhs);
-      expr = lhs; 
+      expr = lhs;
       while (la.kind == 29 || la.kind == 30 || la.kind == 31) {
-        MultOp op; 
+        MultOp op;
         if (la.kind == 29) {
           Get();
-          op = MultOp.TIMES; 
+          op = MultOp.TIMES;
         } else if (la.kind == 30) {
           Get();
-          op = MultOp.DIVIDE; 
+          op = MultOp.DIVIDE;
         } else {
           Get();
-          op = MultOp.MODULO; 
+          op = MultOp.MODULO;
         }
-        Token token = t; 
+        Token token = t;
         UnaryExpr(out IExpr rhs);
-        expr = new _MultExpr(token) { op=op, left=expr, right=rhs }; 
+        expr = new _MultExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
     void UnaryExpr(out IExpr expr) {
-      expr = null; 
+      expr = null;
       if (StartOf(3)) {
         Primary(out IExpr lhs);
-        expr = lhs; 
+        expr = lhs;
       } else if (la.kind == 28 || la.kind == 32 || la.kind == 33) {
-        UnaryOp op; 
+        UnaryOp op;
         if (la.kind == 28) {
           Get();
-          op = UnaryOp.NEGATE; 
+          op = UnaryOp.NEGATE;
         } else if (la.kind == 32) {
           Get();
-          op = UnaryOp.COMPLIMENT; 
+          op = UnaryOp.COMPLIMENT;
         } else {
           Get();
-          op = UnaryOp.NOT; 
+          op = UnaryOp.NOT;
         }
-        Token token = t; 
+        Token token = t;
         UnaryExpr(out IExpr lhs);
-        expr = new _UnaryExpr(token) { op=op, left=lhs }; 
+        expr = new _UnaryExpr(token) { op = op, left = lhs };
       } else SynErr(42);
     }
 
     void Primary(out IExpr expr) {
-      expr = null; 
+      expr = null;
       switch (la.kind) {
-      case 1: {
-        Ident(out _Ident lhs);
-        expr = lhs; 
-        break;
-      }
-      case 2: {
-        String(out _String lhs);
-        expr = lhs; 
-        break;
-      }
-      case 3: {
-        Char(out _Char lhs);
-        expr = lhs; 
-        break;
-      }
-      case 4: {
-        Float(out _Float lhs);
-        expr = lhs; 
-        break;
-      }
-      case 5: {
-        Int(out _Int lhs);
-        expr = lhs; 
-        break;
-      }
-      case 36: {
-        Array(out _Array lhs);
-        expr = lhs; 
-        break;
-      }
-      case 34: {
-        Get();
-        Expr(out IExpr lhs);
-        ExpectWeak(35, 4);
-        expr = lhs; 
-        break;
-      }
-      default: SynErr(43); break;
+        case 1: {
+            Ident(out _Ident lhs);
+            expr = lhs;
+            break;
+          }
+        case 2: {
+            String(out _String lhs);
+            expr = lhs;
+            break;
+          }
+        case 3: {
+            Char(out _Char lhs);
+            expr = lhs;
+            break;
+          }
+        case 4: {
+            Float(out _Float lhs);
+            expr = lhs;
+            break;
+          }
+        case 5: {
+            Int(out _Int lhs);
+            expr = lhs;
+            break;
+          }
+        case 36: {
+            Array(out _Array lhs);
+            expr = lhs;
+            break;
+          }
+        case 34: {
+            Get();
+            Expr(out IExpr lhs);
+            ExpectWeak(35, 4);
+            expr = lhs;
+            break;
+          }
+        default: SynErr(43); break;
       }
     }
 
     void String(out _String term) {
       Expect(2);
-      term = new _String(t); 
+      term = new _String(t);
     }
 
     void Char(out _Char term) {
       Expect(3);
-      term = new _Char(t); 
+      term = new _Char(t);
     }
 
     void Float(out _Float term) {
       Expect(4);
-      term = new _Float(t); 
+      term = new _Float(t);
     }
 
     void Int(out _Int term) {
       Expect(5);
-      term = new _Int(t); 
+      term = new _Int(t);
     }
 
     void Array(out _Array expr) {
       Expect(36);
-      expr = new _Array(t); 
+      expr = new _Array(t);
       if (StartOf(5)) {
         Expr(out IExpr exp0);
-        expr.exprs.Add(exp0); 
+        expr.exprs.Add(exp0);
         while (la.kind == 37) {
           Get();
           Expr(out IExpr exp1);
-          expr.exprs.Add(exp1); 
+          expr.exprs.Add(exp1);
         }
       }
       Expect(38);
@@ -644,7 +642,7 @@ public _XLang xlang;
     public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream
     public string errMsgFormat = "-- line {0} col {1}: {2}"; // 0=line, 1=column, 2=text
 
-    public virtual void SynErr (int line, int col, int n) {
+    public virtual void SynErr(int line, int col, int n) {
       string s;
       switch (n) {
         case 0: s = "EOF expected"; break;
@@ -698,17 +696,17 @@ public _XLang xlang;
       count++;
     }
 
-    public virtual void SemErr (int line, int col, string s) {
+    public virtual void SemErr(int line, int col, string s) {
       errorStream.WriteLine(errMsgFormat, line, col, s);
       count++;
     }
 
-    public virtual void SemErr (string s) {
+    public virtual void SemErr(string s) {
       errorStream.WriteLine(s);
       count++;
     }
 
-    public virtual void Warning (int line, int col, string s) {
+    public virtual void Warning(int line, int col, string s) {
       errorStream.WriteLine(errMsgFormat, line, col, s);
     }
 
@@ -717,7 +715,7 @@ public _XLang xlang;
     }
   } // Errors
 
-  public class FatalError: Exception {
-   public FatalError(string m): base(m) {}
+  public class FatalError : Exception {
+    public FatalError(string m) : base(m) { }
   }
 }

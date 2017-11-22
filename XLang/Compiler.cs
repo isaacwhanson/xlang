@@ -22,18 +22,15 @@
 using System;
 using System.Diagnostics.Contracts;
 
-namespace XLang
-{
-  class Compiler
-  {
+namespace XLang {
+
+  class Compiler {
     // exit codes
     const int OK = 0;
     const int WARN = 1;
 
-    static int Main(string[] args)
-    {
-      if (args.Length > 0)
-      {
+    static int Main(string[] args) {
+      if (args.Length > 0) {
         // parse -> ast
         _XLang xlang = Parse(args[0]);
         xlang.Accept(new PrintAST());
@@ -43,14 +40,12 @@ namespace XLang
       return WARN;
     }
 
-    static _XLang Parse(string filename)
-    {
+    static _XLang Parse(string filename) {
       Contract.Ensures(Contract.Result<_XLang>() != null);
       Scanner scanner = new Scanner(filename);
       Parser parser = new Parser(scanner);
       parser.Parse();
-      if (parser.errors.count != 0)
-      {
+      if (parser.errors.count != 0) {
         string errMsg = String.Format("{0} syntax error(s)", parser.errors.count);
         throw new FatalError(errMsg);
       }

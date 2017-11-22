@@ -43,21 +43,17 @@ Coco/R itself) does not fall under the GNU General Public License.
 using System;
 using System.IO;
 
-namespace at.jku.ssw.Coco
-{
+namespace at.jku.ssw.Coco {
 
-  public class Coco
-  {
+  public class Coco {
 
-    public static int Main(string[] arg)
-    {
+    public static int Main(string[] arg) {
       Console.WriteLine("Coco/R (Apr 19, 2011)");
       string srcName = null, nsName = null, frameDir = null, ddtString = null,
       traceFileName = null, outDir = null;
       bool emitLines = false;
       int retVal = 1;
-      for (int i = 0; i < arg.Length; i++)
-      {
+      for (int i = 0; i < arg.Length; i++) {
         if (arg[i] == "-namespace" && i < arg.Length - 1) nsName = arg[++i].Trim();
         else if (arg[i] == "-frames" && i < arg.Length - 1) frameDir = arg[++i].Trim();
         else if (arg[i] == "-trace" && i < arg.Length - 1) ddtString = arg[++i].Trim();
@@ -65,10 +61,8 @@ namespace at.jku.ssw.Coco
         else if (arg[i] == "-lines") emitLines = true;
         else srcName = arg[i];
       }
-      if (arg.Length > 0 && srcName != null)
-      {
-        try
-        {
+      if (arg.Length > 0 && srcName != null) {
+        try {
           string srcDir = Path.GetDirectoryName(srcName);
 
           Scanner scanner = new Scanner(srcName);
@@ -96,18 +90,12 @@ namespace at.jku.ssw.Coco
           else Console.WriteLine("trace output is in " + traceFileName);
           Console.WriteLine("{0} errors detected", parser.errors.count);
           if (parser.errors.count == 0) { retVal = 0; }
-        }
-        catch (IOException)
-        {
+        } catch (IOException) {
           Console.WriteLine("-- could not open " + traceFileName);
-        }
-        catch (FatalError e)
-        {
+        } catch (FatalError e) {
           Console.WriteLine("-- " + e.Message);
         }
-      }
-      else
-      {
+      } else {
         Console.WriteLine("Usage: Coco Grammar.ATG {{Option}}{0}"
                           + "Options:{0}"
                           + "  -namespace <namespaceName>{0}"

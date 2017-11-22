@@ -23,139 +23,115 @@
 
 using System.Collections.Generic;
 
-namespace XLang
-{
+namespace XLang {
 
-  public partial class _XLang
-  {
+  public partial class _XLang {
     public _Module module;
   }
 
-  public partial class _Module
-  {
+  public partial class _Module {
     public List<IStmt> stmts = new List<IStmt>();
   }
 
   public interface IStmt : IXLangElement { }
 
-  public partial class _LetStmt : IStmt
-  {
+  public partial class _LetStmt : IStmt {
     public _Ident ident;
     public IExpr expr;
   }
 
   public interface IExpr : IXLangElement { }
 
-  public partial class _CondExpr : IExpr
-  {
+  public partial class _CondExpr : IExpr {
     public IExpr condition;
     public IExpr consequent;
     public IExpr alternative;
   }
 
-  public partial class _LogOrExpr : IExpr
-  {
+  public partial class _LogOrExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _LogXorExpr : IExpr
-  {
+  public partial class _LogXorExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _LogAndExpr : IExpr
-  {
+  public partial class _LogAndExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _OrExpr : IExpr
-  {
+  public partial class _OrExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _XorExpr : IExpr
-  {
+  public partial class _XorExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _AndExpr : IExpr
-  {
+  public partial class _AndExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public enum EqlOp
-  {
+  public enum EqlOp {
     EQUAL, NOTEQUAL, HARDEQUAL, HARDNOTEQUAL
   }
-  public partial class _EqlExpr : IExpr
-  {
+  public partial class _EqlExpr : IExpr {
     public EqlOp op;
     public IExpr left;
     public IExpr right;
   }
 
-  public enum RelOp
-  {
+  public enum RelOp {
     LESSTHAN, GREATERTHAN, LESSTHANEQUAL, GREATERTHANEQUAL
   }
-  public partial class _RelExpr : IExpr
-  {
+  public partial class _RelExpr : IExpr {
     public RelOp op;
     public IExpr left;
     public IExpr right;
   }
 
-  public enum ShiftOp
-  {
+  public enum ShiftOp {
     LEFT, RIGHT
   }
-  public partial class _ShiftExpr : IExpr
-  {
+  public partial class _ShiftExpr : IExpr {
     public ShiftOp op;
     public IExpr left;
     public IExpr right;
   }
 
-  public enum AddOp
-  {
+  public enum AddOp {
     PLUS, MINUS
   }
-  public partial class _AddExpr : IExpr
-  {
+  public partial class _AddExpr : IExpr {
     public AddOp op;
     public IExpr left;
     public IExpr right;
   }
 
-  public enum MultOp
-  {
+  public enum MultOp {
     TIMES, DIVIDE, MODULO
   }
-  public partial class _MultExpr : IExpr
-  {
+  public partial class _MultExpr : IExpr {
     public MultOp op;
     public IExpr left;
     public IExpr right;
   }
 
-  public enum UnaryOp
-  {
+  public enum UnaryOp {
     NEGATE, COMPLIMENT, NOT
   }
-  public partial class _UnaryExpr : IExpr
-  {
+  public partial class _UnaryExpr : IExpr {
     public UnaryOp op;
     public IExpr left;
   }
 
-  public partial class _Array : IExpr
-  {
+  public partial class _Array : IExpr {
     public List<IExpr> exprs = new List<IExpr>();
   }
 
