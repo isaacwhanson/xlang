@@ -62,9 +62,9 @@ PRODUCTIONS
     (LetStmt<out _LetStmt let_stmt>         (. stmt = let_stmt;.)) SYNC ";".
 
   LetStmt<out _LetStmt let_stmt> =
-    "let" Ident<out _Ident ident>
-    "="                                     (. Token token = t;.)
-     Expr<out IExpr expr>                   (. let_stmt = new _LetStmt(token) { ident = ident, expr = expr };.).
+    "let"                                   (. Token token = t;.)
+    Ident<out _Ident ident> "="
+    Expr<out IExpr expr>                    (. let_stmt = new _LetStmt(token) { ident = ident, expr = expr };.).
 
   Expr<out IExpr expr> =
     CondExpr<out IExpr lhs>                 (. expr = lhs;.).

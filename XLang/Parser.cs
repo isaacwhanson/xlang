@@ -125,9 +125,9 @@ public _XLang xlang;
 
     void LetStmt(out _LetStmt let_stmt) {
       Expect(7);
+      Token token = t;
       Ident(out _Ident ident);
       Expect(8);
-      Token token = t;
       Expr(out IExpr expr);
       let_stmt = new _LetStmt(token) { ident = ident, expr = expr };
     }
