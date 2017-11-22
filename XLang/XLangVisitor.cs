@@ -45,6 +45,7 @@ namespace XLang
     public abstract void Visit(_Char element);
     public abstract void Visit(_Float element);
     public abstract void Visit(_Int element);
+    public abstract void Visit(_Array element);
 
     /* there will be no elements with these types :) */
 #pragma warning disable RECS0083 // Shows NotImplementedException throws in the quick task bar

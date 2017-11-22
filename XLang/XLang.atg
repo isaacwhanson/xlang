@@ -159,7 +159,14 @@ PRODUCTIONS
     | Char<out _Char lhs>                   (. expr = lhs; .)
     | Float<out _Float lhs>                 (. expr = lhs; .)
     | Int<out _Int lhs>                     (. expr = lhs; .)
+    | Array<out _Array lhs>                 (. expr = lhs; .)
     | '(' Expr<out IExpr lhs> WEAK ')'      (. expr = lhs; .)).
+
+  Array<out _Array expr> =                   
+    '['                                     (. expr = new _Array(t); .)
+     [Expr<out IExpr exp0>                  (. expr.exprs.Add(exp0); .)
+     {',' Expr<out IExpr exp1>              (. expr.exprs.Add(exp1); .)}]
+    ']'.
 
   Ident<out _Ident term> = ident            (. term = new _Ident(t); .).
   String<out _String term> = string         (. term = new _String(t); .).

@@ -203,8 +203,8 @@ public class UTF8Buffer: Buffer {
 public class Scanner {
  const char EOL = '\n';
  const int eofSym = 0; /* pdt */
-	const int maxT = 36;
-	const int noSym = 36;
+	const int maxT = 39;
+	const int noSym = 39;
 
 
  public Buffer buffer; // scanner buffer
@@ -234,15 +234,15 @@ public class Scanner {
 		start[34] = 2; 
 		start[39] = 4; 
 		start[59] = 34; 
-		start[61] = 54; 
+		start[61] = 57; 
 		start[63] = 35; 
 		start[58] = 36; 
-		start[124] = 55; 
-		start[94] = 56; 
-		start[38] = 57; 
-		start[33] = 58; 
-		start[60] = 59; 
-		start[62] = 60; 
+		start[124] = 58; 
+		start[94] = 59; 
+		start[38] = 60; 
+		start[33] = 61; 
+		start[60] = 62; 
+		start[62] = 63; 
 		start[43] = 46; 
 		start[45] = 47; 
 		start[42] = 48; 
@@ -251,6 +251,9 @@ public class Scanner {
 		start[126] = 51; 
 		start[40] = 52; 
 		start[41] = 53; 
+		start[91] = 54; 
+		start[44] = 55; 
+		start[93] = 56; 
 		start[Buffer.EOF] = -1;
 
  }
@@ -587,40 +590,46 @@ public class Scanner {
 			case 53:
 				{t.kind = 35; break;}
 			case 54:
-				recEnd = pos; recKind = 8;
-				if (ch == '=') {AddCh(); goto case 61;}
-				else {t.kind = 8; break;}
+				{t.kind = 36; break;}
 			case 55:
+				{t.kind = 37; break;}
+			case 56:
+				{t.kind = 38; break;}
+			case 57:
+				recEnd = pos; recKind = 8;
+				if (ch == '=') {AddCh(); goto case 64;}
+				else {t.kind = 8; break;}
+			case 58:
 				recEnd = pos; recKind = 14;
 				if (ch == '|') {AddCh(); goto case 37;}
 				else {t.kind = 14; break;}
-			case 56:
+			case 59:
 				recEnd = pos; recKind = 15;
 				if (ch == '^') {AddCh(); goto case 38;}
 				else {t.kind = 15; break;}
-			case 57:
+			case 60:
 				recEnd = pos; recKind = 16;
 				if (ch == '&') {AddCh(); goto case 39;}
 				else {t.kind = 16; break;}
-			case 58:
+			case 61:
 				recEnd = pos; recKind = 33;
-				if (ch == '=') {AddCh(); goto case 62;}
+				if (ch == '=') {AddCh(); goto case 65;}
 				else {t.kind = 33; break;}
-			case 59:
+			case 62:
 				recEnd = pos; recKind = 21;
 				if (ch == '=') {AddCh(); goto case 42;}
 				else if (ch == '<') {AddCh(); goto case 44;}
 				else {t.kind = 21; break;}
-			case 60:
+			case 63:
 				recEnd = pos; recKind = 22;
 				if (ch == '=') {AddCh(); goto case 43;}
 				else if (ch == '>') {AddCh(); goto case 45;}
 				else {t.kind = 22; break;}
-			case 61:
+			case 64:
 				recEnd = pos; recKind = 17;
 				if (ch == '=') {AddCh(); goto case 40;}
 				else {t.kind = 17; break;}
-			case 62:
+			case 65:
 				recEnd = pos; recKind = 18;
 				if (ch == '=') {AddCh(); goto case 41;}
 				else {t.kind = 18; break;}

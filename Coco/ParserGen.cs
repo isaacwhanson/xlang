@@ -136,7 +136,7 @@ namespace at.jku.ssw.Coco
     void GenErrorMsg(int errTyp, Symbol sym)
     {
       errorNr++;
-      err.Write("\t\t\tcase " + errorNr + ": s = \"");
+      err.Write("        case " + errorNr + ": s = \"");
       switch (errTyp)
       {
         case tErr:
@@ -285,7 +285,7 @@ namespace at.jku.ssw.Coco
                 GenCode(p2.sub, indent + 1, s1);
                 if (useSwitch)
                 {
-                  Indent(indent); gen.WriteLine("\tbreak;");
+                  Indent(indent); gen.WriteLine("  break;");
                   Indent(indent); gen.WriteLine("}");
                 }
                 p2 = p2.down;
@@ -355,7 +355,7 @@ namespace at.jku.ssw.Coco
       foreach (Symbol sym in tab.terminals)
       {
         if (Char.IsLetter(sym.name[0]))
-          gen.WriteLine("\tpublic const int _{0} = {1};", sym.name, sym.n);
+          gen.WriteLine("    public const int _{0} = {1};", sym.name, sym.n);
       }
     }
 
@@ -363,7 +363,7 @@ namespace at.jku.ssw.Coco
     {
       foreach (Symbol sym in tab.pragmas)
       {
-        gen.WriteLine("\tpublic const int _{0} = {1};", sym.name, sym.n);
+        gen.WriteLine("    public const int _{0} = {1};", sym.name, sym.n);
       }
     }
 
@@ -371,34 +371,31 @@ namespace at.jku.ssw.Coco
     {
       foreach (Symbol sym in tab.pragmas)
       {
-        gen.WriteLine("\t\t\t\tif (la.kind == {0}) {{", sym.n);
+        gen.WriteLine("        if (la.kind == {0}) {{", sym.n);
         CopySourcePart(sym.semPos, 4);
-        gen.WriteLine("\t\t\t\t}");
+        gen.WriteLine("        }");
       }
     }
 
     void GenNodes()
     {
       string gram = tab.gramSy.name;
-      gen.WriteLine("\npublic interface I{0}Element", gram);
-      gen.WriteLine("{");
-      gen.WriteLine("\tvoid Accept(I{0}Visitor visitor);", gram);
-      gen.WriteLine("}");
-      gen.WriteLine("\npublic interface I{0}Visitor", tab.gramSy.name);
-      gen.WriteLine("{");
+      gen.WriteLine("  public interface I{0}Element {{", gram);
+      gen.WriteLine("    void Accept(I{0}Visitor visitor);", gram);
+      gen.WriteLine("  }");
+      gen.WriteLine("\n  public interface I{0}Visitor {{", tab.gramSy.name);
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\tvoid Visit(_{0} element);", sym.name);
+        gen.WriteLine("    void Visit(_{0} element);", sym.name);
       }
-      gen.WriteLine("}");
+      gen.WriteLine("  }");
       foreach (Symbol sym in tab.nonterminals)
       {
-        gen.WriteLine("\npublic partial class _{0} : I{1}Element", sym.name, tab.gramSy.name);
-        gen.WriteLine("{");
-        gen.WriteLine("\tpublic Token token;");
-        gen.WriteLine("\tpublic _{0}(Token t) {{ this.token = t; }}", sym.name);
-        gen.WriteLine("\tpublic void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
-        gen.WriteLine("}");
+        gen.WriteLine("\n  public partial class _{0} : I{1}Element {{", sym.name, tab.gramSy.name);
+        gen.WriteLine("    public Token token;");
+        gen.WriteLine("    public _{0}(Token t) {{ this.token = t; }}", sym.name);
+        gen.WriteLine("    public void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
+        gen.WriteLine("  }");
       }
     }
 
@@ -407,12 +404,12 @@ namespace at.jku.ssw.Coco
       foreach (Symbol sym in tab.nonterminals)
       {
         curSy = sym;
-        gen.Write("\tvoid {0}(", sym.name);
+        gen.Write("    void {0}(", sym.name);
         CopySourcePart(sym.attrPos, 0);
         gen.WriteLine(") {");
-        CopySourcePart(sym.semPos, 2);
-        GenCode(sym.graph, 2, new BitArray(tab.terminals.Count));
-        gen.WriteLine("\t}"); gen.WriteLine();
+        CopySourcePart(sym.semPos, 3);
+        GenCode(sym.graph, 3, new BitArray(tab.terminals.Count));
+        gen.WriteLine("    }"); gen.WriteLine();
       }
     }
 
@@ -421,7 +418,7 @@ namespace at.jku.ssw.Coco
       for (int i = 0; i < symSet.Count; i++)
       {
         BitArray s = (BitArray)symSet[i];
-        gen.Write("\t\t{");
+        gen.Write("    {");
         int j = 0;
         foreach (Symbol sym in tab.terminals)
         {
@@ -453,16 +450,15 @@ namespace at.jku.ssw.Coco
       if (!string.IsNullOrEmpty(tab.nsName))
       {
         gen.WriteLine("namespace {0} {{", tab.nsName);
-        gen.WriteLine();
       }
       g.CopyFramePart("-->constants");
       GenTokens(); /* ML 2002/09/07 write the token kinds */
-      gen.WriteLine("\tpublic const int maxT = {0};", tab.terminals.Count - 1);
+      gen.WriteLine("    public const int maxT = {0};", tab.terminals.Count - 1);
       GenPragmas(); /* ML 2005/09/23 write the pragma kinds */
       g.CopyFramePart("-->declarations"); CopySourcePart(tab.semDeclPos, 0);
       g.CopyFramePart("-->pragmas"); GenCodePragmas();
       g.CopyFramePart("-->productions"); GenProductions();
-      g.CopyFramePart("-->parseRoot"); gen.WriteLine("\t\t{0}();", tab.gramSy.name); if (tab.checkEOF) gen.Write("\t\tExpect(0);");
+      g.CopyFramePart("-->parseRoot"); gen.WriteLine("      {0}();", tab.gramSy.name); if (tab.checkEOF) gen.Write("      Expect(0);");
       g.CopyFramePart("-->initialization"); InitSets();
       g.CopyFramePart("-->custom"); GenNodes();
       g.CopyFramePart("-->errors"); gen.Write(err);

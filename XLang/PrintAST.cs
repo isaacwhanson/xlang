@@ -192,5 +192,10 @@ namespace XLang
     {
       Console.Write("{0}i", element.token.val);
     }
+
+    public override void Visit(_Array element)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

@@ -154,6 +154,11 @@ namespace XLang
     public IExpr left;
   }
 
+  public partial class _Array : IExpr
+  {
+    public List<IExpr> exprs = new List<IExpr>();
+  }
+
   public partial class _Ident : IExpr { }
 
   public partial class _Int : IExpr { }

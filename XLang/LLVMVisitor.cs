@@ -57,6 +57,7 @@ namespace XLang
 
     public override void Visit(_Ident element)
     {
+      string ident = element.token.val;
       throw new NotImplementedException();
     }
 
@@ -145,6 +146,11 @@ namespace XLang
       Int64 val = Int64.Parse(element.token.val);
       LLVMValueRef val_ref = LLVM.ConstInt(LLVM.Int64Type(), (ulong)val, LLVMTrue);
       valueStack.Push(val_ref);
+    }
+
+    public override void Visit(_Array element)
+    {
+      throw new NotImplementedException();
     }
   }
 }
