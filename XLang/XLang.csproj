@@ -135,6 +135,7 @@
     <ProjectReference Include="..\Coco\Coco.csproj">
       <Project>{2568D485-CBA5-4E9F-AC11-900DF89E5798}</Project>
       <Name>Coco</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
