@@ -203,8 +203,8 @@ public class UTF8Buffer: Buffer {
 public class Scanner {
  const char EOL = '\n';
  const int eofSym = 0; /* pdt */
-	const int maxT = 39;
-	const int noSym = 39;
+	const int maxT = 41;
+	const int noSym = 41;
 
 
  public Buffer buffer; // scanner buffer
@@ -380,6 +380,8 @@ public class Scanner {
  void CheckLiteral() {
 		switch (t.val) {
 			case "let": t.kind = 7; break;
+			case "true": t.kind = 36; break;
+			case "false": t.kind = 37; break;
 			default: break;
 		}
  }
@@ -590,11 +592,11 @@ public class Scanner {
 			case 53:
 				{t.kind = 35; break;}
 			case 54:
-				{t.kind = 36; break;}
-			case 55:
-				{t.kind = 37; break;}
-			case 56:
 				{t.kind = 38; break;}
+			case 55:
+				{t.kind = 39; break;}
+			case 56:
+				{t.kind = 40; break;}
 			case 57:
 				recEnd = pos; recKind = 8;
 				if (ch == '=') {AddCh(); goto case 64;}

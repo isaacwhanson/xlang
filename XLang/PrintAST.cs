@@ -180,5 +180,9 @@ namespace XLang {
       }
       Console.Write("]");
     }
+
+    public override void Visit(_Bool element) {
+      Console.Write(element.token.val);
+    }
   }
 }

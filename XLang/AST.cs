@@ -144,4 +144,6 @@ namespace XLang {
   public partial class _Char : IExpr { }
 
   public partial class _String : IExpr { }
+
+  public partial class _Bool : IExpr { }
 }

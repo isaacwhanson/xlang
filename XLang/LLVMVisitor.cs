@@ -129,5 +129,9 @@ namespace XLang {
     public override void Visit(_Array element) {
       throw new NotImplementedException();
     }
+
+    public override void Visit(_Bool element) {
+      throw new NotImplementedException();
+    }
   }
 }

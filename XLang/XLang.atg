@@ -146,32 +146,34 @@ PRODUCTIONS
     UnaryExpr<out IExpr rhs>                (. expr = new _MultExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   UnaryExpr<out IExpr expr> =               (. expr = null;.)
-    (Primary<out IExpr lhs>                 (. expr = lhs;.)
+    (Primative<out IExpr lhs>               (. expr = lhs;.)
                                            |(. UnaryOp op;.)
     (('-'                                   (. op = UnaryOp.NEGATE;.)
     | '~'                                   (. op = UnaryOp.COMPLIMENT;.)
     | '!'                                   (. op = UnaryOp.NOT;.)) (. Token token = t;.)
     UnaryExpr<out IExpr lhs>                (. expr = new _UnaryExpr(token) { op = op, left = lhs };.))).
 
-  Primary<out IExpr expr> =                 (. expr = null;.)
+  Primative<out IExpr expr> =               (. expr = null;.)
     ( Ident<out _Ident lhs>                 (. expr = lhs;.)
     | String<out _String lhs>               (. expr = lhs;.)
     | Char<out _Char lhs>                   (. expr = lhs;.)
     | Float<out _Float lhs>                 (. expr = lhs;.)
     | Int<out _Int lhs>                     (. expr = lhs;.)
+    | Bool<out _Bool lhs>                   (. expr = lhs;.)
     | Array<out _Array lhs>                 (. expr = lhs;.)
     | '(' Expr<out IExpr lhs> WEAK ')'      (. expr = lhs;.)).
-
-  Array<out _Array expr> =                   
-    '['                                     (. expr = new _Array(t);.)
-    [Expr<out IExpr exp0>                   (. expr.exprs.Add(exp0);.)
-    {',' Expr<out IExpr exp1>               (. expr.exprs.Add(exp1);.)}]
-    ']'.
 
   Ident<out _Ident term> = ident            (. term = new _Ident(t);.).
   String<out _String term> = string         (. term = new _String(t);.).
   Char<out _Char term> = char               (. term = new _Char(t);.).
   Int<out _Int term> = int                  (. term = new _Int(t);.).
   Float<out _Float term> = float            (. term = new _Float(t);.).
+  Bool<out _Bool term> = ("true" | "false") (. term = new _Bool(t);.).
+
+  Array<out _Array expr> =                   
+    '['                                     (. expr = new _Array(t);.)
+    [Expr<out IExpr exp0>                   (. expr.exprs.Add(exp0);.)
+    {',' Expr<out IExpr exp1>               (. expr.exprs.Add(exp1);.)}]
+    ']'.
 
 END XLang.

@@ -9,7 +9,7 @@ namespace XLang {
     public const int _char = 3;
     public const int _float = 4;
     public const int _int = 5;
-    public const int maxT = 39;
+    public const int maxT = 41;
 
     const bool _T = true;
     const bool _x = false;
@@ -116,10 +116,10 @@ public _XLang xlang;
     }
 
     void GlblStmt(out IStmt stmt) {
-      while (!(la.kind == 0 || la.kind == 7)) { SynErr(40); Get(); }
+      while (!(la.kind == 0 || la.kind == 7)) { SynErr(42); Get(); }
       LetStmt(out _LetStmt let_stmt);
       stmt = let_stmt;
-      while (!(la.kind == 0 || la.kind == 6)) { SynErr(41); Get(); }
+      while (!(la.kind == 0 || la.kind == 6)) { SynErr(43); Get(); }
       Expect(6);
     }
 
@@ -329,7 +329,7 @@ public _XLang xlang;
     void UnaryExpr(out IExpr expr) {
       expr = null;
       if (StartOf(1)) {
-        Primary(out IExpr lhs);
+        Primative(out IExpr lhs);
         expr = lhs;
       } else if (la.kind == 28 || la.kind == 32 || la.kind == 33) {
         UnaryOp op;
@@ -346,10 +346,10 @@ public _XLang xlang;
         Token token = t;
         UnaryExpr(out IExpr lhs);
         expr = new _UnaryExpr(token) { op = op, left = lhs };
-      } else SynErr(42);
+      } else SynErr(44);
     }
 
-    void Primary(out IExpr expr) {
+    void Primative(out IExpr expr) {
       expr = null;
       switch (la.kind) {
         case 1: {
@@ -377,7 +377,12 @@ public _XLang xlang;
             expr = lhs;
             break;
           }
-        case 36: {
+        case 36:   case 37: {
+            Bool(out _Bool lhs);
+            expr = lhs;
+            break;
+          }
+        case 38: {
             Array(out _Array lhs);
             expr = lhs;
             break;
@@ -389,7 +394,7 @@ public _XLang xlang;
             expr = lhs;
             break;
           }
-        default: SynErr(43); break;
+        default: SynErr(45); break;
       }
     }
 
@@ -413,19 +418,28 @@ public _XLang xlang;
       term = new _Int(t);
     }
 
+    void Bool(out _Bool term) {
+      if (la.kind == 36) {
+        Get();
+      } else if (la.kind == 37) {
+        Get();
+      } else SynErr(46);
+      term = new _Bool(t);
+    }
+
     void Array(out _Array expr) {
-      Expect(36);
+      Expect(38);
       expr = new _Array(t);
       if (StartOf(3)) {
         Expr(out IExpr exp0);
         expr.exprs.Add(exp0);
-        while (la.kind == 37) {
+        while (la.kind == 39) {
           Get();
           Expr(out IExpr exp1);
           expr.exprs.Add(exp1);
         }
       }
-      Expect(38);
+      Expect(40);
     }
 
 
@@ -440,10 +454,10 @@ public _XLang xlang;
     }
 
     static readonly bool[,] set = {
-        {_T,_x,_x,_x, _x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
-    {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _T,_x,_x,_x, _x},
-    {_T,_x,_x,_x, _x,_x,_T,_T, _x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_T, _x,_T,_T,_x, _x},
-    {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _T,_T,_T,_x, _T,_x,_x,_x, _x}
+        {_T,_x,_x,_x, _x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
+    {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _T,_T,_T,_x, _x,_x,_x},
+    {_T,_x,_x,_x, _x,_x,_T,_T, _x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_T, _x,_x,_x,_T, _T,_x,_x},
+    {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _T,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x}
 
     };
   } // end Parser
@@ -474,11 +488,12 @@ public _XLang xlang;
     void Visit(_AddExpr element);
     void Visit(_MultExpr element);
     void Visit(_UnaryExpr element);
-    void Visit(_Primary element);
+    void Visit(_Primative element);
     void Visit(_String element);
     void Visit(_Char element);
     void Visit(_Float element);
     void Visit(_Int element);
+    void Visit(_Bool element);
     void Visit(_Array element);
   }
 
@@ -596,9 +611,9 @@ public _XLang xlang;
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Primary : IXLangElement {
+  public partial class _Primative : IXLangElement {
     public Token token;
-    public _Primary(Token t) { this.token = t; }
+    public _Primative(Token t) { this.token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
@@ -623,6 +638,12 @@ public _XLang xlang;
   public partial class _Int : IXLangElement {
     public Token token;
     public _Int(Token t) { this.token = t; }
+    public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+  }
+
+  public partial class _Bool : IXLangElement {
+    public Token token;
+    public _Bool(Token t) { this.token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
@@ -679,14 +700,17 @@ public _XLang xlang;
         case 33: s = "\"!\" expected"; break;
         case 34: s = "\"(\" expected"; break;
         case 35: s = "\")\" expected"; break;
-        case 36: s = "\"[\" expected"; break;
-        case 37: s = "\",\" expected"; break;
-        case 38: s = "\"]\" expected"; break;
-        case 39: s = "??? expected"; break;
-        case 40: s = "this symbol not expected in GlblStmt"; break;
-        case 41: s = "this symbol not expected in GlblStmt"; break;
-        case 42: s = "invalid UnaryExpr"; break;
-        case 43: s = "invalid Primary"; break;
+        case 36: s = "\"true\" expected"; break;
+        case 37: s = "\"false\" expected"; break;
+        case 38: s = "\"[\" expected"; break;
+        case 39: s = "\",\" expected"; break;
+        case 40: s = "\"]\" expected"; break;
+        case 41: s = "??? expected"; break;
+        case 42: s = "this symbol not expected in GlblStmt"; break;
+        case 43: s = "this symbol not expected in GlblStmt"; break;
+        case 44: s = "invalid UnaryExpr"; break;
+        case 45: s = "invalid Primative"; break;
+        case 46: s = "invalid Bool"; break;
 
         default: s = "error " + n; break;
       }
