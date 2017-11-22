@@ -22,8 +22,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 using System;
+
 namespace XLang {
+
   public class PrintAST : XLangVisitor {
+
     public override void Visit(_XLang element) {
       element.module.Accept(this);
     }
@@ -170,7 +173,12 @@ namespace XLang {
     }
 
     public override void Visit(_Array element) {
-      throw new NotImplementedException();
+      Console.Write("[ ");
+      foreach (IExpr expr in element.exprs) {
+        expr.Accept(this);
+        Console.Write(", ");
+      }
+      Console.Write("]");
     }
   }
 }
