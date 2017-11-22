@@ -224,7 +224,7 @@ public _XLang xlang;
     void EqlExpr(out IExpr expr) {
       RelExpr(out IExpr lhs);
       expr = lhs;
-      while (StartOf(1)) {
+      while (la.kind == 17 || la.kind == 18 || la.kind == 19 || la.kind == 20) {
         EqlOp op;
         if (la.kind == 17) {
           Get();
@@ -248,7 +248,7 @@ public _XLang xlang;
     void RelExpr(out IExpr expr) {
       ShiftExpr(out IExpr lhs);
       expr = lhs;
-      while (StartOf(2)) {
+      while (la.kind == 21 || la.kind == 22 || la.kind == 23 || la.kind == 24) {
         RelOp op;
         if (la.kind == 21) {
           Get();
@@ -328,7 +328,7 @@ public _XLang xlang;
 
     void UnaryExpr(out IExpr expr) {
       expr = null;
-      if (StartOf(3)) {
+      if (StartOf(1)) {
         Primary(out IExpr lhs);
         expr = lhs;
       } else if (la.kind == 28 || la.kind == 32 || la.kind == 33) {
@@ -385,7 +385,7 @@ public _XLang xlang;
         case 34: {
             Get();
             Expr(out IExpr lhs);
-            ExpectWeak(35, 4);
+            ExpectWeak(35, 2);
             expr = lhs;
             break;
           }
@@ -416,7 +416,7 @@ public _XLang xlang;
     void Array(out _Array expr) {
       Expect(36);
       expr = new _Array(t);
-      if (StartOf(5)) {
+      if (StartOf(3)) {
         Expr(out IExpr exp0);
         expr.exprs.Add(exp0);
         while (la.kind == 37) {
@@ -441,8 +441,6 @@ public _XLang xlang;
 
     static readonly bool[,] set = {
         {_T,_x,_x,_x, _x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
-    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
-    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
     {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _T,_x,_x,_x, _x},
     {_T,_x,_x,_x, _x,_x,_T,_T, _x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_T, _x,_T,_T,_x, _x},
     {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _T,_T,_T,_x, _T,_x,_x,_x, _x}

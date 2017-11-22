@@ -154,7 +154,7 @@ PRODUCTIONS
     UnaryExpr<out IExpr lhs>                (. expr = new _UnaryExpr(token) { op = op, left = lhs };.))).
 
   Primary<out IExpr expr> =                 (. expr = null;.)
-    (Ident<out _Ident lhs>                  (. expr = lhs;.)
+    ( Ident<out _Ident lhs>                 (. expr = lhs;.)
     | String<out _String lhs>               (. expr = lhs;.)
     | Char<out _Char lhs>                   (. expr = lhs;.)
     | Float<out _Float lhs>                 (. expr = lhs;.)
@@ -164,8 +164,8 @@ PRODUCTIONS
 
   Array<out _Array expr> =                   
     '['                                     (. expr = new _Array(t);.)
-     [Expr<out IExpr exp0>                  (. expr.exprs.Add(exp0);.)
-     {',' Expr<out IExpr exp1>              (. expr.exprs.Add(exp1);.)}]
+    [Expr<out IExpr exp0>                   (. expr.exprs.Add(exp0);.)
+    {',' Expr<out IExpr exp1>               (. expr.exprs.Add(exp1);.)}]
     ']'.
 
   Ident<out _Ident term> = ident            (. term = new _Ident(t);.).

@@ -34,7 +34,7 @@ namespace at.jku.ssw.Coco {
 
   public class ParserGen {
 
-    const int maxTerm = 3;      // sets of size < maxTerm are enumerated
+    const int maxTerm = 4;      // sets of size < maxTerm are enumerated
     const char CR = '\r';
     const char LF = '\n';
     const int EOF = -1;
