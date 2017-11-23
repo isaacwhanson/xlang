@@ -130,7 +130,7 @@ namespace XLang {
       throw new NotImplementedException();
     }
 
-    public override void Visit(_Bool element) {
+    public override void Visit(_Boolean element) {
       throw new NotImplementedException();
     }
   }

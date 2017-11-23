@@ -1,9 +1,9 @@
 /* Coco/R ATG for (C#) XLang Compiler */
 
 COMPILER XLang
-public _XLang xlang;
+public _XLang ast;
 
-    /*Author:
+    /* Author:
          Isaac W Hanson <isaac@starlig.ht>
 
     Copyright (c) 2017
@@ -19,13 +19,12 @@ public _XLang xlang;
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    */
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 CHARACTERS
-  lower       = 'a'..'z'.
+  lower       = 'a'..'z' + '_'.
   upper       = 'A'..'Z'.
-  letter      = lower + upper + '_'.
+  letter      = lower + upper.
   newline     = '\r' + '\n'.
   whitespace  = ' ' + '\t' + '\u000b' + '\u000c' + '\f'.
   bin         = "01".
@@ -39,11 +38,12 @@ CHARACTERS
   e           = "eE".
 
 TOKENS
-  ident       = letter {letter | digit}.
+  identifier  = lower {letter | digit}.
+  type        = upper {letter | digit}.
   string      = '"' {notquote | "\\\""} '"'.
-  char        = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) '\''.
+  character   = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) '\''.
   float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
-  int         = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
+  integer     = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
 
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO "\n"
@@ -51,8 +51,8 @@ COMMENTS FROM "#" TO "\n"
 IGNORE whitespace + newline
 
 PRODUCTIONS
-  XLang =                                   (. xlang = new _XLang(t);.)
-    Module<out _Module module>              (. xlang.module = module;.).
+  XLang =                                   (. ast = new _XLang(t);.)
+    Module<out _Module module>              (. ast.module = module;.).
 
   Module<out _Module module> =              (. module = new _Module(t);.)
      GlblStmt<out IStmt stmt0>              (. module.stmts.Add(stmt0);.)
@@ -72,7 +72,7 @@ PRODUCTIONS
   CondExpr<out IExpr expr> =
     LogOrExpr<out IExpr lhs>                (. expr = lhs;.)
     ['?'                                    (. Token token = t;.)
-     Expr<out IExpr consequent>         
+     Expr<out IExpr consequent>
      ':' Expr<out IExpr alternative>        (. expr = new _CondExpr(token) { condition = expr, consequent = consequent, alternative = alternative };.)].
 
   LogOrExpr<out IExpr expr> =
@@ -159,16 +159,17 @@ PRODUCTIONS
     | Char<out _Char lhs>                   (. expr = lhs;.)
     | Float<out _Float lhs>                 (. expr = lhs;.)
     | Int<out _Int lhs>                     (. expr = lhs;.)
-    | Bool<out _Bool lhs>                   (. expr = lhs;.)
+    | Boolean<out _Boolean lhs>             (. expr = lhs;.)
     | Array<out _Array lhs>                 (. expr = lhs;.)
     | '(' Expr<out IExpr lhs> WEAK ')'      (. expr = lhs;.)).
 
-  Ident<out _Ident term> = ident            (. term = new _Ident(t);.).
+  Ident<out _Ident term> = identifier       (. term = new _Ident(t);.).
   String<out _String term> = string         (. term = new _String(t);.).
-  Char<out _Char term> = char               (. term = new _Char(t);.).
-  Int<out _Int term> = int                  (. term = new _Int(t);.).
+  Char<out _Char term> = character          (. term = new _Char(t);.).
+  Int<out _Int term> = integer              (. term = new _Int(t);.).
   Float<out _Float term> = float            (. term = new _Float(t);.).
-  Bool<out _Bool term> = ("true" | "false") (. term = new _Bool(t);.).
+  Boolean<out _Boolean term> =
+    ("true" | "false")                      (. term = new _Boolean(t);.).
 
   Array<out _Array expr> =                   
     '['                                     (. expr = new _Array(t);.)

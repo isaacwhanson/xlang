@@ -46,7 +46,7 @@ namespace XLang {
     public abstract void Visit(_Char element);
     public abstract void Visit(_Float element);
     public abstract void Visit(_Int element);
-    public abstract void Visit(_Bool element);
+    public abstract void Visit(_Boolean element);
     public abstract void Visit(_Array element);
 
     /* there will be no elements with these types :) */
@@ -61,7 +61,7 @@ namespace XLang {
 
     public void Visit(_Primitive element) {
       throw new NotImplementedException();
-    }
 #pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar
+    }
   }
 }

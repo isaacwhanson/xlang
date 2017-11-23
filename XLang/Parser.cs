@@ -4,12 +4,13 @@ namespace XLang {
 
   public class Parser {
     public const int _EOF = 0;
-    public const int _ident = 1;
-    public const int _string = 2;
-    public const int _char = 3;
-    public const int _float = 4;
-    public const int _int = 5;
-    public const int maxT = 41;
+    public const int _identifier = 1;
+    public const int _type = 2;
+    public const int _string = 3;
+    public const int _character = 4;
+    public const int _float = 5;
+    public const int _integer = 6;
+    public const int maxT = 42;
 
     const bool _T = true;
     const bool _x = false;
@@ -21,9 +22,9 @@ namespace XLang {
     public Token t;    // last recognized token
     public Token la;   // lookahead token
     int errDist = minErrDist;
-public _XLang xlang;
+public _XLang ast;
 
-    /*Author:
+    /* Author:
          Isaac W Hanson <isaac@starlig.ht>
 
     Copyright (c) 2017
@@ -39,8 +40,7 @@ public _XLang xlang;
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    */
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 
 
@@ -100,34 +100,34 @@ public _XLang xlang;
 #pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
 
     void XLang() {
-      xlang = new _XLang(t);
+      ast = new _XLang(t);
       Module(out _Module module);
-      xlang.module = module;
+      ast.module = module;
     }
 
     void Module(out _Module module) {
       module = new _Module(t);
       GlblStmt(out IStmt stmt0);
       module.stmts.Add(stmt0);
-      while (la.kind == 7) {
+      while (la.kind == 8) {
         GlblStmt(out IStmt stmt1);
         module.stmts.Add(stmt1);
       }
     }
 
     void GlblStmt(out IStmt stmt) {
-      while (!(la.kind == 0 || la.kind == 7)) { SynErr(42); Get(); }
+      while (!(la.kind == 0 || la.kind == 8)) { SynErr(43); Get(); }
       LetStmt(out _LetStmt let_stmt);
       stmt = let_stmt;
-      while (!(la.kind == 0 || la.kind == 6)) { SynErr(43); Get(); }
-      Expect(6);
+      while (!(la.kind == 0 || la.kind == 7)) { SynErr(44); Get(); }
+      Expect(7);
     }
 
     void LetStmt(out _LetStmt let_stmt) {
-      Expect(7);
+      Expect(8);
       Token token = t;
       Ident(out _Ident ident);
-      Expect(8);
+      Expect(9);
       Expr(out IExpr expr);
       let_stmt = new _LetStmt(token) { ident = ident, expr = expr };
     }
@@ -145,11 +145,11 @@ public _XLang xlang;
     void CondExpr(out IExpr expr) {
       LogOrExpr(out IExpr lhs);
       expr = lhs;
-      if (la.kind == 9) {
+      if (la.kind == 10) {
         Get();
         Token token = t;
         Expr(out IExpr consequent);
-        Expect(10);
+        Expect(11);
         Expr(out IExpr alternative);
         expr = new _CondExpr(token) { condition = expr, consequent = consequent, alternative = alternative };
       }
@@ -158,7 +158,7 @@ public _XLang xlang;
     void LogOrExpr(out IExpr expr) {
       LogXorExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 11) {
+      while (la.kind == 12) {
         Get();
         Token token = t;
         LogXorExpr(out IExpr rhs);
@@ -169,7 +169,7 @@ public _XLang xlang;
     void LogXorExpr(out IExpr expr) {
       LogAndExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 12) {
+      while (la.kind == 13) {
         Get();
         Token token = t;
         LogAndExpr(out IExpr rhs);
@@ -180,7 +180,7 @@ public _XLang xlang;
     void LogAndExpr(out IExpr expr) {
       OrExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 13) {
+      while (la.kind == 14) {
         Get();
         Token token = t;
         OrExpr(out IExpr rhs);
@@ -191,7 +191,7 @@ public _XLang xlang;
     void OrExpr(out IExpr expr) {
       XorExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 14) {
+      while (la.kind == 15) {
         Get();
         Token token = t;
         XorExpr(out IExpr rhs);
@@ -202,7 +202,7 @@ public _XLang xlang;
     void XorExpr(out IExpr expr) {
       AndExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 15) {
+      while (la.kind == 16) {
         Get();
         Token token = t;
         AndExpr(out IExpr rhs);
@@ -213,7 +213,7 @@ public _XLang xlang;
     void AndExpr(out IExpr expr) {
       EqlExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 16) {
+      while (la.kind == 17) {
         Get();
         Token token = t;
         EqlExpr(out IExpr rhs);
@@ -224,15 +224,15 @@ public _XLang xlang;
     void EqlExpr(out IExpr expr) {
       RelExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 17 || la.kind == 18 || la.kind == 19 || la.kind == 20) {
+      while (la.kind == 18 || la.kind == 19 || la.kind == 20 || la.kind == 21) {
         EqlOp op;
-        if (la.kind == 17) {
+        if (la.kind == 18) {
           Get();
           op = EqlOp.EQUAL;
-        } else if (la.kind == 18) {
+        } else if (la.kind == 19) {
           Get();
           op = EqlOp.NOTEQUAL;
-        } else if (la.kind == 19) {
+        } else if (la.kind == 20) {
           Get();
           op = EqlOp.HARDEQUAL;
         } else {
@@ -248,15 +248,15 @@ public _XLang xlang;
     void RelExpr(out IExpr expr) {
       ShiftExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 21 || la.kind == 22 || la.kind == 23 || la.kind == 24) {
+      while (la.kind == 22 || la.kind == 23 || la.kind == 24 || la.kind == 25) {
         RelOp op;
-        if (la.kind == 21) {
+        if (la.kind == 22) {
           Get();
           op = RelOp.LESSTHAN;
-        } else if (la.kind == 22) {
+        } else if (la.kind == 23) {
           Get();
           op = RelOp.GREATERTHAN;
-        } else if (la.kind == 23) {
+        } else if (la.kind == 24) {
           Get();
           op = RelOp.LESSTHANEQUAL;
         } else {
@@ -272,9 +272,9 @@ public _XLang xlang;
     void ShiftExpr(out IExpr expr) {
       AddExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 25 || la.kind == 26) {
+      while (la.kind == 26 || la.kind == 27) {
         ShiftOp op;
-        if (la.kind == 25) {
+        if (la.kind == 26) {
           Get();
           op = ShiftOp.LEFT;
         } else {
@@ -290,9 +290,9 @@ public _XLang xlang;
     void AddExpr(out IExpr expr) {
       MultExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 27 || la.kind == 28) {
+      while (la.kind == 28 || la.kind == 29) {
         AddOp op;
-        if (la.kind == 27) {
+        if (la.kind == 28) {
           Get();
           op = AddOp.PLUS;
         } else {
@@ -308,12 +308,12 @@ public _XLang xlang;
     void MultExpr(out IExpr expr) {
       UnaryExpr(out IExpr lhs);
       expr = lhs;
-      while (la.kind == 29 || la.kind == 30 || la.kind == 31) {
+      while (la.kind == 30 || la.kind == 31 || la.kind == 32) {
         MultOp op;
-        if (la.kind == 29) {
+        if (la.kind == 30) {
           Get();
           op = MultOp.TIMES;
-        } else if (la.kind == 30) {
+        } else if (la.kind == 31) {
           Get();
           op = MultOp.DIVIDE;
         } else {
@@ -331,12 +331,12 @@ public _XLang xlang;
       if (StartOf(1)) {
         Primitive(out IExpr lhs);
         expr = lhs;
-      } else if (la.kind == 28 || la.kind == 32 || la.kind == 33) {
+      } else if (la.kind == 29 || la.kind == 33 || la.kind == 34) {
         UnaryOp op;
-        if (la.kind == 28) {
+        if (la.kind == 29) {
           Get();
           op = UnaryOp.NEGATE;
-        } else if (la.kind == 32) {
+        } else if (la.kind == 33) {
           Get();
           op = UnaryOp.COMPLIMENT;
         } else {
@@ -346,7 +346,7 @@ public _XLang xlang;
         Token token = t;
         UnaryExpr(out IExpr lhs);
         expr = new _UnaryExpr(token) { op = op, left = lhs };
-      } else SynErr(44);
+      } else SynErr(45);
     }
 
     void Primitive(out IExpr expr) {
@@ -357,89 +357,89 @@ public _XLang xlang;
             expr = lhs;
             break;
           }
-        case 2: {
+        case 3: {
             String(out _String lhs);
             expr = lhs;
             break;
           }
-        case 3: {
+        case 4: {
             Char(out _Char lhs);
             expr = lhs;
             break;
           }
-        case 4: {
+        case 5: {
             Float(out _Float lhs);
             expr = lhs;
             break;
           }
-        case 5: {
+        case 6: {
             Int(out _Int lhs);
             expr = lhs;
             break;
           }
-        case 36:   case 37: {
-            Bool(out _Bool lhs);
+        case 37:   case 38: {
+            Boolean(out _Boolean lhs);
             expr = lhs;
             break;
           }
-        case 38: {
+        case 39: {
             Array(out _Array lhs);
             expr = lhs;
             break;
           }
-        case 34: {
+        case 35: {
             Get();
             Expr(out IExpr lhs);
-            ExpectWeak(35, 2);
+            ExpectWeak(36, 2);
             expr = lhs;
             break;
           }
-        default: SynErr(45); break;
+        default: SynErr(46); break;
       }
     }
 
     void String(out _String term) {
-      Expect(2);
+      Expect(3);
       term = new _String(t);
     }
 
     void Char(out _Char term) {
-      Expect(3);
+      Expect(4);
       term = new _Char(t);
     }
 
     void Float(out _Float term) {
-      Expect(4);
+      Expect(5);
       term = new _Float(t);
     }
 
     void Int(out _Int term) {
-      Expect(5);
+      Expect(6);
       term = new _Int(t);
     }
 
-    void Bool(out _Bool term) {
-      if (la.kind == 36) {
+    void Boolean(out _Boolean term) {
+      if (la.kind == 37) {
         Get();
-      } else if (la.kind == 37) {
+      } else if (la.kind == 38) {
         Get();
-      } else SynErr(46);
-      term = new _Bool(t);
+      } else SynErr(47);
+      term = new _Boolean(t);
     }
 
     void Array(out _Array expr) {
-      Expect(38);
+      Expect(39);
       expr = new _Array(t);
       if (StartOf(3)) {
         Expr(out IExpr exp0);
         expr.exprs.Add(exp0);
-        while (la.kind == 39) {
+        while (la.kind == 40) {
           Get();
           Expr(out IExpr exp1);
           expr.exprs.Add(exp1);
         }
       }
-      Expect(40);
+      Expect(41);
     }
 
 
@@ -454,10 +454,10 @@ public _XLang xlang;
     }
 
     static readonly bool[,] set = {
-        {_T,_x,_x,_x, _x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
-    {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_x, _T,_T,_T,_x, _x,_x,_x},
-    {_T,_x,_x,_x, _x,_x,_T,_T, _x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_T, _x,_x,_x,_T, _T,_x,_x},
-    {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_x, _T,_T,_T,_x, _T,_T,_T,_x, _x,_x,_x}
+        {_T,_x,_x,_x, _x,_x,_x,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
+    {_x,_T,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_T, _x,_T,_T,_T, _x,_x,_x,_x},
+    {_T,_x,_x,_x, _x,_x,_x,_T, _T,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _T,_x,_x,_x, _T,_T,_x,_x},
+    {_x,_T,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _x,_T,_T,_T, _x,_T,_T,_T, _x,_x,_x,_x}
 
     };
   } // end Parser
@@ -493,7 +493,7 @@ public _XLang xlang;
     void Visit(_Char element);
     void Visit(_Float element);
     void Visit(_Int element);
-    void Visit(_Bool element);
+    void Visit(_Boolean element);
     void Visit(_Array element);
   }
 
@@ -641,9 +641,9 @@ public _XLang xlang;
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Bool : IXLangElement {
+  public partial class _Boolean : IXLangElement {
     public Token token;
-    public _Bool(Token t) { this.token = t; }
+    public _Boolean(Token t) { this.token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
@@ -665,52 +665,53 @@ public _XLang xlang;
       string s;
       switch (n) {
         case 0: s = "EOF expected"; break;
-        case 1: s = "ident expected"; break;
-        case 2: s = "string expected"; break;
-        case 3: s = "char expected"; break;
-        case 4: s = "float expected"; break;
-        case 5: s = "int expected"; break;
-        case 6: s = "\";\" expected"; break;
-        case 7: s = "\"let\" expected"; break;
-        case 8: s = "\"=\" expected"; break;
-        case 9: s = "\"?\" expected"; break;
-        case 10: s = "\":\" expected"; break;
-        case 11: s = "\"||\" expected"; break;
-        case 12: s = "\"^^\" expected"; break;
-        case 13: s = "\"&&\" expected"; break;
-        case 14: s = "\"|\" expected"; break;
-        case 15: s = "\"^\" expected"; break;
-        case 16: s = "\"&\" expected"; break;
-        case 17: s = "\"==\" expected"; break;
-        case 18: s = "\"!=\" expected"; break;
-        case 19: s = "\"===\" expected"; break;
-        case 20: s = "\"!==\" expected"; break;
-        case 21: s = "\"<\" expected"; break;
-        case 22: s = "\">\" expected"; break;
-        case 23: s = "\"<=\" expected"; break;
-        case 24: s = "\">=\" expected"; break;
-        case 25: s = "\"<<\" expected"; break;
-        case 26: s = "\">>\" expected"; break;
-        case 27: s = "\"+\" expected"; break;
-        case 28: s = "\"-\" expected"; break;
-        case 29: s = "\"*\" expected"; break;
-        case 30: s = "\"/\" expected"; break;
-        case 31: s = "\"%\" expected"; break;
-        case 32: s = "\"~\" expected"; break;
-        case 33: s = "\"!\" expected"; break;
-        case 34: s = "\"(\" expected"; break;
-        case 35: s = "\")\" expected"; break;
-        case 36: s = "\"true\" expected"; break;
-        case 37: s = "\"false\" expected"; break;
-        case 38: s = "\"[\" expected"; break;
-        case 39: s = "\",\" expected"; break;
-        case 40: s = "\"]\" expected"; break;
-        case 41: s = "??? expected"; break;
-        case 42: s = "this symbol not expected in GlblStmt"; break;
+        case 1: s = "identifier expected"; break;
+        case 2: s = "type expected"; break;
+        case 3: s = "string expected"; break;
+        case 4: s = "character expected"; break;
+        case 5: s = "float expected"; break;
+        case 6: s = "integer expected"; break;
+        case 7: s = "\";\" expected"; break;
+        case 8: s = "\"let\" expected"; break;
+        case 9: s = "\"=\" expected"; break;
+        case 10: s = "\"?\" expected"; break;
+        case 11: s = "\":\" expected"; break;
+        case 12: s = "\"||\" expected"; break;
+        case 13: s = "\"^^\" expected"; break;
+        case 14: s = "\"&&\" expected"; break;
+        case 15: s = "\"|\" expected"; break;
+        case 16: s = "\"^\" expected"; break;
+        case 17: s = "\"&\" expected"; break;
+        case 18: s = "\"==\" expected"; break;
+        case 19: s = "\"!=\" expected"; break;
+        case 20: s = "\"===\" expected"; break;
+        case 21: s = "\"!==\" expected"; break;
+        case 22: s = "\"<\" expected"; break;
+        case 23: s = "\">\" expected"; break;
+        case 24: s = "\"<=\" expected"; break;
+        case 25: s = "\">=\" expected"; break;
+        case 26: s = "\"<<\" expected"; break;
+        case 27: s = "\">>\" expected"; break;
+        case 28: s = "\"+\" expected"; break;
+        case 29: s = "\"-\" expected"; break;
+        case 30: s = "\"*\" expected"; break;
+        case 31: s = "\"/\" expected"; break;
+        case 32: s = "\"%\" expected"; break;
+        case 33: s = "\"~\" expected"; break;
+        case 34: s = "\"!\" expected"; break;
+        case 35: s = "\"(\" expected"; break;
+        case 36: s = "\")\" expected"; break;
+        case 37: s = "\"true\" expected"; break;
+        case 38: s = "\"false\" expected"; break;
+        case 39: s = "\"[\" expected"; break;
+        case 40: s = "\",\" expected"; break;
+        case 41: s = "\"]\" expected"; break;
+        case 42: s = "??? expected"; break;
         case 43: s = "this symbol not expected in GlblStmt"; break;
-        case 44: s = "invalid UnaryExpr"; break;
-        case 45: s = "invalid Primitive"; break;
-        case 46: s = "invalid Bool"; break;
+        case 44: s = "this symbol not expected in GlblStmt"; break;
+        case 45: s = "invalid UnaryExpr"; break;
+        case 46: s = "invalid Primitive"; break;
+        case 47: s = "invalid Boolean"; break;
 
         default: s = "error " + n; break;
       }

@@ -145,5 +145,5 @@ namespace XLang {
 
   public partial class _String : IExpr { }
 
-  public partial class _Bool : IExpr { }
+  public partial class _Boolean : IExpr { }
 }

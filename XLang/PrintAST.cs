@@ -165,11 +165,11 @@ namespace XLang {
     }
 
     public override void Visit(_Float element) {
-      Console.Write("{0}f", element.token.val);
+      Console.Write("(float) {0}", element.token.val);
     }
 
     public override void Visit(_Int element) {
-      Console.Write("{0}i", element.token.val);
+      Console.Write("(int) {0}", element.token.val);
     }
 
     public override void Visit(_Array element) {
@@ -181,7 +181,7 @@ namespace XLang {
       Console.Write("]");
     }
 
-    public override void Visit(_Bool element) {
+    public override void Visit(_Boolean element) {
       Console.Write(element.token.val);
     }
   }

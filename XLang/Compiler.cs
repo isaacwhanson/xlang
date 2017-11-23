@@ -32,8 +32,11 @@ namespace XLang {
     static int Main(string[] args) {
       if (args.Length > 0) {
         // parse -> ast
-        _XLang xlang = Parse(args[0]);
-        xlang.Accept(new PrintAST());
+        string filename = args[0];
+        _XLang ast = Parse(filename);
+        // print ast -> console
+        PrintAST printer = new PrintAST();
+        ast.Accept(printer);
         return OK;
       }
       Console.WriteLine("No source file specified");
@@ -49,7 +52,7 @@ namespace XLang {
         string errMsg = String.Format("{0} syntax error(s)", parser.errors.count);
         throw new FatalError(errMsg);
       }
-      return parser.xlang;
+      return parser.ast;
     }
   }
 }
