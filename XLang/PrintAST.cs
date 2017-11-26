@@ -27,6 +27,12 @@ namespace XLang {
 
   public class PrintAST : XLangVisitor {
 
+    public static PrintAST Print(_XLang ast) {
+      PrintAST visitor = new PrintAST();
+      ast.Accept(visitor);
+      return visitor;
+    }
+
     public override void Visit(_XLang element) {
       element.module.Accept(this);
     }

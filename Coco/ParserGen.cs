@@ -294,6 +294,17 @@ namespace at.jku.ssw.Coco {
     }
 
     void GenTokens() {
+      gen.WriteLine("\n    public _{0} ast;\n", tab.gramSy.name);
+      gen.WriteLine("    public static Parser Parse(Scanner scanner, out _{0} ast) {{", tab.gramSy.name);
+      gen.WriteLine("      Parser parser = new Parser(scanner);");
+      gen.WriteLine("      parser.Parse();");
+      gen.WriteLine("      ast = parser.ast;");
+      gen.WriteLine("      if (parser.errors.count != 0) {");
+      gen.WriteLine("        string errMsg = System.String.Format(\"{0} syntax error(s)\", parser.errors.count);");
+      gen.WriteLine("        throw new FatalError(errMsg);");
+      gen.WriteLine("      }");
+      gen.WriteLine("      return parser;");
+      gen.WriteLine("    }\n");
       foreach (Symbol sym in tab.terminals) {
         if (Char.IsLetter(sym.name[0]))
           gen.WriteLine("    public const int _{0} = {1};", sym.name, sym.n);
@@ -343,15 +354,6 @@ namespace at.jku.ssw.Coco {
         GenCode(sym.graph, 3, new BitArray(tab.terminals.Count));
         gen.WriteLine("    }"); gen.WriteLine();
       }
-      gen.WriteLine("    public _{0} ast;", tab.gramSy.name);
-      gen.WriteLine("    public void Parse(out _{0} ast) {{", tab.gramSy.name);
-      gen.WriteLine("      Parse();");
-      gen.WriteLine("      ast = this.ast;");
-      gen.WriteLine("      if (errors.count != 0) {");
-      gen.WriteLine("        string errMsg = System.String.Format(\"{0} syntax error(s)\", errors.count);");
-      gen.WriteLine("        throw new FatalError(errMsg);");
-      gen.WriteLine("      }");
-      gen.WriteLine("    }");
     }
 
     void InitSets() {

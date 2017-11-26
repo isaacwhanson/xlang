@@ -20,9 +20,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 using System;
-using System.Diagnostics.Contracts;
 
-namespace XLang {
+namespace XLisp {
 
   class Compiler {
     // exit codes
@@ -34,8 +33,7 @@ namespace XLang {
         // parse -> ast
         string filename = args[0];
         Scanner scanner = new Scanner(filename);
-        Parser.Parse(scanner, out _XLang ast);
-        PrintAST.Print(ast);
+        Parser.Parse(scanner, out _XLisp ast);
         return OK;
       }
       Console.WriteLine("No source file specified");

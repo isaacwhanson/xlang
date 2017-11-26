@@ -1,1 +1,141 @@
-﻿
+﻿COMPILER XLisp
+
+    /* Coco/R ATG for (C#) XLisp Compiler
+
+     Author:
+         Isaac W Hanson <isaac@starlig.ht>
+
+    Copyright (c) 2017
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
+
+CHARACTERS
+  lower       = 'a'..'z' + '_'.
+  upper       = 'A'..'Z'.
+  special     = "~`!@#$%^&*?/+=|-_:".
+  letter      = lower + upper + special.
+  newline     = '\r' + '\n'.
+  whitespace  = ' ' + '\t' + '\u000b' + '\u000c' + '\f'.
+  bin         = "01".
+  oct         = '0'..'7'.
+  digit       = '0'..'9'.
+  nonzero     = '1'..'9'.
+  hex         = digit + 'a'..'f' + 'A'..'F'.
+  notquote    = ANY - '\"' - newline.
+  notapost    = ANY - '\'' - newline.
+  sign        = "+-".
+  e           = "eE".
+
+TOKENS
+  identifier  = letter {letter | digit}.
+  string      = '"' {notquote | "\\\""} '"'.
+  character   = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) '\''.
+  float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
+  integer     = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
+
+COMMENTS FROM "/*" TO "*/" NESTED
+COMMENTS FROM "//" TO "\n"
+COMMENTS FROM "#" TO "\n"
+IGNORE whitespace + newline
+
+PRODUCTIONS
+  XLisp =                           (. ast = new _XLisp(t);.)
+    XSeq<out _List list>            (. ast.list = list;.).
+
+  List<out _List list> =
+    "(" Seq<out _List list0> ")"    (. list = list0;.).
+
+  XList<out _List list> =
+    "{" XSeq<out _List list0> "}"   (. list = list0;.).
+
+  XSeq<out _List list> =            (. list = new _List(t);.)
+    Seq<out _List list0>            (. list.Add(list0);.)
+    {";" Seq<out _List list1>       (. list.Add(list1);.)}
+    [Dot<out _List nil>             (. list.Add(nil);.)].
+
+  Dot<out _List nil> =
+    "."                             (. nil = new _List(t);.).
+
+  Seq<out _List list> =             (. list = new _List(t);.)
+    Expr<out IAtom expr0>           (. list.Add(expr0);.)
+    {Expr<out IAtom expr1>          (. list.Add(expr1);.)}.
+
+  Expr<out IAtom expr> =            (. expr = null;.)
+    ( Atom<out IAtom atom>          (. expr = atom;.)
+    | List<out _List list>          (. expr = list;.)
+    | XList<out _List list>         (. expr = list;.)).
+
+  Atom<out IAtom atom> =            (. atom = null;.)
+    ( Ident<out _Ident id>          (. atom = id;.)
+    | String<out _String str>       (. atom = str;.)
+    | Character<out _Character chr> (. atom = chr;.)
+    | Float<out _Float num>         (. atom = num;.)
+    | Integer<out _Integer num>     (. atom = num;.)
+    | Nil<out _List nil>            (. atom = nil;.)
+    | True<out _True tru>           (. atom = tru;.)
+    | Eq<out _Eq eq>                (. atom = eq;.)
+    | First<out _First car>         (. atom = car;.)
+    | Rest<out _Rest cdr>           (. atom = cdr;.)
+    | Cons<out _Cons cons>          (. atom = cons;.)
+    | Quote<out _Quote quote>       (. atom = quote;.)
+    | Cond<out _Cond cond>          (. atom = cond;.)
+    | Lambda<out _Lambda lambda>    (. atom = lambda;.)
+    | Label<out _Label label>       (. atom = label;.)).
+
+  Ident<out _Ident id> =
+    identifier (. id = new _Ident(t);.).
+
+  String<out _String str> =
+    string (. str = new _String(t);.).
+
+  Character<out _Character chr> =
+    character (. chr = new _Character(t);.).
+
+  Float<out _Float flt> =
+    float (. flt = new _Float(t);.).
+
+  Integer<out _Integer inti> =
+    integer (. inti = new _Integer(t);.).
+
+  Nil<out _List nil> =
+    "nil" (. nil = new _List(t);.).
+
+  True<out _True troo> =
+    "true" (. troo = new _True(t);.).
+
+  Eq<out _Eq eq> =
+    "==" (. eq = new _Eq(t);.).
+
+  First<out _First car> =
+    "first" (. car = new _First(t);.).
+
+  Rest<out _Rest cdr> =
+    "rest" (. cdr = new _Rest(t);.).
+
+  Cons<out _Cons cons> =
+    ":" (. cons = new _Cons(t);.).
+
+  Quote<out _Quote quote> =
+    "'" (. quote = new _Quote(t);.).
+
+  Cond<out _Cond cond> =
+    "?" (. cond = new _Cond(t);.).
+
+  Lambda<out _Lambda lambda> =
+    "=>" (. lambda = new _Lambda(t);.).
+
+  Label<out _Label label> =
+    ":=" (. label = new _Label(t);.).
+
+END XLisp.

@@ -119,7 +119,7 @@
     <Compile Include="Compiler.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Scanner.cs" />
-    <Compile Include="AST.cs" />
+    <Compile Include="XLangAST.cs" />
     <Compile Include="PrintAST.cs" />
     <Compile Include="LLVMVisitor.cs" />
     <Compile Include="XLangVisitor.cs" />

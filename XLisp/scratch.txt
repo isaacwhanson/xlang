@@ -1,1 +1,38 @@
 ﻿
+smalltalk:                                                                       
+  nil                                                                              
+  true                                                                             
+  false                                                                            
+  self                                                                             
+  super                                                                            
+  this                                                                             
+  /* comment */                                                                    
+  // comment                                                                       
+  # comment                                                                        
+  'c'                                                                              
+  "string"                                                                         
+  42                                                                               
+  3.1415                                                                           
+  [1, 2, 3]                                                                        
+  var := expr                                                                      
+  params => expr                                                                   
+  <annotation key:"value">                                                         
+  return                              
+
+lisp:                                                                            
+  (defun fibonacci (n)
+    (if (or (zero? n) (= n 1))
+        1
+      (+ (fibonacci (- n 1)) (fibonacci (- n 2)))))
+
+  eq        ==                                                                     
+  car       first/head
+  cdr       rest/next/tail
+  cons      :                                                                      
+  quote     '                                                                      
+  cond      ?                                                                      
+  lambda    =>                                                                     
+  label     :=                                                                     
+  ()        nil                                                                    
+  't        true
+

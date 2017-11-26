@@ -3,6 +3,20 @@ using System;
 namespace XLang {
 
   public class Parser {
+
+    public _XLang ast;
+
+    public static Parser Parse(Scanner scanner, out _XLang ast) {
+      Parser parser = new Parser(scanner);
+      parser.Parse();
+      ast = parser.ast;
+      if (parser.errors.count != 0) {
+        string errMsg = System.String.Format("{0} syntax error(s)", parser.errors.count);
+        throw new FatalError(errMsg);
+      }
+      return parser;
+    }
+
     public const int _EOF = 0;
     public const int _identifier = 1;
     public const int _type = 2;
@@ -522,15 +536,6 @@ namespace XLang {
       Expect(48);
     }
 
-    public _XLang ast;
-    public void Parse(out _XLang ast) {
-      Parse();
-      ast = this.ast;
-      if (errors.count != 0) {
-        string errMsg = System.String.Format("{0} syntax error(s)", errors.count);
-        throw new FatalError(errMsg);
-      }
-    }
 
 
 #pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement

@@ -19,6 +19,16 @@
     <WarningLevel>4</WarningLevel>
     <ExternalConsole>true</ExternalConsole>
     <PlatformTarget>x86</PlatformTarget>
+    <CustomCommands>
+      <CustomCommands>
+        <Command>
+          <type>Custom</type>
+          <name>Coco/R</name>
+          <command>mono ${SolutionDir}/Coco/bin/${ProjectConfigName}/Coco.exe XLisp.atg -namespace XLisp -frames ${SolutionDir}/Coco</command>
+          <workingdir>${ProjectDir}</workingdir>
+        </Command>
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <Optimize>true</Optimize>
@@ -32,8 +42,23 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Compiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="Scanner.cs" />
+    <Compile Include="XLispAST.cs" />
+    <Compile Include="XLispVisitor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Coco\Coco.csproj">
+      <Project>{2568D485-CBA5-4E9F-AC11-900DF89E5798}</Project>
+      <Name>Coco</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="XLisp.atg" />
+    <None Include="scratch.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
