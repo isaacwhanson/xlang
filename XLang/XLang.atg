@@ -1,9 +1,7 @@
-/* Coco/R ATG for (C#) XLang Compiler */
-
 COMPILER XLang
-public _XLang ast;
 
-    /* Author:
+    /* Coco/R ATG for (C#) XLang Compiler
+       Author:
          Isaac W Hanson <isaac@starlig.ht>
 
     Copyright (c) 2017
@@ -61,10 +59,49 @@ PRODUCTIONS
   GlblStmt<out IStmt stmt> = SYNC
     (LetStmt<out _LetStmt let_stmt>         (. stmt = let_stmt;.)) SYNC ";".
 
+  StmtBlock<out _StmtBlock stmt> =
+    "{"                                     (. stmt = new _StmtBlock(t);.)
+    {Stmt<out IStmt stmt0>                  (. stmt.stmts.Add(stmt0);.)}
+    "}".
+
+  Stmt<out IStmt stmt> =                    (. stmt = null;.)
+    ( StmtBlock<out _StmtBlock block>       (. stmt = block;.)
+    | RetStmt<out _RetStmt ret>             (. stmt = ret;.)
+    | BreakStmt<out _BreakStmt brk>         (. stmt = brk;.)
+    | ContStmt<out _ContStmt cont>          (. stmt = cont;.)
+    | WhileStmt<out _WhileStmt whil>        (. stmt = whil;.)) ";".
+
+  WhileStmt<out _WhileStmt stmt> =
+    "while"                                 (. Token token = t;.)
+    "(" Expr<out IExpr expr>
+    ")" Stmt<out IStmt stmt0>               (. stmt = new _WhileStmt(token) { expr = expr, stmt = stmt0 };.).
+
+  BreakStmt<out _BreakStmt stmt> =
+    "break"                                 (. stmt = new _BreakStmt(t);.).
+
+  ContStmt<out _ContStmt stmt> =
+    "continue"                              (. stmt = new _ContStmt(t);.).
+
+  RetStmt<out _RetStmt stmt> =
+    "return"                                (. stmt = new _RetStmt(t);.)
+    [Expr<out IExpr expr>                   (. stmt.expr = expr;.)].
+
   LetStmt<out _LetStmt let_stmt> =
-    "let"                                   (. Token token = t;.)
-    Ident<out _Ident ident> "="
-    Expr<out IExpr expr>                    (. let_stmt = new _LetStmt(token) { ident = ident, expr = expr };.).
+    "let"                                   (. let_stmt = null; Token token = t;.)
+    Type<out _Type typ> Ident<out _Ident ident>
+    (ParamDeclList<out _ParamDeclList plist> "=>" Stmt<out IStmt stmt>
+                                            (. let_stmt = new _LetStmt(token) { ident = ident, plist = plist, stmt = stmt };.)
+    | "=" Expr<out IExpr expr>              (. let_stmt = new _LetStmt(token) { ident = ident, expr = expr };.)).
+
+  ParamDecl<out _ParamDecl param> =
+    Type<out _Type typ0>                    (. Token token = t;.)
+    Ident<out _Ident ident0>                (. param = new _ParamDecl(token) { type = typ0, ident = ident0 };.).
+
+  ParamDeclList<out _ParamDeclList list> =
+    "("                                     (. list = new _ParamDeclList(t);.)
+    [ParamDecl<out _ParamDecl p0>           (. list.plist.Add(p0);.)
+    {"," ParamDecl<out _ParamDecl p1>       (. list.plist.Add(p1);.)}]
+    ")".
 
   Expr<out IExpr expr> =
     CondExpr<out IExpr lhs>                 (. expr = lhs;.).
@@ -160,6 +197,7 @@ PRODUCTIONS
     | Float<out _Float lhs>                 (. expr = lhs;.)
     | Int<out _Int lhs>                     (. expr = lhs;.)
     | Boolean<out _Boolean lhs>             (. expr = lhs;.)
+    | Type<out _Type lhs>                   (. expr = lhs;.)
     | Array<out _Array lhs>                 (. expr = lhs;.)
     | '(' Expr<out IExpr lhs> WEAK ')'      (. expr = lhs;.)).
 
@@ -168,6 +206,7 @@ PRODUCTIONS
   Char<out _Char term> = character          (. term = new _Char(t);.).
   Int<out _Int term> = integer              (. term = new _Int(t);.).
   Float<out _Float term> = float            (. term = new _Float(t);.).
+  Type<out _Type term> = type               (. term = new _Type(t);.).
   Boolean<out _Boolean term> =
     ("true" | "false")                      (. term = new _Boolean(t);.).
 

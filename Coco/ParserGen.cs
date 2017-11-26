@@ -327,7 +327,7 @@ namespace at.jku.ssw.Coco {
       foreach (Symbol sym in tab.nonterminals) {
         gen.WriteLine("\n  public partial class _{0} : I{1}Element {{", sym.name, tab.gramSy.name);
         gen.WriteLine("    public Token token;");
-        gen.WriteLine("    public _{0}(Token t) {{ this.token = t; }}", sym.name);
+        gen.WriteLine("    public _{0}(Token t) {{ token = t; }}", sym.name);
         gen.WriteLine("    public void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
         gen.WriteLine("  }");
       }
@@ -343,6 +343,15 @@ namespace at.jku.ssw.Coco {
         GenCode(sym.graph, 3, new BitArray(tab.terminals.Count));
         gen.WriteLine("    }"); gen.WriteLine();
       }
+      gen.WriteLine("    public _{0} ast;", tab.gramSy.name);
+      gen.WriteLine("    public void Parse(out _{0} ast) {{", tab.gramSy.name);
+      gen.WriteLine("      Parse();");
+      gen.WriteLine("      ast = this.ast;");
+      gen.WriteLine("      if (errors.count != 0) {");
+      gen.WriteLine("        string errMsg = System.String.Format(\"{0} syntax error(s)\", errors.count);");
+      gen.WriteLine("        throw new FatalError(errMsg);");
+      gen.WriteLine("      }");
+      gen.WriteLine("    }");
     }
 
     void InitSets() {

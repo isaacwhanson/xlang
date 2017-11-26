@@ -48,6 +48,14 @@ namespace XLang {
     public abstract void Visit(_Int element);
     public abstract void Visit(_Boolean element);
     public abstract void Visit(_Array element);
+    public abstract void Visit(_StmtBlock element);
+    public abstract void Visit(_RetStmt element);
+    public abstract void Visit(_BreakStmt element);
+    public abstract void Visit(_ContStmt element);
+    public abstract void Visit(_WhileStmt element);
+    public abstract void Visit(_Type element);
+    public abstract void Visit(_ParamDeclList element);
+    public abstract void Visit(_ParamDecl element);
 
     /* there will be no elements with these types :) */
 #pragma warning disable RECS0083 // Shows NotImplementedException throws in the quick task bar
@@ -60,6 +68,10 @@ namespace XLang {
     }
 
     public void Visit(_Primitive element) {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(_Stmt element) {
       throw new NotImplementedException();
 #pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar
     }

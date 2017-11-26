@@ -133,5 +133,37 @@ namespace XLang {
     public override void Visit(_Boolean element) {
       throw new NotImplementedException();
     }
+
+    public override void Visit(_StmtBlock element) {
+      throw new NotImplementedException();
+    }
+
+    public override void Visit(_RetStmt element) {
+      throw new NotImplementedException();
+    }
+
+    public override void Visit(_BreakStmt element) {
+      throw new NotImplementedException();
+    }
+
+    public override void Visit(_ContStmt element) {
+      throw new NotImplementedException();
+    }
+
+    public override void Visit(_WhileStmt element) {
+      throw new NotImplementedException();
+    }
+
+    public override void Visit(_Type element) {
+      throw new NotImplementedException();
+    }
+
+    public override void Visit(_ParamDeclList element) {
+      throw new NotImplementedException();
+    }
+
+    public override void Visit(_ParamDecl element) {
+      throw new NotImplementedException();
+    }
   }
 }

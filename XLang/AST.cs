@@ -33,14 +33,42 @@ namespace XLang {
     public List<IStmt> stmts = new List<IStmt>();
   }
 
-  public interface IStmt : IXLangElement { }
+  public interface IStmt : IExpr { }
+
+  public interface IExpr : IXLangElement { }
 
   public partial class _LetStmt : IStmt {
     public _Ident ident;
+    public _ParamDeclList plist;
+    public IExpr expr;
+    public IStmt stmt;
+  }
+
+  public partial class _ParamDeclList {
+    public List<_ParamDecl> plist;
+  }
+
+  public partial class _ParamDecl {
+    public _Type type;
+    public _Ident ident;
+  }
+
+  public partial class _StmtBlock : IStmt {
+    public List<IStmt> stmts = new List<IStmt>();
+  }
+
+  public partial class _RetStmt : IStmt {
     public IExpr expr;
   }
 
-  public interface IExpr : IXLangElement { }
+  public partial class _BreakStmt : IStmt { }
+
+  public partial class _ContStmt : IStmt { }
+
+  public partial class _WhileStmt : IStmt {
+    public IExpr expr;
+    public IStmt stmt;
+  }
 
   public partial class _CondExpr : IExpr {
     public IExpr condition;
@@ -146,4 +174,6 @@ namespace XLang {
   public partial class _String : IExpr { }
 
   public partial class _Boolean : IExpr { }
+
+  public partial class _Type : IExpr { }
 }
