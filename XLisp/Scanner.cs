@@ -1,3 +1,23 @@
+/* 
+  Author:
+       Isaac W Hanson <isaac@starlig.ht>
+
+  Copyright (c) 2017 
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 
 using System;
 using System.IO;
@@ -206,8 +226,8 @@ namespace XLisp {
   public class Scanner {
     const char EOL = '\n';
     const int eofSym = 0; /* pdt */
-	const int maxT = 22;
-	const int noSym = 22;
+	const int maxT = 21;
+	const int noSym = 21;
 
     public Buffer buffer; // scanner buffer
 
@@ -241,14 +261,13 @@ namespace XLisp {
 		start[48] = 25; 
 		for (int i = 49; i <= 57; ++i) start[i] = 26;
 		start[34] = 2; 
-		start[39] = 40; 
+		start[39] = 39; 
 		start[40] = 33; 
 		start[41] = 34; 
 		start[123] = 35; 
 		start[125] = 36; 
 		start[59] = 37; 
-		start[46] = 38; 
-		start[61] = 41; 
+		start[61] = 40; 
 		start[Buffer.EOF] = -1;
 
     }
@@ -372,14 +391,14 @@ namespace XLisp {
 
     void CheckLiteral() {
 		switch (t.val) {
-			case "nil": t.kind = 12; break;
-			case "true": t.kind = 13; break;
-			case "==": t.kind = 14; break;
-			case "first": t.kind = 15; break;
-			case "rest": t.kind = 16; break;
-			case ":": t.kind = 17; break;
-			case "?": t.kind = 19; break;
-			case ":=": t.kind = 21; break;
+			case "nil": t.kind = 11; break;
+			case "true": t.kind = 12; break;
+			case "==": t.kind = 13; break;
+			case "first": t.kind = 14; break;
+			case "rest": t.kind = 15; break;
+			case ":": t.kind = 16; break;
+			case "?": t.kind = 18; break;
+			case ":=": t.kind = 20; break;
 			default: break;
 		}
     }
@@ -555,18 +574,16 @@ namespace XLisp {
 			case 37:
 				{t.kind = 10; break;}
 			case 38:
-				{t.kind = 11; break;}
+				{t.kind = 19; break;}
 			case 39:
-				{t.kind = 20; break;}
-			case 40:
-				recEnd = pos; recKind = 18;
+				recEnd = pos; recKind = 17;
 				if (ch <= 9 || ch >= 11 && ch <= 12 || ch >= 14 && ch <= '&' || ch >= '(' && ch <= '[' || ch >= ']' && ch <= 65535) {AddCh(); goto case 4;}
 				else if (ch == 92) {AddCh(); goto case 28;}
-				else {t.kind = 18; break;}
-			case 41:
+				else {t.kind = 17; break;}
+			case 40:
 				recEnd = pos; recKind = 1;
 				if (ch == '!' || ch >= '#' && ch <= '&' || ch >= '*' && ch <= '+' || ch == '-' || ch >= '/' && ch <= ':' || ch == '=' || ch >= '?' && ch <= 'Z' || ch >= '^' && ch <= 'z' || ch == '|' || ch == '~') {AddCh(); goto case 1;}
-				else if (ch == '>') {AddCh(); goto case 39;}
+				else if (ch == '>') {AddCh(); goto case 38;}
 				else {t.kind = 1; t.val = new String(tval, 0, tlen); CheckLiteral(); return t;}
 
       }

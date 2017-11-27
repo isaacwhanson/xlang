@@ -50,10 +50,6 @@ namespace XLisp {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Dot element) {
-      throw new NotImplementedException();
-    }
-
     public void Visit(_Expr element) {
       throw new NotImplementedException();
     }

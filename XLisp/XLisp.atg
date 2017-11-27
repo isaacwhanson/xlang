@@ -61,11 +61,7 @@ PRODUCTIONS
 
   XSeq<out _List list> =            (. list = new _List(t);.)
     Seq<out _List list0>            (. list.Add(list0);.)
-    {";" Seq<out _List list1>       (. list.Add(list1);.)}
-    [Dot<out _List nil>             (. list.Add(nil);.)].
-
-  Dot<out _List nil> =
-    "."                             (. nil = new _List(t);.).
+    {";" Seq<out _List list1>       (. list.Add(list1);.)}.
 
   Seq<out _List list> =             (. list = new _List(t);.)
     Expr<out IAtom expr0>           (. list.Add(expr0);.)

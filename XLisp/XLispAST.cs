@@ -30,9 +30,7 @@ namespace XLisp {
 
   public partial class _List : IAtom {
     public List<IAtom> exprs = new List<IAtom>();
-    public void Add(IAtom exp) {
-      exprs.Add(exp);
-    }
+    public void Add(IAtom exp) { exprs.Add(exp); }
   }
 
   public partial class _Ident : IAtom { }

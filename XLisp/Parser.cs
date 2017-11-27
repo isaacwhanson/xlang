@@ -1,3 +1,23 @@
+/* 
+  Author:
+       Isaac W Hanson <isaac@starlig.ht>
+
+  Copyright (c) 2017 
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 
 using System;
 namespace XLisp {
@@ -23,7 +43,7 @@ namespace XLisp {
     public const int _character = 3;
     public const int _float = 4;
     public const int _integer = 5;
-    public const int maxT = 22;
+    public const int maxT = 21;
 
     const bool _T = true;
     const bool _x = false;
@@ -107,10 +127,6 @@ namespace XLisp {
         Seq(out _List list1);
         list.Add(list1);
       }
-      if (la.kind == 11) {
-        Dot(out _List nil);
-        list.Add(nil);
-      }
     }
 
     void List(out _List list) {
@@ -137,11 +153,6 @@ namespace XLisp {
       list = list0;
     }
 
-    void Dot(out _List nil) {
-      Expect(11);
-      nil = new _List(t);
-    }
-
     void Expr(out IAtom expr) {
       expr = null;
       if (StartOf(2)) {
@@ -153,7 +164,7 @@ namespace XLisp {
       } else if (la.kind == 8) {
         XList(out _List list);
         expr = list;
-      } else SynErr(23);
+      } else SynErr(22);
     }
 
     void Atom(out IAtom atom) {
@@ -184,57 +195,57 @@ namespace XLisp {
             atom = num;
             break;
           }
-        case 12: {
+        case 11: {
             Nil(out _List nil);
             atom = nil;
             break;
           }
-        case 13: {
+        case 12: {
             True(out _True tru);
             atom = tru;
             break;
           }
-        case 14: {
+        case 13: {
             Eq(out _Eq eq);
             atom = eq;
             break;
           }
-        case 15: {
+        case 14: {
             First(out _First car);
             atom = car;
             break;
           }
-        case 16: {
+        case 15: {
             Rest(out _Rest cdr);
             atom = cdr;
             break;
           }
-        case 17: {
+        case 16: {
             Cons(out _Cons cons);
             atom = cons;
             break;
           }
-        case 18: {
+        case 17: {
             Quote(out _Quote quote);
             atom = quote;
             break;
           }
-        case 19: {
+        case 18: {
             Cond(out _Cond cond);
             atom = cond;
             break;
           }
-        case 20: {
+        case 19: {
             Lambda(out _Lambda lambda);
             atom = lambda;
             break;
           }
-        case 21: {
+        case 20: {
             Label(out _Label label);
             atom = label;
             break;
           }
-        default: SynErr(24); break;
+        default: SynErr(23); break;
       }
     }
 
@@ -264,52 +275,52 @@ namespace XLisp {
     }
 
     void Nil(out _List nil) {
-      Expect(12);
+      Expect(11);
       nil = new _List(t);
     }
 
     void True(out _True troo) {
-      Expect(13);
+      Expect(12);
       troo = new _True(t);
     }
 
     void Eq(out _Eq eq) {
-      Expect(14);
+      Expect(13);
       eq = new _Eq(t);
     }
 
     void First(out _First car) {
-      Expect(15);
+      Expect(14);
       car = new _First(t);
     }
 
     void Rest(out _Rest cdr) {
-      Expect(16);
+      Expect(15);
       cdr = new _Rest(t);
     }
 
     void Cons(out _Cons cons) {
-      Expect(17);
+      Expect(16);
       cons = new _Cons(t);
     }
 
     void Quote(out _Quote quote) {
-      Expect(18);
+      Expect(17);
       quote = new _Quote(t);
     }
 
     void Cond(out _Cond cond) {
-      Expect(19);
+      Expect(18);
       cond = new _Cond(t);
     }
 
     void Lambda(out _Lambda lambda) {
-      Expect(20);
+      Expect(19);
       lambda = new _Lambda(t);
     }
 
     void Label(out _Label label) {
-      Expect(21);
+      Expect(20);
       label = new _Label(t);
     }
 
@@ -325,9 +336,9 @@ namespace XLisp {
     }
 
     static readonly bool[,] set = {
-        {_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-    {_x,_T,_T,_T, _T,_T,_T,_x, _T,_x,_x,_x, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_x,_x},
-    {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_x, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_x,_x}
+        {_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x},
+    {_x,_T,_T,_T, _T,_T,_T,_x, _T,_x,_x,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x},
+    {_x,_T,_T,_T, _T,_T,_x,_x, _x,_x,_x,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x}
 
     };
   } // end Parser
@@ -344,7 +355,6 @@ namespace XLisp {
     void Visit(_List element);
     void Visit(_Seq element);
     void Visit(_XList element);
-    void Visit(_Dot element);
     void Visit(_Expr element);
     void Visit(_Atom element);
     void Visit(_Ident element);
@@ -391,12 +401,6 @@ namespace XLisp {
   public partial class _XList : IXLispElement {
     public Token token;
     public _XList(Token t) { token = t; }
-    public void Accept(IXLispVisitor visitor) { visitor.Visit(this); }
-  }
-
-  public partial class _Dot : IXLispElement {
-    public Token token;
-    public _Dot(Token t) { token = t; }
     public void Accept(IXLispVisitor visitor) { visitor.Visit(this); }
   }
 
@@ -524,20 +528,19 @@ namespace XLisp {
         case 8: s = "\"{\" expected"; break;
         case 9: s = "\"}\" expected"; break;
         case 10: s = "\";\" expected"; break;
-        case 11: s = "\".\" expected"; break;
-        case 12: s = "\"nil\" expected"; break;
-        case 13: s = "\"true\" expected"; break;
-        case 14: s = "\"==\" expected"; break;
-        case 15: s = "\"first\" expected"; break;
-        case 16: s = "\"rest\" expected"; break;
-        case 17: s = "\":\" expected"; break;
-        case 18: s = "\"\'\" expected"; break;
-        case 19: s = "\"?\" expected"; break;
-        case 20: s = "\"=>\" expected"; break;
-        case 21: s = "\":=\" expected"; break;
-        case 22: s = "??? expected"; break;
-        case 23: s = "invalid Expr"; break;
-        case 24: s = "invalid Atom"; break;
+        case 11: s = "\"nil\" expected"; break;
+        case 12: s = "\"true\" expected"; break;
+        case 13: s = "\"==\" expected"; break;
+        case 14: s = "\"first\" expected"; break;
+        case 15: s = "\"rest\" expected"; break;
+        case 16: s = "\":\" expected"; break;
+        case 17: s = "\"\'\" expected"; break;
+        case 18: s = "\"?\" expected"; break;
+        case 19: s = "\"=>\" expected"; break;
+        case 20: s = "\":=\" expected"; break;
+        case 21: s = "??? expected"; break;
+        case 22: s = "invalid Expr"; break;
+        case 23: s = "invalid Atom"; break;
 
         default: s = "error " + n; break;
       }

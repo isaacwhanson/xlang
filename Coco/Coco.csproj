@@ -60,6 +60,7 @@
     <None Include="README.md" />
     <None Include="Scanner.frame">
     </None>
+    <None Include="Copyright.frame" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
