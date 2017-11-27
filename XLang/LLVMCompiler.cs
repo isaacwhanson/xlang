@@ -25,7 +25,13 @@ using LLVMSharp;
 
 namespace XLang {
 
-  public class LLVMVisitor : XLangVisitor {
+  public class LLVMCompiler : XLangVisitor {
+
+    public static LLVMCompiler Build(_XLang xlang) {
+      LLVMCompiler visitor = new LLVMCompiler();
+      xlang.Accept(visitor);
+      return visitor;
+    }
 
     LLVMModuleRef module;
     LLVMBuilderRef builder;

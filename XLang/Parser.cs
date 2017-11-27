@@ -18,16 +18,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 using System;
+
 namespace XLang {
 
   public class Parser {
 
-    public _XLang ast;
+    public _XLang xlang;
 
-    public static Parser Parse(IScanner scanner, out _XLang ast) {
+    public static Parser Parse(IScanner scanner, out _XLang xlang) {
       Parser parser = new Parser(scanner);
       parser.Parse();
-      ast = parser.ast;
+      xlang = parser.xlang;
       if (parser.errors.count != 0) {
         string errMsg = System.String.Format("{0} syntax error(s)", parser.errors.count);
         throw new FatalError(errMsg);
@@ -53,11 +54,13 @@ namespace XLang {
 
     public Token t;     // last recognized token
     public Token la;    // lookahead token
+    public string filename;
     int errDist = minErrDist;
 
 
     public Parser(IScanner scanner) {
       this.scanner = scanner;
+      filename = scanner.GetFileName();
       errors = new Errors();
     }
 
@@ -113,27 +116,25 @@ namespace XLang {
 
     void XLang() {
       Token token = la;
-      ast = new _XLang(t);
       Module(out _Module module);
-      ast.module = module;
+      xlang = new _XLang(token) { module = module, filename = filename };
     }
 
     void Module(out _Module module) {
       Token token = la;
-      module = new _Module(t);
+      module = new _Module(token);
       GlblStmt(out IStmt stmt0);
-      module.stmts.Add(stmt0);
+      module.Add(stmt0);
       while (la.kind == 16) {
         GlblStmt(out IStmt stmt1);
-        module.stmts.Add(stmt1);
+        module.Add(stmt1);
       }
     }
 
     void GlblStmt(out IStmt stmt) {
       Token token = la;
       while (!(la.kind == 0 || la.kind == 16)) { SynErr(50); Get(); }
-      LetStmt(out _LetStmt let_stmt);
-      stmt = let_stmt;
+      LetStmt(out stmt);
       while (!(la.kind == 0 || la.kind == 7)) { SynErr(51); Get(); }
       Expect(7);
     }
@@ -158,11 +159,11 @@ namespace XLang {
 
     void StmtBlock(out _StmtBlock stmt) {
       Token token = la;
+      stmt = new _StmtBlock(token);
       Expect(8);
-      stmt = new _StmtBlock(t);
       while (StartOf(1)) {
         Stmt(out IStmt stmt0);
-        stmt.stmts.Add(stmt0);
+        stmt.Add(stmt0);
       }
       Expect(9);
     }
@@ -192,7 +193,7 @@ namespace XLang {
     void RetStmt(out _RetStmt stmt) {
       Token token = la;
       Expect(15);
-      stmt = new _RetStmt(t);
+      stmt = new _RetStmt(token);
       if (StartOf(2)) {
         Expr(out IExpr expr);
         stmt.expr = expr;
@@ -202,13 +203,13 @@ namespace XLang {
     void BreakStmt(out _BreakStmt stmt) {
       Token token = la;
       Expect(13);
-      stmt = new _BreakStmt(t);
+      stmt = new _BreakStmt(token);
     }
 
     void ContStmt(out _ContStmt stmt) {
       Token token = la;
       Expect(14);
-      stmt = new _ContStmt(t);
+      stmt = new _ContStmt(token);
     }
 
     void WhileStmt(out _WhileStmt stmt) {
@@ -223,33 +224,32 @@ namespace XLang {
 
     void Expr(out IExpr expr) {
       Token token = la;
-      CondExpr(out IExpr lhs);
-      expr = lhs;
+      CondExpr(out expr);
     }
 
     void Type(out _Type term) {
       Token token = la;
       Expect(2);
-      term = new _Type(t);
+      term = new _Type(token);
     }
 
     void Ident(out _Ident term) {
       Token token = la;
       Expect(1);
-      term = new _Ident(t);
+      term = new _Ident(token);
     }
 
     void ParamDeclList(out _ParamDeclList list) {
       Token token = la;
       Expect(11);
-      list = new _ParamDeclList(t);
+      list = new _ParamDeclList(token);
       if (la.kind == 2) {
         ParamDecl(out _ParamDecl p0);
-        list.plist.Add(p0);
+        list.Add(p0);
         while (la.kind == 19) {
           Get();
           ParamDecl(out _ParamDecl p1);
-          list.plist.Add(p1);
+          list.Add(p1);
         }
       }
       Expect(12);
@@ -264,8 +264,7 @@ namespace XLang {
 
     void CondExpr(out IExpr expr) {
       Token token = la;
-      LogOrExpr(out IExpr lhs);
-      expr = lhs;
+      LogOrExpr(out expr);
       if (la.kind == 20) {
         Get();
         token = t;
@@ -278,8 +277,7 @@ namespace XLang {
 
     void LogOrExpr(out IExpr expr) {
       Token token = la;
-      LogXorExpr(out IExpr lhs);
-      expr = lhs;
+      LogXorExpr(out expr);
       while (la.kind == 22) {
         Get();
         token = t;
@@ -290,8 +288,7 @@ namespace XLang {
 
     void LogXorExpr(out IExpr expr) {
       Token token = la;
-      LogAndExpr(out IExpr lhs);
-      expr = lhs;
+      LogAndExpr(out expr);
       while (la.kind == 23) {
         Get();
         token = t;
@@ -302,8 +299,7 @@ namespace XLang {
 
     void LogAndExpr(out IExpr expr) {
       Token token = la;
-      OrExpr(out IExpr lhs);
-      expr = lhs;
+      OrExpr(out expr);
       while (la.kind == 24) {
         Get();
         token = t;
@@ -314,8 +310,7 @@ namespace XLang {
 
     void OrExpr(out IExpr expr) {
       Token token = la;
-      XorExpr(out IExpr lhs);
-      expr = lhs;
+      XorExpr(out expr);
       while (la.kind == 25) {
         Get();
         token = t;
@@ -326,8 +321,7 @@ namespace XLang {
 
     void XorExpr(out IExpr expr) {
       Token token = la;
-      AndExpr(out IExpr lhs);
-      expr = lhs;
+      AndExpr(out expr);
       while (la.kind == 26) {
         Get();
         token = t;
@@ -338,8 +332,7 @@ namespace XLang {
 
     void AndExpr(out IExpr expr) {
       Token token = la;
-      EqlExpr(out IExpr lhs);
-      expr = lhs;
+      EqlExpr(out expr);
       while (la.kind == 27) {
         Get();
         token = t;
@@ -350,8 +343,7 @@ namespace XLang {
 
     void EqlExpr(out IExpr expr) {
       Token token = la;
-      RelExpr(out IExpr lhs);
-      expr = lhs;
+      RelExpr(out expr);
       while (la.kind == 28 || la.kind == 29 || la.kind == 30 || la.kind == 31) {
         EqlOp op; token = la;
         if (la.kind == 28) {
@@ -374,8 +366,7 @@ namespace XLang {
 
     void RelExpr(out IExpr expr) {
       Token token = la;
-      ShiftExpr(out IExpr lhs);
-      expr = lhs;
+      ShiftExpr(out expr);
       while (la.kind == 32 || la.kind == 33 || la.kind == 34 || la.kind == 35) {
         RelOp op; token = la;
         if (la.kind == 32) {
@@ -398,8 +389,7 @@ namespace XLang {
 
     void ShiftExpr(out IExpr expr) {
       Token token = la;
-      AddExpr(out IExpr lhs);
-      expr = lhs;
+      AddExpr(out expr);
       while (la.kind == 36 || la.kind == 37) {
         ShiftOp op; token = la;
         if (la.kind == 36) {
@@ -416,8 +406,7 @@ namespace XLang {
 
     void AddExpr(out IExpr expr) {
       Token token = la;
-      MultExpr(out IExpr lhs);
-      expr = lhs;
+      MultExpr(out expr);
       while (la.kind == 38 || la.kind == 39) {
         AddOp op; token = la;
         if (la.kind == 38) {
@@ -434,8 +423,7 @@ namespace XLang {
 
     void MultExpr(out IExpr expr) {
       Token token = la;
-      UnaryExpr(out IExpr lhs);
-      expr = lhs;
+      UnaryExpr(out expr);
       while (la.kind == 40 || la.kind == 41 || la.kind == 42) {
         MultOp op; token = la;
         if (la.kind == 40) {
@@ -457,10 +445,9 @@ namespace XLang {
       Token token = la;
       expr = null;
       if (StartOf(3)) {
-        Primitive(out IExpr lhs);
-        expr = lhs;
+        Primitive(out expr);
       } else if (la.kind == 39 || la.kind == 43 || la.kind == 44) {
-        UnaryOp op; token = la;
+        UnaryOp op;
         if (la.kind == 39) {
           Get();
           op = UnaryOp.NEGATE;
@@ -534,25 +521,25 @@ namespace XLang {
     void String(out _String term) {
       Token token = la;
       Expect(3);
-      term = new _String(t);
+      term = new _String(token);
     }
 
     void Char(out _Char term) {
       Token token = la;
       Expect(4);
-      term = new _Char(t);
+      term = new _Char(token);
     }
 
     void Float(out _Float term) {
       Token token = la;
       Expect(5);
-      term = new _Float(t);
+      term = new _Float(token);
     }
 
     void Int(out _Int term) {
       Token token = la;
       Expect(6);
-      term = new _Int(t);
+      term = new _Int(token);
     }
 
     void Boolean(out _Boolean term) {
@@ -562,26 +549,24 @@ namespace XLang {
       } else if (la.kind == 46) {
         Get();
       } else SynErr(56);
-      term = new _Boolean(t);
+      term = new _Boolean(token);
     }
 
-    void Array(out _Array expr) {
+    void Array(out _Array ra) {
       Token token = la;
       Expect(47);
-      expr = new _Array(t);
+      ra = new _Array(token);
       if (StartOf(2)) {
         Expr(out IExpr exp0);
-        expr.exprs.Add(exp0);
+        ra.Add(exp0);
         while (la.kind == 19) {
           Get();
           Expr(out IExpr exp1);
-          expr.exprs.Add(exp1);
+          ra.Add(exp1);
         }
       }
       Expect(48);
     }
-
-
 
 #pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
 
@@ -855,7 +840,6 @@ namespace XLang {
     public _Array(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
-
 
 #pragma warning restore RECS0001 // Class is declared partial but has only one part
 

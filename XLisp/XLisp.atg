@@ -30,20 +30,20 @@ COMMENTS FROM "#" TO "\n"
 IGNORE whitespace + newline
 
 PRODUCTIONS
-  XLisp =                           (. ast = new _XLisp(t);.)
-    XSeq<out _List list>            (. ast.list = list;.).
+  XLisp =                           (. xlisp = new _XLisp(token);.)
+    XSeq<out _List list>            (. xlisp.list = list;.).
 
   List<out _List list> =
-    "(" Seq<out _List list0> ")"    (. list = list0;.).
+    "(" Seq<out list> ")".
 
   XList<out _List list> =
-    "{" XSeq<out _List list0> "}"   (. list = list0;.).
+    "{" XSeq<out list> "}".
 
-  XSeq<out _List list> =            (. list = new _List(t);.)
+  XSeq<out _List list> =            (. list = new _List(token);.)
     Seq<out _List list0>            (. list.Add(list0);.)
     {";" Seq<out _List list1>       (. list.Add(list1);.)}.
 
-  Seq<out _List list> =             (. list = new _List(t);.)
+  Seq<out _List list> =             (. list = new _List(token);.)
     Expr<out IAtom expr0>           (. list.Add(expr0);.)
     {Expr<out IAtom expr1>          (. list.Add(expr1);.)}.
 
@@ -70,48 +70,48 @@ PRODUCTIONS
     | Label<out _Label label>       (. atom = label;.)).
 
   Ident<out _Ident id> =
-    identifier (. id = new _Ident(t);.).
+    identifier (. id = new _Ident(token);.).
 
   String<out _String str> =
-    string (. str = new _String(t);.).
+    string (. str = new _String(token);.).
 
   Character<out _Character chr> =
-    character (. chr = new _Character(t);.).
+    character (. chr = new _Character(token);.).
 
   Float<out _Float flt> =
-    float (. flt = new _Float(t);.).
+    float (. flt = new _Float(token);.).
 
   Integer<out _Integer inti> =
-    integer (. inti = new _Integer(t);.).
+    integer (. inti = new _Integer(token);.).
 
   Nil<out _List nil> =
-    "nil" (. nil = new _List(t);.).
+    "nil" (. nil = new _List(token);.).
 
   True<out _True troo> =
-    "true" (. troo = new _True(t);.).
+    "true" (. troo = new _True(token);.).
 
   Eq<out _Eq eq> =
-    "==" (. eq = new _Eq(t);.).
+    "==" (. eq = new _Eq(token);.).
 
   First<out _First car> =
-    "first" (. car = new _First(t);.).
+    "first" (. car = new _First(token);.).
 
   Rest<out _Rest cdr> =
-    "rest" (. cdr = new _Rest(t);.).
+    "rest" (. cdr = new _Rest(token);.).
 
   Cons<out _Cons cons> =
-    ":" (. cons = new _Cons(t);.).
+    ":" (. cons = new _Cons(token);.).
 
   Quote<out _Quote quote> =
-    "'" (. quote = new _Quote(t);.).
+    "'" (. quote = new _Quote(token);.).
 
   Cond<out _Cond cond> =
-    "?" (. cond = new _Cond(t);.).
+    "?" (. cond = new _Cond(token);.).
 
   Lambda<out _Lambda lambda> =
-    "=>" (. lambda = new _Lambda(t);.).
+    "=>" (. lambda = new _Lambda(token);.).
 
   Label<out _Label label> =
-    ":=" (. label = new _Label(t);.).
+    ":=" (. label = new _Label(token);.).
 
 END XLisp.

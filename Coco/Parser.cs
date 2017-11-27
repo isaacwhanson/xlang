@@ -21,16 +21,17 @@ using System.IO;
 
 
 using System;
+
 namespace at.jku.ssw.Coco {
 
   public class Parser {
 
-    public _Coco ast;
+    public _Coco coco;
 
-    public static Parser Parse(IScanner scanner, out _Coco ast) {
+    public static Parser Parse(IScanner scanner, out _Coco coco) {
       Parser parser = new Parser(scanner);
       parser.Parse();
-      ast = parser.ast;
+      coco = parser.coco;
       if (parser.errors.count != 0) {
         string errMsg = System.String.Format("{0} syntax error(s)", parser.errors.count);
         throw new FatalError(errMsg);
@@ -57,18 +58,19 @@ namespace at.jku.ssw.Coco {
 
     public Token t;     // last recognized token
     public Token la;    // lookahead token
+    public string filename;
     int errDist = minErrDist;
 const int id = 0;
-	const int str = 1;
-	
-	public TextWriter trace;    // other Coco objects referenced in this ATG
-	public Tab tab;
-	public DFA dfa;
-	public ParserGen pgen;
+ const int str = 1;
+ 
+ public TextWriter trace;    // other Coco objects referenced in this ATG
+ public Tab tab;
+ public DFA dfa;
+ public ParserGen pgen;
 
-	bool   genScanner;
-	string tokenString;         // used in declarations of literal tokens
-	string noString = "-none-"; // used in declarations of literal tokens
+ bool   genScanner;
+ string tokenString;         // used in declarations of literal tokens
+ string noString = "-none-"; // used in declarations of literal tokens
 
 /*-------------------------------------------------------------------------*/
 
@@ -76,6 +78,7 @@ const int id = 0;
 
     public Parser(IScanner scanner) {
       this.scanner = scanner;
+      filename = scanner.GetFileName();
       errors = new Errors();
     }
 
@@ -210,8 +213,8 @@ const int id = 0;
         else {
          if (sym.typ == Node.nt) {
            if (sym.graph != null) SemErr("name declared twice");
-         } else SemErr("this symbol kind not allowed on left side of production");
-         sym.line = t.line;
+          } else SemErr("this symbol kind not allowed on left side of production");
+          sym.line = t.line;
         }
         bool noAttrs = sym.attrPos == null;
         sym.attrPos = null;
@@ -714,8 +717,6 @@ const int id = 0;
        g = new Graph(tab.NewNode(Node.eps, null, 0));
     }
 
-
-
 #pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
 
     public void Parse() {
@@ -885,7 +886,6 @@ const int id = 0;
     public _TokenFactor(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
-
 
 #pragma warning restore RECS0001 // Class is declared partial but has only one part
 

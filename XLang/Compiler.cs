@@ -24,17 +24,17 @@ using System;
 namespace XLang {
 
   class Compiler {
-    // exit codes
+
     const int OK = 0;
     const int WARN = 1;
 
     static int Main(string[] args) {
       if (args.Length > 0) {
-        // parse -> ast
         string filename = args[0];
-        Scanner scanner = new Scanner(filename);
+        IScanner scanner = new Scanner(filename);
         Parser.Parse(scanner, out _XLang xlang);
-        PrintAST.Print(xlang);
+        Printer.Print(xlang);
+        // LLVMCompiler.Build(xlang);
         return OK;
       }
       Console.WriteLine("No source file specified");

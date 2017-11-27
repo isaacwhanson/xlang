@@ -120,14 +120,12 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="XLangAST.cs" />
-    <Compile Include="PrintAST.cs" />
-    <Compile Include="LLVMVisitor.cs" />
+    <Compile Include="Printer.cs" />
+    <Compile Include="LLVMCompiler.cs" />
     <Compile Include="XLangVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C.atg" />
     <None Include="LICENSE" />
-    <None Include="README.md" />
     <None Include="packages.config" />
     <None Include="XLang.atg" />
   </ItemGroup>

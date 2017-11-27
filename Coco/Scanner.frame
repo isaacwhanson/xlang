@@ -46,6 +46,7 @@ using System.Collections.Generic;
     Token Peek();
     void ResetPeek();
     Buffer GetBuffer();
+    string GetFileName();
   }
 
   //-----------------------------------------------------------------------------------
@@ -257,6 +258,8 @@ using System.Collections.Generic;
     char[] tval = new char[128]; // text of current token
     int tlen;         // length of current token
 
+    string fileName = "<stream>";
+
     static Scanner() {
       start = new Dictionary<int, int>(128);
 -->initialization
@@ -264,6 +267,7 @@ using System.Collections.Generic;
 
     public Scanner(string fileName) {
       try {
+        this.fileName = fileName;
         Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
         buffer = new Buffer(stream, false);
         Init();
@@ -383,5 +387,7 @@ using System.Collections.Generic;
     public void ResetPeek() { pt = tokens; }
 
     public Buffer GetBuffer() { return buffer; }
+
+    public string GetFileName() { return fileName; }
 
   } // end Scanner

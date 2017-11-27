@@ -294,11 +294,12 @@ namespace at.jku.ssw.Coco {
     }
 
     void GenTokens() {
-      gen.WriteLine("\n    public _{0} ast;\n", tab.gramSy.name);
-      gen.WriteLine("    public static Parser Parse(IScanner scanner, out _{0} ast) {{", tab.gramSy.name);
+      System.String lowroot = tab.gramSy.name.ToLower();
+      gen.WriteLine("\n    public _{0} {1};\n", tab.gramSy.name, lowroot);
+      gen.WriteLine("    public static Parser Parse(IScanner scanner, out _{0} {1}) {{", tab.gramSy.name, lowroot);
       gen.WriteLine("      Parser parser = new Parser(scanner);");
       gen.WriteLine("      parser.Parse();");
-      gen.WriteLine("      ast = parser.ast;");
+      gen.WriteLine("      {0} = parser.{0};", lowroot);
       gen.WriteLine("      if (parser.errors.count != 0) {");
       gen.WriteLine("        string errMsg = System.String.Format(\"{0} syntax error(s)\", parser.errors.count);");
       gen.WriteLine("        throw new FatalError(errMsg);");
@@ -347,13 +348,13 @@ namespace at.jku.ssw.Coco {
     void GenProductions() {
       foreach (Symbol sym in tab.nonterminals) {
         curSy = sym;
-        gen.Write("    void {0}(", sym.name);
+        gen.Write("\n    void {0}(", sym.name);
         CopySourcePart(sym.attrPos, 0);
         gen.WriteLine(") {");
         gen.WriteLine("      Token token = la;");
         CopySourcePart(sym.semPos, 3);
         GenCode(sym.graph, 3, new BitArray(tab.terminals.Count));
-        gen.WriteLine("    }"); gen.WriteLine();
+        gen.WriteLine("    }");
       }
     }
 

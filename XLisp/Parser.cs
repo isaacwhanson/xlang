@@ -18,16 +18,17 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 using System;
+
 namespace XLisp {
 
   public class Parser {
 
-    public _XLisp ast;
+    public _XLisp xlisp;
 
-    public static Parser Parse(IScanner scanner, out _XLisp ast) {
+    public static Parser Parse(IScanner scanner, out _XLisp xlisp) {
       Parser parser = new Parser(scanner);
       parser.Parse();
-      ast = parser.ast;
+      xlisp = parser.xlisp;
       if (parser.errors.count != 0) {
         string errMsg = System.String.Format("{0} syntax error(s)", parser.errors.count);
         throw new FatalError(errMsg);
@@ -52,11 +53,13 @@ namespace XLisp {
 
     public Token t;     // last recognized token
     public Token la;    // lookahead token
+    public string filename;
     int errDist = minErrDist;
 
 
     public Parser(IScanner scanner) {
       this.scanner = scanner;
+      filename = scanner.GetFileName();
       errors = new Errors();
     }
 
@@ -112,14 +115,14 @@ namespace XLisp {
 
     void XLisp() {
       Token token = la;
-      ast = new _XLisp(t);
+      xlisp = new _XLisp(token);
       XSeq(out _List list);
-      ast.list = list;
+      xlisp.list = list;
     }
 
     void XSeq(out _List list) {
       Token token = la;
-      list = new _List(t);
+      list = new _List(token);
       Seq(out _List list0);
       list.Add(list0);
       while (la.kind == 10) {
@@ -132,14 +135,13 @@ namespace XLisp {
     void List(out _List list) {
       Token token = la;
       Expect(6);
-      Seq(out _List list0);
+      Seq(out list);
       Expect(7);
-      list = list0;
     }
 
     void Seq(out _List list) {
       Token token = la;
-      list = new _List(t);
+      list = new _List(token);
       Expr(out IAtom expr0);
       list.Add(expr0);
       while (StartOf(1)) {
@@ -151,9 +153,8 @@ namespace XLisp {
     void XList(out _List list) {
       Token token = la;
       Expect(8);
-      XSeq(out _List list0);
+      XSeq(out list);
       Expect(9);
-      list = list0;
     }
 
     void Expr(out IAtom expr) {
@@ -257,94 +258,92 @@ namespace XLisp {
     void Ident(out _Ident id) {
       Token token = la;
       Expect(1);
-      id = new _Ident(t);
+      id = new _Ident(token);
     }
 
     void String(out _String str) {
       Token token = la;
       Expect(2);
-      str = new _String(t);
+      str = new _String(token);
     }
 
     void Character(out _Character chr) {
       Token token = la;
       Expect(3);
-      chr = new _Character(t);
+      chr = new _Character(token);
     }
 
     void Float(out _Float flt) {
       Token token = la;
       Expect(4);
-      flt = new _Float(t);
+      flt = new _Float(token);
     }
 
     void Integer(out _Integer inti) {
       Token token = la;
       Expect(5);
-      inti = new _Integer(t);
+      inti = new _Integer(token);
     }
 
     void Nil(out _List nil) {
       Token token = la;
       Expect(11);
-      nil = new _List(t);
+      nil = new _List(token);
     }
 
     void True(out _True troo) {
       Token token = la;
       Expect(12);
-      troo = new _True(t);
+      troo = new _True(token);
     }
 
     void Eq(out _Eq eq) {
       Token token = la;
       Expect(13);
-      eq = new _Eq(t);
+      eq = new _Eq(token);
     }
 
     void First(out _First car) {
       Token token = la;
       Expect(14);
-      car = new _First(t);
+      car = new _First(token);
     }
 
     void Rest(out _Rest cdr) {
       Token token = la;
       Expect(15);
-      cdr = new _Rest(t);
+      cdr = new _Rest(token);
     }
 
     void Cons(out _Cons cons) {
       Token token = la;
       Expect(16);
-      cons = new _Cons(t);
+      cons = new _Cons(token);
     }
 
     void Quote(out _Quote quote) {
       Token token = la;
       Expect(17);
-      quote = new _Quote(t);
+      quote = new _Quote(token);
     }
 
     void Cond(out _Cond cond) {
       Token token = la;
       Expect(18);
-      cond = new _Cond(t);
+      cond = new _Cond(token);
     }
 
     void Lambda(out _Lambda lambda) {
       Token token = la;
       Expect(19);
-      lambda = new _Lambda(t);
+      lambda = new _Lambda(token);
     }
 
     void Label(out _Label label) {
       Token token = la;
       Expect(20);
-      label = new _Label(t);
+      label = new _Label(token);
     }
-
-
 
 #pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
 
@@ -525,7 +524,6 @@ namespace XLisp {
     public _Label(Token t) { token = t; }
     public void Accept(IXLispVisitor visitor) { visitor.Visit(this); }
   }
-
 
 #pragma warning restore RECS0001 // Class is declared partial but has only one part
 

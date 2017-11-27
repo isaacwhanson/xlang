@@ -38,6 +38,7 @@ namespace XLisp {
     Token Peek();
     void ResetPeek();
     Buffer GetBuffer();
+    string GetFileName();
   }
 
   //-----------------------------------------------------------------------------------
@@ -251,6 +252,8 @@ namespace XLisp {
     char[] tval = new char[128]; // text of current token
     int tlen;         // length of current token
 
+    string fileName = "<stream>";
+
     static Scanner() {
       start = new Dictionary<int, int>(128);
       for (int i = 33; i <= 33; ++i) start[i] = 1;
@@ -279,6 +282,7 @@ namespace XLisp {
 
     public Scanner(string fileName) {
       try {
+        this.fileName = fileName;
         Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
         buffer = new Buffer(stream, false);
         Init();
@@ -628,6 +632,8 @@ namespace XLisp {
     public void ResetPeek() { pt = tokens; }
 
     public Buffer GetBuffer() { return buffer; }
+
+    public string GetFileName() { return fileName; }
 
   } // end Scanner
 }

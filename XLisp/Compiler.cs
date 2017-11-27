@@ -33,7 +33,7 @@ namespace XLisp {
         // parse -> ast
         string filename = args[0];
         IScanner scanner = new Scanner(filename);
-        Parser.Parse(scanner, out _XLisp ast);
+        Parser.Parse(scanner, out _XLisp xlisp);
         return OK;
       }
       Console.WriteLine("No source file specified");

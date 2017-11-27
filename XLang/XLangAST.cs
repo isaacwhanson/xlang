@@ -26,11 +26,15 @@ using System.Collections.Generic;
 namespace XLang {
 
   public partial class _XLang {
+    public string filename;
     public _Module module;
   }
 
   public partial class _Module {
     public List<IStmt> stmts = new List<IStmt>();
+    public void Add(IStmt stmt) {
+      stmts.Add(stmt);
+    }
   }
 
   public interface IStmt : IExpr { }
@@ -46,6 +50,9 @@ namespace XLang {
 
   public partial class _ParamDeclList {
     public List<_ParamDecl> plist;
+    public void Add(_ParamDecl p) {
+      plist.Add(p);
+    }
   }
 
   public partial class _ParamDecl {
@@ -55,6 +62,9 @@ namespace XLang {
 
   public partial class _StmtBlock : IStmt {
     public List<IStmt> stmts = new List<IStmt>();
+    public void Add(IStmt stmt) {
+      stmts.Add(stmt);
+    }
   }
 
   public partial class _RetStmt : IStmt {
@@ -161,6 +171,9 @@ namespace XLang {
 
   public partial class _Array : IExpr {
     public List<IExpr> exprs = new List<IExpr>();
+    public void Add(IExpr expr) {
+      exprs.Add(expr);
+    }
   }
 
   public partial class _Ident : IExpr { }

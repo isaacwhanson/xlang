@@ -25,11 +25,11 @@ using System;
 
 namespace XLang {
 
-  public class PrintAST : XLangVisitor {
+  public class Printer : XLangVisitor {
 
-    public static PrintAST Print(_XLang ast) {
-      PrintAST visitor = new PrintAST();
-      ast.Accept(visitor);
+    public static Printer Print(_XLang xlang) {
+      Printer visitor = new Printer();
+      xlang.Accept(visitor);
       return visitor;
     }
 

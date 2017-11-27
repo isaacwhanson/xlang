@@ -26,6 +26,7 @@ Coco/R itself) does not fall under the GNU General Public License.
 ----------------------------------------------------------------------*/
 -->begin
 using System;
+
 -->namespace
   public class Parser {
 -->constants
@@ -38,11 +39,13 @@ using System;
 
     public Token t;     // last recognized token
     public Token la;    // lookahead token
+    public string filename;
     int errDist = minErrDist;
 -->declarations
 
     public Parser(IScanner scanner) {
       this.scanner = scanner;
+      filename = scanner.GetFileName();
       errors = new Errors();
     }
 
@@ -95,9 +98,7 @@ using System;
     }
 
 #pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
-
 -->productions
-
 #pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
 
     public void Parse() {
@@ -114,7 +115,6 @@ using System;
 #pragma warning disable RECS0001
 
 -->custom
-
 #pragma warning restore RECS0001 // Class is declared partial but has only one part
 
   public class Errors {
