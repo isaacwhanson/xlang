@@ -73,7 +73,7 @@ namespace XLang {
 
     public void Visit(_Stmt element) {
       throw new NotImplementedException();
-#pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar
     }
+#pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar
   }
 }

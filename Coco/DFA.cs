@@ -799,7 +799,7 @@ namespace at.jku.ssw.Coco {
           // But this is ok.
           // if (t.state.endOf != null) {
           //   Console.WriteLine("Ambiguous context clause");
-          //	 errors.count++;
+          //   errors.count++;
           // }
         }
       }
@@ -867,54 +867,54 @@ namespace at.jku.ssw.Coco {
     //------------------------ scanner generation ----------------------
 
     void GenComBody(Comment com) {
-      gen.WriteLine("\t\t\tfor(;;) {");
-      gen.Write("\t\t\t\tif ({0}) ", ChCond(com.stop[0])); gen.WriteLine("{");
+      gen.WriteLine("        for (;;) {");
+      gen.Write("          if ({0}) ", ChCond(com.stop[0])); gen.WriteLine("{");
       if (com.stop.Length == 1) {
-        gen.WriteLine("\t\t\t\t\tlevel--;");
-        gen.WriteLine("\t\t\t\t\tif (level == 0) { oldEols = line - line0; NextCh(); return true; }");
-        gen.WriteLine("\t\t\t\t\tNextCh();");
+        gen.WriteLine("            level--;");
+        gen.WriteLine("            if (level == 0) { oldEols = line - line0; NextCh(); return true; }");
+        gen.WriteLine("            NextCh();");
       } else {
-        gen.WriteLine("\t\t\t\t\tNextCh();");
-        gen.WriteLine("\t\t\t\t\tif ({0}) {{", ChCond(com.stop[1]));
-        gen.WriteLine("\t\t\t\t\t\tlevel--;");
-        gen.WriteLine("\t\t\t\t\t\tif (level == 0) { oldEols = line - line0; NextCh(); return true; }");
-        gen.WriteLine("\t\t\t\t\t\tNextCh();");
-        gen.WriteLine("\t\t\t\t\t}");
+        gen.WriteLine("            NextCh();");
+        gen.WriteLine("            if ({0}) {{", ChCond(com.stop[1]));
+        gen.WriteLine("              level--;");
+        gen.WriteLine("              if (level == 0) { oldEols = line - line0; NextCh(); return true; }");
+        gen.WriteLine("              NextCh();");
+        gen.WriteLine("            }");
       }
       if (com.nested) {
-        gen.Write("\t\t\t\t}"); gen.Write(" else if ({0}) ", ChCond(com.start[0])); gen.WriteLine("{");
+        gen.Write("        }"); gen.Write(" else if ({0}) ", ChCond(com.start[0])); gen.WriteLine("{");
         if (com.start.Length == 1)
-          gen.WriteLine("\t\t\t\t\tlevel++; NextCh();");
+          gen.WriteLine("          level++; NextCh();");
         else {
-          gen.WriteLine("\t\t\t\t\tNextCh();");
-          gen.Write("\t\t\t\t\tif ({0}) ", ChCond(com.start[1])); gen.WriteLine("{");
-          gen.WriteLine("\t\t\t\t\t\tlevel++; NextCh();");
-          gen.WriteLine("\t\t\t\t\t}");
+          gen.WriteLine("          NextCh();");
+          gen.Write("          if ({0}) ", ChCond(com.start[1])); gen.WriteLine("{");
+          gen.WriteLine("            level++; NextCh();");
+          gen.WriteLine("          }");
         }
       }
-      gen.WriteLine("\t\t\t\t} else if (ch == Buffer.EOF) return false;");
-      gen.WriteLine("\t\t\t\telse NextCh();");
-      gen.WriteLine("\t\t\t}");
+      gen.WriteLine("          } else if (ch == Buffer.EOF) return false;");
+      gen.WriteLine("          else NextCh();");
+      gen.WriteLine("        }");
     }
 
     void GenComment(Comment com, int i) {
       gen.WriteLine();
-      gen.Write("\tbool Comment{0}() ", i); gen.WriteLine("{");
-      gen.WriteLine("\t\tint level = 1, pos0 = pos, line0 = line, col0 = col, charPos0 = charPos;");
+      gen.Write("    bool Comment{0}() ", i); gen.WriteLine("{");
+      gen.WriteLine("      int level = 1, pos0 = pos, line0 = line, col0 = col, charPos0 = charPos;");
       if (com.start.Length == 1) {
-        gen.WriteLine("\t\tNextCh();");
+        gen.WriteLine("      NextCh();");
         GenComBody(com);
       } else {
-        gen.WriteLine("\t\tNextCh();");
-        gen.Write("\t\tif ({0}) ", ChCond(com.start[1])); gen.WriteLine("{");
-        gen.WriteLine("\t\t\tNextCh();");
+        gen.WriteLine("      NextCh();");
+        gen.Write("      if ({0}) ", ChCond(com.start[1])); gen.WriteLine("{");
+        gen.WriteLine("        NextCh();");
         GenComBody(com);
-        gen.WriteLine("\t\t} else {");
-        gen.WriteLine("\t\t\tbuffer.Pos = pos0; NextCh(); line = line0; col = col0; charPos = charPos0;");
-        gen.WriteLine("\t\t}");
-        gen.WriteLine("\t\treturn false;");
+        gen.WriteLine("      } else {");
+        gen.WriteLine("        buffer.Pos = pos0; NextCh(); line = line0; col = col0; charPos = charPos0;");
+        gen.WriteLine("      }");
+        gen.WriteLine("      return false;");
       }
-      gen.WriteLine("\t}");
+      gen.WriteLine("    }");
     }
 
     string SymName(Symbol sym) {
@@ -927,9 +927,9 @@ namespace at.jku.ssw.Coco {
 
     void GenLiterals() {
       if (ignoreCase) {
-        gen.WriteLine("\t\tswitch (t.val.ToLower()) {");
+        gen.WriteLine("      switch (t.val.ToLower()) {");
       } else {
-        gen.WriteLine("\t\tswitch (t.val) {");
+        gen.WriteLine("      switch (t.val) {");
       }
       foreach (IList ts in new IList[] { tab.terminals, tab.pragmas }) {
         foreach (Symbol sym in ts) {
@@ -937,24 +937,24 @@ namespace at.jku.ssw.Coco {
             string name = SymName(sym);
             if (ignoreCase) name = name.ToLower();
             // sym.name stores literals with quotes, e.g. "\"Literal\""
-            gen.WriteLine("\t\t\tcase {0}: t.kind = {1}; break;", name, sym.n);
+            gen.WriteLine("        case {0}: t.kind = {1}; break;", name, sym.n);
           }
         }
       }
-      gen.WriteLine("\t\t\tdefault: break;");
-      gen.Write("\t\t}");
+      gen.WriteLine("        default: break;");
+      gen.Write("      }");
     }
 
     void WriteState(State state) {
       Symbol endOf = state.endOf;
-      gen.WriteLine("\t\t\tcase {0}:", state.nr);
+      gen.WriteLine("        case {0}:", state.nr);
       if (endOf != null && state.firstAction != null) {
-        gen.WriteLine("\t\t\t\trecEnd = pos; recKind = {0};", endOf.n);
+        gen.WriteLine("          recEnd = pos; recKind = {0};", endOf.n);
       }
       bool ctxEnd = state.ctx;
       for (Action action = state.firstAction; action != null; action = action.next) {
-        if (action == state.firstAction) gen.Write("\t\t\t\tif (");
-        else gen.Write("\t\t\t\telse if (");
+        if (action == state.firstAction) gen.Write("          if (");
+        else gen.Write("          else if (");
         if (action.typ == Node.chr) gen.Write(ChCond((char)action.sym));
         else PutRange(tab.CharClassSet(action.sym));
         gen.Write(") {");
@@ -962,18 +962,18 @@ namespace at.jku.ssw.Coco {
           gen.Write("apx++; "); ctxEnd = false;
         } else if (state.ctx)
           gen.Write("apx = 0; ");
-        gen.Write("AddCh(); goto case {0};", action.target.state.nr);
+        gen.Write(" AddCh(); goto case {0}; ", action.target.state.nr);
         gen.WriteLine("}");
       }
       if (state.firstAction == null)
-        gen.Write("\t\t\t\t{");
+        gen.Write("        {");
       else
-        gen.Write("\t\t\t\telse {");
+        gen.Write("        else {");
       if (ctxEnd) { // final context state: cut appendix
         gen.WriteLine();
-        gen.WriteLine("\t\t\t\t\ttlen -= apx;");
-        gen.WriteLine("\t\t\t\t\tSetScannerBehindT();");
-        gen.Write("\t\t\t\t\t");
+        gen.WriteLine("          tlen -= apx;");
+        gen.WriteLine("          SetScannerBehindT();");
+        gen.Write("          ");
       }
       if (endOf == null) {
         gen.WriteLine("goto case 0;}");
@@ -991,15 +991,15 @@ namespace at.jku.ssw.Coco {
       for (Action action = firstState.firstAction; action != null; action = action.next) {
         int targetState = action.target.state.nr;
         if (action.typ == Node.chr) {
-          gen.WriteLine("\t\tstart[" + action.sym + "] = " + targetState + "; ");
+          gen.WriteLine("      start[" + action.sym + "] = " + targetState + ";");
         } else {
           CharSet s = tab.CharClassSet(action.sym);
           for (CharSet.Range r = s.head; r != null; r = r.next) {
-            gen.WriteLine("\t\tfor (int i = " + r.from + "; i <= " + r.to + "; ++i) start[i] = " + targetState + ";");
+            gen.WriteLine("      for (int i = " + r.from + "; i <= " + r.to + "; ++i) start[i] = " + targetState + ";");
           }
         }
       }
-      gen.WriteLine("\t\tstart[Buffer.EOF] = -1;");
+      gen.WriteLine("      start[Buffer.EOF] = -1;");
     }
 
     public void WriteScanner() {
@@ -1018,22 +1018,22 @@ namespace at.jku.ssw.Coco {
         gen.Write(" {");
       }
       g.CopyFramePart("-->declarations");
-      gen.WriteLine("\tconst int maxT = {0};", tab.terminals.Count - 1);
-      gen.WriteLine("\tconst int noSym = {0};", tab.noSym.n);
+      gen.WriteLine("    const int maxT = {0};", tab.terminals.Count - 1);
+      gen.WriteLine("    const int noSym = {0};", tab.noSym.n);
       if (ignoreCase)
-        gen.Write("\tchar valCh;       // current input character (for token.val)");
+        gen.Write("  char valCh;       // current input character (for token.val)");
       g.CopyFramePart("-->initialization");
       WriteStartTab();
       g.CopyFramePart("-->casing1");
       if (ignoreCase) {
-        gen.WriteLine("\t\tif (ch != Buffer.EOF) {");
-        gen.WriteLine("\t\t\tvalCh = (char) ch;");
-        gen.WriteLine("\t\t\tch = char.ToLower((char) ch);");
-        gen.WriteLine("\t\t}");
+        gen.WriteLine("    if (ch != Buffer.EOF) {");
+        gen.WriteLine("      valCh = (char) ch;");
+        gen.WriteLine("      ch = char.ToLower((char) ch);");
+        gen.WriteLine("    }");
       }
       g.CopyFramePart("-->casing2");
-      gen.Write("\t\t\ttval[tlen++] = ");
-      if (ignoreCase) gen.Write("valCh;"); else gen.Write("(char) ch;");
+      gen.Write("        tval[tlen++] = ");
+      if (ignoreCase) gen.Write("valCh;"); else gen.Write("(char)ch;");
       g.CopyFramePart("-->comments");
       Comment com = firstComment;
       int comIdx = 0;
@@ -1043,21 +1043,21 @@ namespace at.jku.ssw.Coco {
       }
       g.CopyFramePart("-->literals"); GenLiterals();
       g.CopyFramePart("-->scan1");
-      gen.Write("\t\t\t");
+      gen.Write("      ");
       if (tab.ignored.Elements() > 0) { PutRange(tab.ignored); } else { gen.Write("false"); }
       g.CopyFramePart("-->scan2");
       if (firstComment != null) {
-        gen.Write("\t\tif (");
+        gen.Write("      if (");
         com = firstComment; comIdx = 0;
         while (com != null) {
           gen.Write(ChCond(com.start[0]));
           gen.Write(" && Comment{0}()", comIdx);
-          if (com.next != null) gen.Write(" ||");
+          if (com.next != null) gen.Write(" || ");
           com = com.next; comIdx++;
         }
         gen.Write(") return NextToken();");
       }
-      if (hasCtxMoves) { gen.WriteLine(); gen.Write("\t\tint apx = 0;"); } /* pdt */
+      if (hasCtxMoves) { gen.WriteLine(); gen.Write("    int apx = 0;"); } /* pdt */
       g.CopyFramePart("-->scan3");
       for (State state = firstState.next; state != null; state = state.next)
         WriteState(state);
