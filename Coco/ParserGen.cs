@@ -295,7 +295,7 @@ namespace at.jku.ssw.Coco {
 
     void GenTokens() {
       gen.WriteLine("\n    public _{0} ast;\n", tab.gramSy.name);
-      gen.WriteLine("    public static Parser Parse(Scanner scanner, out _{0} ast) {{", tab.gramSy.name);
+      gen.WriteLine("    public static Parser Parse(IScanner scanner, out _{0} ast) {{", tab.gramSy.name);
       gen.WriteLine("      Parser parser = new Parser(scanner);");
       gen.WriteLine("      parser.Parse();");
       gen.WriteLine("      ast = parser.ast;");
@@ -350,6 +350,7 @@ namespace at.jku.ssw.Coco {
         gen.Write("    void {0}(", sym.name);
         CopySourcePart(sym.attrPos, 0);
         gen.WriteLine(") {");
+        gen.WriteLine("      Token token = la;");
         CopySourcePart(sym.semPos, 3);
         GenCode(sym.graph, 3, new BitArray(tab.terminals.Count));
         gen.WriteLine("    }"); gen.WriteLine();
@@ -420,7 +421,7 @@ namespace at.jku.ssw.Coco {
       tab = parser.tab;
       errors = parser.errors;
       trace = parser.trace;
-      buffer = parser.scanner.buffer;
+      buffer = parser.scanner.GetBuffer();
       errorNr = -1;
       usingPos = null;
     }

@@ -27,7 +27,7 @@ namespace at.jku.ssw.Coco {
 
     public _Coco ast;
 
-    public static Parser Parse(Scanner scanner, out _Coco ast) {
+    public static Parser Parse(IScanner scanner, out _Coco ast) {
       Parser parser = new Parser(scanner);
       parser.Parse();
       ast = parser.ast;
@@ -52,11 +52,11 @@ namespace at.jku.ssw.Coco {
     const bool _x = false;
     const int minErrDist = 2;
 
-    public Scanner scanner;
+    public IScanner scanner;
     public Errors errors;
 
-    public Token t;    // last recognized token
-    public Token la;   // lookahead token
+    public Token t;     // last recognized token
+    public Token la;    // lookahead token
     int errDist = minErrDist;
 const int id = 0;
 	const int str = 1;
@@ -74,7 +74,7 @@ const int id = 0;
 
 
 
-    public Parser(Scanner scanner) {
+    public Parser(IScanner scanner) {
       this.scanner = scanner;
       errors = new Errors();
     }
@@ -136,6 +136,7 @@ const int id = 0;
 #pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
 
     void Coco() {
+      Token token = la;
       Symbol sym; Graph g, g1, g2; string gramName; CharSet s; int beg, line;
       if (StartOf(1)) {
         Get();
@@ -270,6 +271,7 @@ const int id = 0;
     }
 
     void SetDecl() {
+      Token token = la;
       CharSet s;
       Expect(1);
       string name = t.val;
@@ -285,6 +287,7 @@ const int id = 0;
     }
 
     void TokenDecl(int typ) {
+      Token token = la;
       string name; int kind; Symbol sym; Graph g;
       Sym(out name, out kind);
       sym = tab.FindSym(name);
@@ -323,6 +326,7 @@ const int id = 0;
     }
 
     void TokenExpr(out Graph g) {
+      Token token = la;
       Graph g2;
       TokenTerm(out g);
       bool first = true;
@@ -335,6 +339,7 @@ const int id = 0;
     }
 
     void Set(out CharSet s) {
+      Token token = la;
       CharSet s2;
       SimSet(out s);
       while (la.kind == 20 || la.kind == 21) {
@@ -351,6 +356,7 @@ const int id = 0;
     }
 
     void AttrDecl(Symbol sym) {
+      Token token = la;
       if (la.kind == 24) {
         Get();
         int beg = la.pos; int col = la.col; int line = la.line;
@@ -383,6 +389,7 @@ const int id = 0;
     }
 
     void SemText(out Position pos) {
+      Token token = la;
       Expect(39);
       int beg = la.pos; int col = la.col; int line = la.line;
       while (StartOf(13)) {
@@ -401,6 +408,7 @@ const int id = 0;
     }
 
     void Expression(out Graph g) {
+      Token token = la;
       Graph g2;
       Term(out g);
       bool first = true;
@@ -413,6 +421,7 @@ const int id = 0;
     }
 
     void SimSet(out CharSet s) {
+      Token token = la;
       int n1, n2;
       s = new CharSet();
       if (la.kind == 1) {
@@ -442,6 +451,7 @@ const int id = 0;
     }
 
     void Char(out int n) {
+      Token token = la;
       Expect(5);
       string name = t.val; n = 0;
       name = tab.Unescape(name.Substring(1, name.Length-2));
@@ -452,6 +462,7 @@ const int id = 0;
     }
 
     void Sym(out string name, out int kind) {
+      Token token = la;
       name = "???"; kind = id;
       if (la.kind == 1) {
         Get();
@@ -472,6 +483,7 @@ const int id = 0;
     }
 
     void Term(out Graph g) {
+      Token token = la;
       Graph g2; Node rslv = null; g = null;
       if (StartOf(17)) {
         if (la.kind == 37) {
@@ -496,6 +508,7 @@ const int id = 0;
     }
 
     void Resolver(out Position pos) {
+      Token token = la;
       Expect(37);
       Expect(30);
       int beg = la.pos; int col = la.col; int line = la.line;
@@ -504,6 +517,7 @@ const int id = 0;
     }
 
     void Factor(out Graph g) {
+      Token token = la;
       string name; int kind; Position pos; bool weak = false; 
       g = null;
       
@@ -599,6 +613,7 @@ const int id = 0;
     }
 
     void Attribs(Node p) {
+      Token token = la;
       if (la.kind == 24) {
         Get();
         int beg = la.pos; int col = la.col; int line = la.line;
@@ -629,6 +644,7 @@ const int id = 0;
     }
 
     void Condition() {
+      Token token = la;
       while (StartOf(20)) {
         if (la.kind == 30) {
           Get();
@@ -641,6 +657,7 @@ const int id = 0;
     }
 
     void TokenTerm(out Graph g) {
+      Token token = la;
       Graph g2;
       TokenFactor(out g);
       while (StartOf(7)) {
@@ -658,6 +675,7 @@ const int id = 0;
     }
 
     void TokenFactor(out Graph g) {
+      Token token = la;
       string name; int kind;
       g = null;
       if (la.kind == 1 || la.kind == 3 || la.kind == 5) {

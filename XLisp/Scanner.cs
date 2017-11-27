@@ -33,6 +33,13 @@ namespace XLisp {
     public Token next;  // ML 2005-03-11 Tokens are kept in linked list
   }
 
+  public interface IScanner {
+    Token Scan();
+    Token Peek();
+    void ResetPeek();
+    Buffer GetBuffer();
+  }
+
   //-----------------------------------------------------------------------------------
   // Buffer
   //-----------------------------------------------------------------------------------
@@ -221,7 +228,7 @@ namespace XLisp {
   //-----------------------------------------------------------------------------------
   // Scanner
   //-----------------------------------------------------------------------------------
-  public class Scanner {
+  public class Scanner : IScanner {
     const char EOL = '\n';
     const int eofSym = 0; /* pdt */
     const int maxT = 21;
@@ -619,6 +626,8 @@ namespace XLisp {
 
     // make sure that peeking starts at the current scan position
     public void ResetPeek() { pt = tokens; }
+
+    public Buffer GetBuffer() { return buffer; }
 
   } // end Scanner
 }

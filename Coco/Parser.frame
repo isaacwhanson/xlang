@@ -33,15 +33,15 @@ using System;
     const bool _x = false;
     const int minErrDist = 2;
 
-    public Scanner scanner;
+    public IScanner scanner;
     public Errors errors;
 
-    public Token t;    // last recognized token
-    public Token la;   // lookahead token
+    public Token t;     // last recognized token
+    public Token la;    // lookahead token
     int errDist = minErrDist;
 -->declarations
 
-    public Parser(Scanner scanner) {
+    public Parser(IScanner scanner) {
       this.scanner = scanner;
       errors = new Errors();
     }

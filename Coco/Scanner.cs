@@ -33,6 +33,13 @@ namespace at.jku.ssw.Coco {
     public Token next;  // ML 2005-03-11 Tokens are kept in linked list
   }
 
+  public interface IScanner {
+    Token Scan();
+    Token Peek();
+    void ResetPeek();
+    Buffer GetBuffer();
+  }
+
   //-----------------------------------------------------------------------------------
   // Buffer
   //-----------------------------------------------------------------------------------
@@ -221,7 +228,7 @@ namespace at.jku.ssw.Coco {
   //-----------------------------------------------------------------------------------
   // Scanner
   //-----------------------------------------------------------------------------------
-  public class Scanner {
+  public class Scanner : IScanner {
     const char EOL = '\n';
     const int eofSym = 0; /* pdt */
     const int maxT = 41;
@@ -554,6 +561,8 @@ namespace at.jku.ssw.Coco {
 
     // make sure that peeking starts at the current scan position
     public void ResetPeek() { pt = tokens; }
+
+    public Buffer GetBuffer() { return buffer; }
 
   } // end Scanner
 }

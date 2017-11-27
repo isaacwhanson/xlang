@@ -24,7 +24,7 @@ namespace XLisp {
 
     public _XLisp ast;
 
-    public static Parser Parse(Scanner scanner, out _XLisp ast) {
+    public static Parser Parse(IScanner scanner, out _XLisp ast) {
       Parser parser = new Parser(scanner);
       parser.Parse();
       ast = parser.ast;
@@ -47,15 +47,15 @@ namespace XLisp {
     const bool _x = false;
     const int minErrDist = 2;
 
-    public Scanner scanner;
+    public IScanner scanner;
     public Errors errors;
 
-    public Token t;    // last recognized token
-    public Token la;   // lookahead token
+    public Token t;     // last recognized token
+    public Token la;    // lookahead token
     int errDist = minErrDist;
 
 
-    public Parser(Scanner scanner) {
+    public Parser(IScanner scanner) {
       this.scanner = scanner;
       errors = new Errors();
     }
@@ -111,12 +111,14 @@ namespace XLisp {
 #pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
 
     void XLisp() {
+      Token token = la;
       ast = new _XLisp(t);
       XSeq(out _List list);
       ast.list = list;
     }
 
     void XSeq(out _List list) {
+      Token token = la;
       list = new _List(t);
       Seq(out _List list0);
       list.Add(list0);
@@ -128,6 +130,7 @@ namespace XLisp {
     }
 
     void List(out _List list) {
+      Token token = la;
       Expect(6);
       Seq(out _List list0);
       Expect(7);
@@ -135,6 +138,7 @@ namespace XLisp {
     }
 
     void Seq(out _List list) {
+      Token token = la;
       list = new _List(t);
       Expr(out IAtom expr0);
       list.Add(expr0);
@@ -145,6 +149,7 @@ namespace XLisp {
     }
 
     void XList(out _List list) {
+      Token token = la;
       Expect(8);
       XSeq(out _List list0);
       Expect(9);
@@ -152,6 +157,7 @@ namespace XLisp {
     }
 
     void Expr(out IAtom expr) {
+      Token token = la;
       expr = null;
       if (StartOf(2)) {
         Atom(out IAtom atom);
@@ -166,6 +172,7 @@ namespace XLisp {
     }
 
     void Atom(out IAtom atom) {
+      Token token = la;
       atom = null;
       switch (la.kind) {
         case 1: {
@@ -248,76 +255,91 @@ namespace XLisp {
     }
 
     void Ident(out _Ident id) {
+      Token token = la;
       Expect(1);
       id = new _Ident(t);
     }
 
     void String(out _String str) {
+      Token token = la;
       Expect(2);
       str = new _String(t);
     }
 
     void Character(out _Character chr) {
+      Token token = la;
       Expect(3);
       chr = new _Character(t);
     }
 
     void Float(out _Float flt) {
+      Token token = la;
       Expect(4);
       flt = new _Float(t);
     }
 
     void Integer(out _Integer inti) {
+      Token token = la;
       Expect(5);
       inti = new _Integer(t);
     }
 
     void Nil(out _List nil) {
+      Token token = la;
       Expect(11);
       nil = new _List(t);
     }
 
     void True(out _True troo) {
+      Token token = la;
       Expect(12);
       troo = new _True(t);
     }
 
     void Eq(out _Eq eq) {
+      Token token = la;
       Expect(13);
       eq = new _Eq(t);
     }
 
     void First(out _First car) {
+      Token token = la;
       Expect(14);
       car = new _First(t);
     }
 
     void Rest(out _Rest cdr) {
+      Token token = la;
       Expect(15);
       cdr = new _Rest(t);
     }
 
     void Cons(out _Cons cons) {
+      Token token = la;
       Expect(16);
       cons = new _Cons(t);
     }
 
     void Quote(out _Quote quote) {
+      Token token = la;
       Expect(17);
       quote = new _Quote(t);
     }
 
     void Cond(out _Cond cond) {
+      Token token = la;
       Expect(18);
       cond = new _Cond(t);
     }
 
     void Lambda(out _Lambda lambda) {
+      Token token = la;
       Expect(19);
       lambda = new _Lambda(t);
     }
 
     void Label(out _Label label) {
+      Token token = la;
       Expect(20);
       label = new _Label(t);
     }

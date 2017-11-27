@@ -32,7 +32,7 @@ namespace XLisp {
       if (args.Length > 0) {
         // parse -> ast
         string filename = args[0];
-        Scanner scanner = new Scanner(filename);
+        IScanner scanner = new Scanner(filename);
         Parser.Parse(scanner, out _XLisp ast);
         return OK;
       }

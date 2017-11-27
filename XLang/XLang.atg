@@ -53,7 +53,7 @@ PRODUCTIONS
     | WhileStmt<out _WhileStmt whil>        (. stmt = whil;.)) ";".
 
   WhileStmt<out _WhileStmt stmt> =
-    "while"                                 (. Token token = t;.)
+    "while"
     "(" Expr<out IExpr expr>
     ")" Stmt<out IStmt stmt0>               (. stmt = new _WhileStmt(token) { expr = expr, stmt = stmt0 };.).
 
@@ -68,14 +68,14 @@ PRODUCTIONS
     [Expr<out IExpr expr>                   (. stmt.expr = expr;.)].
 
   LetStmt<out _LetStmt let_stmt> =
-    "let"                                   (. let_stmt = null; Token token = t;.)
+    "let"                                   (. let_stmt = null;.)
     Type<out _Type typ> Ident<out _Ident ident>
     (ParamDeclList<out _ParamDeclList plist> "=>" Stmt<out IStmt stmt>
                                             (. let_stmt = new _LetStmt(token) { ident = ident, plist = plist, stmt = stmt };.)
     | "=" Expr<out IExpr expr>              (. let_stmt = new _LetStmt(token) { ident = ident, expr = expr };.)).
 
   ParamDecl<out _ParamDecl param> =
-    Type<out _Type typ0>                    (. Token token = t;.)
+    Type<out _Type typ0>
     Ident<out _Ident ident0>                (. param = new _ParamDecl(token) { type = typ0, ident = ident0 };.).
 
   ParamDeclList<out _ParamDeclList list> =
@@ -89,86 +89,86 @@ PRODUCTIONS
 
   CondExpr<out IExpr expr> =
     LogOrExpr<out IExpr lhs>                (. expr = lhs;.)
-    ['?'                                    (. Token token = t;.)
+    ['?'                                    (. token = t;.)
      Expr<out IExpr consequent>
      ':' Expr<out IExpr alternative>        (. expr = new _CondExpr(token) { condition = expr, consequent = consequent, alternative = alternative };.)].
 
   LogOrExpr<out IExpr expr> =
     LogXorExpr<out IExpr lhs>               (. expr = lhs;.)
-    {"||"                                   (. Token token = t;.)
+    {"||"                                   (. token = t;.)
     LogXorExpr<out IExpr rhs>               (. expr = new _LogOrExpr(token) { left = expr, right = rhs };.)}.
 
   LogXorExpr<out IExpr expr> =
     LogAndExpr<out IExpr lhs>               (. expr = lhs;.)
-    {"^^"                                   (. Token token = t;.)
+    {"^^"                                   (. token = t;.)
     LogAndExpr<out IExpr rhs>               (. expr = new _LogXorExpr(token) { left = expr, right = rhs };.)}.
 
   LogAndExpr<out IExpr expr> =
     OrExpr<out IExpr lhs>                   (. expr = lhs;.)
-    {"&&"                                   (. Token token = t;.)
+    {"&&"                                   (. token = t;.)
     OrExpr<out IExpr rhs>                   (. expr = new _LogAndExpr(token) { left = expr, right = rhs };.)}.
 
   OrExpr<out IExpr expr> =
     XorExpr<out IExpr lhs>                  (. expr = lhs;.)
-    {'|'                                    (. Token token = t;.)
+    {'|'                                    (. token = t;.)
     XorExpr<out IExpr rhs>                  (. expr = new _OrExpr(token) { left = expr, right = rhs };.)}.
 
   XorExpr<out IExpr expr> =
     AndExpr<out IExpr lhs>                  (. expr = lhs;.)
-    {'^'                                    (. Token token = t;.)
+    {'^'                                    (. token = t;.)
     AndExpr<out IExpr rhs>                  (. expr = new _XorExpr(token) { left = expr, right = rhs };.)}.
 
   AndExpr<out IExpr expr> =
     EqlExpr<out IExpr lhs>                  (. expr = lhs;.)
-    {'&'                                    (. Token token = t;.)
+    {'&'                                    (. token = t;.)
     EqlExpr<out IExpr rhs>                  (. expr = new _AndExpr(token) { left = expr, right = rhs };.)}.
 
   EqlExpr<out IExpr expr> =
     RelExpr<out IExpr lhs>                  (. expr = lhs;.)
-                                           {(. EqlOp op;.)
+                                           {(. EqlOp op; token = la;.)
     ( "=="                                  (. op = EqlOp.EQUAL;.)
     | "!="                                  (. op = EqlOp.NOTEQUAL;.)
     | "==="                                 (. op = EqlOp.HARDEQUAL;.)
-    | "!=="                                 (. op = EqlOp.HARDNOTEQUAL;.)) (. Token token = t;.)
+    | "!=="                                 (. op = EqlOp.HARDNOTEQUAL;.))
     RelExpr<out IExpr rhs>                  (. expr = new _EqlExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   RelExpr<out IExpr expr> =
     ShiftExpr<out IExpr lhs>                (. expr = lhs;.)
-                                           {(. RelOp op;.)
+                                           {(. RelOp op; token = la;.)
     ( '<'                                   (. op = RelOp.LESSTHAN;.)
     | '>'                                   (. op = RelOp.GREATERTHAN;.)
     | "<="                                  (. op = RelOp.LESSTHANEQUAL;.)
-    | ">="                                  (. op = RelOp.GREATERTHANEQUAL;.)) (. Token token = t;.)
+    | ">="                                  (. op = RelOp.GREATERTHANEQUAL;.))
     ShiftExpr<out IExpr rhs>                (. expr = new _RelExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   ShiftExpr<out IExpr expr> =
     AddExpr<out IExpr lhs>                  (. expr = lhs;.)
-                                           {(. ShiftOp op;.)
+                                           {(. ShiftOp op; token = la;.)
     ( "<<"                                  (. op = ShiftOp.LEFT;.)
-    | ">>"                                  (. op = ShiftOp.RIGHT;.)) (. Token token = t;.)
+    | ">>"                                  (. op = ShiftOp.RIGHT;.))
     AddExpr<out IExpr rhs>                  (. expr = new _ShiftExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   AddExpr<out IExpr expr> =
     MultExpr<out IExpr lhs>                 (. expr = lhs;.)
-                                           {(. AddOp op;.)
+                                           {(. AddOp op; token = la;.)
     ( '+'                                   (. op = AddOp.PLUS;.)
-    | '-'                                   (. op = AddOp.MINUS;.)) (. Token token = t;.)
+    | '-'                                   (. op = AddOp.MINUS;.))
     MultExpr<out IExpr rhs>                 (. expr = new _AddExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   MultExpr<out IExpr expr> =
     UnaryExpr<out IExpr lhs>                (. expr = lhs;.)
-                                           {(. MultOp op;.)
+                                           {(. MultOp op; token = la;.)
     ( '*'                                   (. op = MultOp.TIMES;.)
     | '/'                                   (. op = MultOp.DIVIDE;.)
-    | '%'                                   (. op = MultOp.MODULO;.)) (. Token token = t;.)
+    | '%'                                   (. op = MultOp.MODULO;.))
     UnaryExpr<out IExpr rhs>                (. expr = new _MultExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   UnaryExpr<out IExpr expr> =               (. expr = null;.)
     (Primitive<out IExpr lhs>               (. expr = lhs;.)
-                                           |(. UnaryOp op;.)
+                                           |(. UnaryOp op; token = la;.)
     (('-'                                   (. op = UnaryOp.NEGATE;.)
     | '~'                                   (. op = UnaryOp.COMPLIMENT;.)
-    | '!'                                   (. op = UnaryOp.NOT;.)) (. Token token = t;.)
+    | '!'                                   (. op = UnaryOp.NOT;.))
     UnaryExpr<out IExpr lhs>                (. expr = new _UnaryExpr(token) { op = op, left = lhs };.))).
 
   Primitive<out IExpr expr> =               (. expr = null;.)
