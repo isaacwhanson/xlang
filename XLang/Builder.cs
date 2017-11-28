@@ -1,6 +1,4 @@
 ﻿/*
-  LLVMVisitor
-
   Author:
        Isaac W Hanson <isaac@starlig.ht>
 
@@ -25,10 +23,10 @@ using LLVMSharp;
 
 namespace XLang {
 
-  public class LLVMCompiler : XLangVisitor {
+  public class Builder : XLangVisitor {
 
-    public static LLVMCompiler Build(_XLang xlang) {
-      LLVMCompiler visitor = new LLVMCompiler();
+    public static Builder Build(_XLang xlang) {
+      Builder visitor = new Builder();
       xlang.Accept(visitor);
       return visitor;
     }

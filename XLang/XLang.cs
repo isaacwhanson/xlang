@@ -1,6 +1,4 @@
 ﻿/*
-  Compiler
-
   Author:
        Isaac W Hanson <isaac@starlig.ht>
 
@@ -23,7 +21,7 @@ using System;
 
 namespace XLang {
 
-  class Compiler {
+  class XLang {
 
     const int OK = 0;
     const int WARN = 1;

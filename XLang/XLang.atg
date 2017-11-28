@@ -66,7 +66,7 @@ PRODUCTIONS
     "return"                                  (. stmt = new _RetStmt(token);.)
     [Expr<.out IExpr expr.>                   (. stmt.expr = expr;.)].
 
-  LetStmt<.out _LetStmt let_stmt.> =
+  LetStmt<.out IStmt let_stmt.> =
     "let"                                     (. let_stmt = null;.)
     Type<.out _Type typ.> Ident<.out _Ident ident.>
     (ParamDeclList<.out _ParamDeclList plist.> "=>" Stmt<.out IStmt stmt.>
@@ -123,8 +123,7 @@ PRODUCTIONS
     EqlExpr<.out IExpr rhs.>                  (. expr = new _AndExpr(token) { left = expr, right = rhs };.)}.
 
   EqlExpr<.out IExpr expr.> =
-    RelExpr<.out expr.>
-                                             {(. EqlOp op; token = la;.)
+    RelExpr<.out expr.>                      {(. EqlOp op; token = la;.)
     ( "=="                                    (. op = EqlOp.EQUAL;.)
     | "!="                                    (. op = EqlOp.NOTEQUAL;.)
     | "==="                                   (. op = EqlOp.HARDEQUAL;.)
@@ -132,8 +131,7 @@ PRODUCTIONS
     RelExpr<.out IExpr rhs.>                  (. expr = new _EqlExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   RelExpr<.out IExpr expr.> =
-    ShiftExpr<.out expr.>
-                                             {(. RelOp op; token = la;.)
+    ShiftExpr<.out expr.>                    {(. RelOp op; token = la;.)
     ( '<'                                     (. op = RelOp.LESSTHAN;.)
     | '>'                                     (. op = RelOp.GREATERTHAN;.)
     | "<="                                    (. op = RelOp.LESSTHANEQUAL;.)
@@ -141,30 +139,26 @@ PRODUCTIONS
     ShiftExpr<.out IExpr rhs.>                (. expr = new _RelExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   ShiftExpr<.out IExpr expr.> =
-    AddExpr<.out expr.>
-                                             {(. ShiftOp op; token = la;.)
+    AddExpr<.out expr.>                      {(. ShiftOp op; token = la;.)
     ( "<<"                                    (. op = ShiftOp.LEFT;.)
     | ">>"                                    (. op = ShiftOp.RIGHT;.))
     AddExpr<.out IExpr rhs.>                  (. expr = new _ShiftExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   AddExpr<.out IExpr expr.> =
-    MultExpr<.out expr.>
-                                             {(. AddOp op; token = la;.)
+    MultExpr<.out expr.>                     {(. AddOp op; token = la;.)
     ( '+'                                     (. op = AddOp.PLUS;.)
     | '-'                                     (. op = AddOp.MINUS;.))
     MultExpr<.out IExpr rhs.>                 (. expr = new _AddExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   MultExpr<.out IExpr expr.> =
-    UnaryExpr<.out expr.>
-                                             {(. MultOp op; token = la;.)
+    UnaryExpr<.out expr.>                    {(. MultOp op; token = la;.)
     ( '*'                                     (. op = MultOp.TIMES;.)
     | '/'                                     (. op = MultOp.DIVIDE;.)
     | '%'                                     (. op = MultOp.MODULO;.))
     UnaryExpr<.out IExpr rhs.>                (. expr = new _MultExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   UnaryExpr<.out IExpr expr.> =               (. expr = null;.)
-    (Primitive<.out expr.>
-                                             |(. UnaryOp op;.)
+    (Primitive<.out expr.>                   |(. UnaryOp op;.)
     (('-'                                     (. op = UnaryOp.NEGATE;.)
     | '~'                                     (. op = UnaryOp.COMPLIMENT;.)
     | '!'                                     (. op = UnaryOp.NOT;.))

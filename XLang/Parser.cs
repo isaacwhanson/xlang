@@ -139,7 +139,7 @@ namespace XLang {
       Expect(7);
     }
 
-    void LetStmt(out _LetStmt let_stmt) {
+    void LetStmt(out IStmt let_stmt) {
       Token token = la;
       Expect(16);
       let_stmt = null;

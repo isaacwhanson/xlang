@@ -1,8 +1,4 @@
 ﻿/*
-  AST
-
-  partial-classes and interfaces comprising the abstract syntax tree
-
   Author:
        Isaac W Hanson <isaac@starlig.ht>
 
@@ -42,7 +38,7 @@ namespace XLang {
   public interface IExpr : IXLangElement { }
 
   public partial class _LetStmt : IStmt {
-    public _Ident ident;
+    public IExpr ident;
     public _ParamDeclList plist;
     public IExpr expr;
     public IStmt stmt;
@@ -56,8 +52,8 @@ namespace XLang {
   }
 
   public partial class _ParamDecl {
-    public _Type type;
-    public _Ident ident;
+    public IExpr type;
+    public IExpr ident;
   }
 
   public partial class _StmtBlock : IStmt {
