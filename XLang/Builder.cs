@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using LLVMSharp;
+using Mono.CSharp;
 
 namespace XLang {
 
@@ -39,8 +40,16 @@ namespace XLang {
     readonly LLVMBool LLVMFalse = new LLVMBool(0);
     readonly LLVMBool LLVMTrue = new LLVMBool(1);
 
+    Evaluator evaluator = new Evaluator(new CompilerContext(new CompilerSettings(), new ConsoleReportPrinter()));
+
+    public bool Eval(string code, out object result) {
+      evaluator.Evaluate(code, out result, out bool worked);
+      return worked;
+    }
+
     public override void Visit(_XLang element) {
       builder = LLVM.CreateBuilder();
+      evaluator.Run("using System;");
       element.module.Accept(this);
     }
 
@@ -125,9 +134,10 @@ namespace XLang {
     }
 
     public override void Visit(_Int element) {
-      Int64 val = Int64.Parse(element.token.val);
-      LLVMValueRef val_ref = LLVM.ConstInt(LLVM.Int64Type(), (ulong)val, LLVMTrue);
-      valueStack.Push(val_ref);
+      if (Eval(element.token.val, out object val)) {
+        LLVMValueRef valueRef = LLVM.ConstInt(LLVM.Int64Type(), (ulong)val, LLVMTrue);
+        valueStack.Push(valueRef);
+      }
     }
 
     public override void Visit(_Array element) {
