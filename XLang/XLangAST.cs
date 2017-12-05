@@ -21,7 +21,7 @@ using System.Collections.Generic;
 
 namespace XLang {
 
-  public partial class _XLang {
+  public partial class _XLang : IExpr {
     public string filename;
     public _Module module;
   }

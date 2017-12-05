@@ -181,10 +181,8 @@ namespace at.jku.ssw.Coco {
 
     public Range head;
 
-    public bool this[int i]
-    {
-      get
-      {
+    public bool this[int i] {
+      get {
         for (Range p = head; p != null; p = p.next)
           if (i < p.from) return false;
           else if (i <= p.to) return true; // p.from <= i <= p.to
@@ -206,8 +204,7 @@ namespace at.jku.ssw.Coco {
         }
         prev = cur; cur = cur.next;
       }
-      Range n = new Range(i, i)
-      {
+      Range n = new Range(i, i) {
         next = cur
       };
       if (prev == null) head = n; else prev.next = n;
@@ -434,8 +431,7 @@ namespace at.jku.ssw.Coco {
     //---------- State handling
 
     State NewState() {
-      State s = new State()
-      {
+      State s = new State() {
         nr = ++lastStateNr
       };
       if (firstState == null) firstState = s; else lastState.next = s;
@@ -445,8 +441,7 @@ namespace at.jku.ssw.Coco {
 
     void NewTransition(State from, State to, int typ, int sym, int tc) {
       Target t = new Target(to);
-      Action a = new Action(typ, sym, tc)
-      {
+      Action a = new Action(typ, sym, tc) {
         target = t
       };
       from.AddAction(a);
@@ -810,8 +805,7 @@ namespace at.jku.ssw.Coco {
     Melted firstMelted; // head of melted state list
 
     Melted NewMelted(BitArray set, State state) {
-      Melted m = new Melted(set, state)
-      {
+      Melted m = new Melted(set, state) {
         next = firstMelted
       };
       firstMelted = m;
@@ -856,8 +850,7 @@ namespace at.jku.ssw.Coco {
     }
 
     public void NewComment(Node from, Node to, bool nested) {
-      Comment c = new Comment(CommentStr(from), CommentStr(to), nested)
-      {
+      Comment c = new Comment(CommentStr(from), CommentStr(to), nested) {
         next = firstComment
       };
       firstComment = c;

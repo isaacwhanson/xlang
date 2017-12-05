@@ -409,8 +409,7 @@ namespace at.jku.ssw.Coco {
     public Graph StrToGraph(string str) {
       string s = Unescape(str.Substring(1, str.Length - 2));
       if (s.Length == 0) parser.SemErr("empty token not allowed");
-      Graph g = new Graph
-      {
+      Graph g = new Graph {
         r = dummyNode
       };
       for (int i = 0; i < s.Length; i++) {
@@ -777,8 +776,7 @@ namespace at.jku.ssw.Coco {
     }
 
     void CompSyncSets() {
-      allSyncSets = new BitArray(terminals.Count)
-      {
+      allSyncSets = new BitArray(terminals.Count) {
         [eofSy.n] = true
       };
       visited = new BitArray(nodes.Count);
@@ -791,8 +789,7 @@ namespace at.jku.ssw.Coco {
     public void SetupAnys() {
       foreach (Node p in nodes)
         if (p.typ == Node.any) {
-          p.set = new BitArray(terminals.Count, true)
-          {
+          p.set = new BitArray(terminals.Count, true) {
             [eofSy.n] = false
           };
         }

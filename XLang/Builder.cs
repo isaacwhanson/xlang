@@ -130,7 +130,10 @@ namespace XLang {
     }
 
     public override void Visit(_Float element) {
-      valueStack.Push(LLVM.ConstReal(LLVM.DoubleType(), Double.Parse(element.token.val)));
+      if (Eval(element.token.val, out object val)) {
+        LLVMValueRef valueRef = LLVM.ConstReal(LLVM.DoubleType(), (double)val);
+        valueStack.Push(valueRef);
+      }
     }
 
     public override void Visit(_Int element) {
