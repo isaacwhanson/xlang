@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XLang", "XLang\XLang.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coco", "Coco\Coco.csproj", "{2568D485-CBA5-4E9F-AC11-900DF89E5798}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XLisp", "XLisp\XLisp.csproj", "{280002E1-F27E-411B-89B1-AB23B7DEB05E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moxi", "Moxi\Moxi.csproj", "{1CC38FC4-182D-499E-9194-0A969A5ADA4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,10 @@ Global
 		{2568D485-CBA5-4E9F-AC11-900DF89E5798}.Debug|x86.Build.0 = Debug|x86
 		{2568D485-CBA5-4E9F-AC11-900DF89E5798}.Release|x86.ActiveCfg = Release|x86
 		{2568D485-CBA5-4E9F-AC11-900DF89E5798}.Release|x86.Build.0 = Release|x86
-		{280002E1-F27E-411B-89B1-AB23B7DEB05E}.Debug|x86.ActiveCfg = Debug|x86
-		{280002E1-F27E-411B-89B1-AB23B7DEB05E}.Debug|x86.Build.0 = Debug|x86
-		{280002E1-F27E-411B-89B1-AB23B7DEB05E}.Release|x86.ActiveCfg = Release|x86
-		{280002E1-F27E-411B-89B1-AB23B7DEB05E}.Release|x86.Build.0 = Release|x86
+		{1CC38FC4-182D-499E-9194-0A969A5ADA4B}.Debug|x86.ActiveCfg = Debug|x86
+		{1CC38FC4-182D-499E-9194-0A969A5ADA4B}.Debug|x86.Build.0 = Debug|x86
+		{1CC38FC4-182D-499E-9194-0A969A5ADA4B}.Release|x86.ActiveCfg = Release|x86
+		{1CC38FC4-182D-499E-9194-0A969A5ADA4B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

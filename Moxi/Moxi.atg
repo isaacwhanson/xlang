@@ -1,0 +1,35 @@
+﻿COMPILER Moxi
+
+CHARACTERS
+  newline     = '\r' + '\n'.
+  whitespace  = ' ' + '\t' + '\u000b' + '\u000c' + '\f'.
+  lower       = 'a'..'z' + '_'.
+  upper       = 'A'..'Z'.
+  letter      = lower + upper.
+  bin         = "01".
+  oct         = '0'..'7'.
+  digit       = '0'..'9'.
+  nonzero     = '1'..'9'.
+  hex         = digit + 'a'..'f' + 'A'..'F'.
+  notquote    = ANY - '\"' - newline.
+  notapost    = ANY - '\'' - newline.
+  sign        = "+-".
+  e           = "eE".
+
+TOKENS
+  identifier  = letter {letter | digit}.
+  string      = '"' {notquote | "\\\""} '"'.
+  character   = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) '\''.
+  float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}).
+  integer     = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}).
+
+COMMENTS FROM "/*" TO "*/" NESTED
+COMMENTS FROM "//" TO "\n"
+COMMENTS FROM "#" TO "\n"
+IGNORE whitespace + newline
+
+PRODUCTIONS
+  Moxi =
+    identifier.
+
+END Moxi.

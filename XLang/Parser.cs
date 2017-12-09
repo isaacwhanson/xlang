@@ -50,11 +50,11 @@ namespace XLang {
     const int minErrDist = 2;
 
     public IScanner scanner;
+    public string filename;
     public Errors errors;
 
     public Token t;     // last recognized token
     public Token la;    // lookahead token
-    public string filename;
     int errDist = minErrDist;
 
 

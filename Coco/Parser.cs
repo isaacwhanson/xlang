@@ -54,11 +54,11 @@ namespace at.jku.ssw.Coco {
     const int minErrDist = 2;
 
     public IScanner scanner;
+    public string filename;
     public Errors errors;
 
     public Token t;     // last recognized token
     public Token la;    // lookahead token
-    public string filename;
     int errDist = minErrDist;
 const int id = 0;
  const int str = 1;
@@ -73,7 +73,6 @@ const int id = 0;
  string noString = "-none-"; // used in declarations of literal tokens
 
 /*-------------------------------------------------------------------------*/
-
 
 
     public Parser(IScanner scanner) {
