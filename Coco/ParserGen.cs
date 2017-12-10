@@ -336,6 +336,7 @@ namespace at.jku.ssw.Coco {
       string gram = tab.gramSy.name;
       gen.WriteLine("  public interface I{0}Element {{", gram);
       gen.WriteLine("    void Accept(I{0}Visitor visitor);", gram);
+      gen.WriteLine("    Token GetToken();");
       gen.WriteLine("  }");
       gen.WriteLine("\n  public interface I{0}Visitor {{", tab.gramSy.name);
       foreach (Symbol sym in tab.nonterminals) {
@@ -347,6 +348,7 @@ namespace at.jku.ssw.Coco {
         gen.WriteLine("    public Token token;");
         gen.WriteLine("    public {0}(Token t) {{ token = t; }}", sym.name);
         gen.WriteLine("    public void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
+        gen.WriteLine("    public Token GetToken() { return token; }");
         gen.WriteLine("  }");
       }
     }

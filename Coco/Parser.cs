@@ -761,6 +761,7 @@ const int id = 0;
 
   public interface ICocoElement {
     void Accept(ICocoVisitor visitor);
+    Token GetToken();
   }
 
   public interface ICocoVisitor {
@@ -788,108 +789,126 @@ const int id = 0;
     public Token token;
     public Coco(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class SetDecl : ICocoElement {
     public Token token;
     public SetDecl(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class TokenDecl : ICocoElement {
     public Token token;
     public TokenDecl(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class TokenExpr : ICocoElement {
     public Token token;
     public TokenExpr(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Set : ICocoElement {
     public Token token;
     public Set(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class AttrDecl : ICocoElement {
     public Token token;
     public AttrDecl(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class SemText : ICocoElement {
     public Token token;
     public SemText(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Expression : ICocoElement {
     public Token token;
     public Expression(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class SimSet : ICocoElement {
     public Token token;
     public SimSet(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Char : ICocoElement {
     public Token token;
     public Char(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Sym : ICocoElement {
     public Token token;
     public Sym(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Term : ICocoElement {
     public Token token;
     public Term(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Resolver : ICocoElement {
     public Token token;
     public Resolver(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Factor : ICocoElement {
     public Token token;
     public Factor(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Attribs : ICocoElement {
     public Token token;
     public Attribs(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Condition : ICocoElement {
     public Token token;
     public Condition(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class TokenTerm : ICocoElement {
     public Token token;
     public TokenTerm(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class TokenFactor : ICocoElement {
     public Token token;
     public TokenFactor(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
 #pragma warning restore RECS0001 // Class is declared partial but has only one part

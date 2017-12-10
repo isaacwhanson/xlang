@@ -599,6 +599,7 @@ namespace XLang {
 
   public interface IXLangElement {
     void Accept(IXLangVisitor visitor);
+    Token GetToken();
   }
 
   public interface IXLangVisitor {
@@ -643,210 +644,245 @@ namespace XLang {
     public Token token;
     public XLang(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Module : IXLangElement {
     public Token token;
     public Module(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class GlblStmt : IXLangElement {
     public Token token;
     public GlblStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class LetStmt : IXLangElement {
     public Token token;
     public LetStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class StmtBlock : IXLangElement {
     public Token token;
     public StmtBlock(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Stmt : IXLangElement {
     public Token token;
     public Stmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class RetStmt : IXLangElement {
     public Token token;
     public RetStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class BreakStmt : IXLangElement {
     public Token token;
     public BreakStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class ContStmt : IXLangElement {
     public Token token;
     public ContStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class WhileStmt : IXLangElement {
     public Token token;
     public WhileStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Expr : IXLangElement {
     public Token token;
     public Expr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Type : IXLangElement {
     public Token token;
     public Type(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Ident : IXLangElement {
     public Token token;
     public Ident(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class ParamDeclList : IXLangElement {
     public Token token;
     public ParamDeclList(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class ParamDecl : IXLangElement {
     public Token token;
     public ParamDecl(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class CondExpr : IXLangElement {
     public Token token;
     public CondExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class LogOrExpr : IXLangElement {
     public Token token;
     public LogOrExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class LogXorExpr : IXLangElement {
     public Token token;
     public LogXorExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class LogAndExpr : IXLangElement {
     public Token token;
     public LogAndExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class OrExpr : IXLangElement {
     public Token token;
     public OrExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class XorExpr : IXLangElement {
     public Token token;
     public XorExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class AndExpr : IXLangElement {
     public Token token;
     public AndExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class EqlExpr : IXLangElement {
     public Token token;
     public EqlExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class RelExpr : IXLangElement {
     public Token token;
     public RelExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class ShiftExpr : IXLangElement {
     public Token token;
     public ShiftExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class AddExpr : IXLangElement {
     public Token token;
     public AddExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class MultExpr : IXLangElement {
     public Token token;
     public MultExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class UnaryExpr : IXLangElement {
     public Token token;
     public UnaryExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Primitive : IXLangElement {
     public Token token;
     public Primitive(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class String : IXLangElement {
     public Token token;
     public String(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Char : IXLangElement {
     public Token token;
     public Char(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Float : IXLangElement {
     public Token token;
     public Float(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Int : IXLangElement {
     public Token token;
     public Int(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Boolean : IXLangElement {
     public Token token;
     public Boolean(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
   public partial class Array : IXLangElement {
     public Token token;
     public Array(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
 #pragma warning restore RECS0001 // Class is declared partial but has only one part

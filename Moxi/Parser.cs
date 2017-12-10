@@ -145,6 +145,7 @@ namespace Moxi {
 
   public interface IMoxiElement {
     void Accept(IMoxiVisitor visitor);
+    Token GetToken();
   }
 
   public interface IMoxiVisitor {
@@ -155,6 +156,7 @@ namespace Moxi {
     public Token token;
     public Moxi(Token t) { token = t; }
     public void Accept(IMoxiVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
   }
 
 #pragma warning restore RECS0001 // Class is declared partial but has only one part
