@@ -31,25 +31,25 @@ IGNORE whitespace + newline
 
 PRODUCTIONS
   XLang =
-    Module<.out Module module.>              (. xlang = new XLang(token) { module = module, filename = filename };.).
+    Module<.out Module module.>               (. xlang = new XLang(token) { module = module, filename = filename };.).
 
-  Module<.out Module module.> =              (. module = new Module(token);.)
+  Module<.out Module module.> =               (. module = new Module(token);.)
      GlblStmt<.out IStmt stmt0.>              (. module.Add(stmt0);.)
     {GlblStmt<.out IStmt stmt1.>              (. module.Add(stmt1);.)}.
 
   GlblStmt<.out IStmt stmt.> = SYNC
     LetStmt<.out stmt.> SYNC ";".
 
-  StmtBlock<.out StmtBlock stmt.> =          (. stmt = new StmtBlock(token);.)
+  StmtBlock<.out StmtBlock stmt.> =           (. stmt = new StmtBlock(token);.)
     "{" {Stmt<.out IStmt stmt0.>              (. stmt.Add(stmt0);.)}
     "}".
 
   Stmt<.out IStmt stmt.> =                    (. stmt = null;.)
-    ( StmtBlock<.out StmtBlock block.>       (. stmt = block;.)
-    | RetStmt<.out RetStmt ret.>             (. stmt = ret;.)
-    | BreakStmt<.out BreakStmt brk.>         (. stmt = brk;.)
-    | ContStmt<.out ContStmt cont.>          (. stmt = cont;.)
-    | WhileStmt<.out WhileStmt whil.>        (. stmt = whil;.)) ";".
+    ( StmtBlock<.out StmtBlock block.>        (. stmt = block;.)
+    | RetStmt<.out RetStmt ret.>              (. stmt = ret;.)
+    | BreakStmt<.out BreakStmt brk.>          (. stmt = brk;.)
+    | ContStmt<.out ContStmt cont.>           (. stmt = cont;.)
+    | WhileStmt<.out WhileStmt whil.>         (. stmt = whil;.)) ";".
 
   WhileStmt<.out WhileStmt stmt.> =
     "while"
@@ -75,12 +75,12 @@ PRODUCTIONS
 
   ParamDecl<.out ParamDecl param.> =
     Type<.out Type typ0.>
-    Ident<.out Ident ident0.>                (. param = new ParamDecl(token) { type = typ0, ident = ident0 };.).
+    Ident<.out Ident ident0.>                 (. param = new ParamDecl(token) { type = typ0, ident = ident0 };.).
 
   ParamDeclList<.out ParamDeclList list.> =
     "("                                       (. list = new ParamDeclList(token);.)
-    [ParamDecl<.out ParamDecl p0.>           (. list.Add(p0);.)
-    {"," ParamDecl<.out ParamDecl p1.>       (. list.Add(p1);.)}]
+    [ParamDecl<.out ParamDecl p0.>            (. list.Add(p0);.)
+    {"," ParamDecl<.out ParamDecl p1.>        (. list.Add(p1);.)}]
     ")".
 
   Expr<.out IExpr expr.> =
@@ -165,22 +165,22 @@ PRODUCTIONS
     UnaryExpr<.out IExpr lhs.>                (. expr = new UnaryExpr(token) { op = op, left = lhs };.))).
 
   Primitive<.out IExpr expr.> =               (. expr = null;.)
-    ( Ident<.out Ident lhs.>                 (. expr = lhs;.)
-    | String<.out String lhs.>               (. expr = lhs;.)
-    | Char<.out Char lhs.>                   (. expr = lhs;.)
-    | Float<.out Float lhs.>                 (. expr = lhs;.)
-    | Int<.out Int lhs.>                     (. expr = lhs;.)
-    | Boolean<.out Boolean lhs.>             (. expr = lhs;.)
-    | Type<.out Type lhs.>                   (. expr = lhs;.)
-    | Array<.out Array lhs.>                 (. expr = lhs;.)
+    ( Ident<.out Ident lhs.>                  (. expr = lhs;.)
+    | String<.out String lhs.>                (. expr = lhs;.)
+    | Char<.out Char lhs.>                    (. expr = lhs;.)
+    | Float<.out Float lhs.>                  (. expr = lhs;.)
+    | Int<.out Int lhs.>                      (. expr = lhs;.)
+    | Boolean<.out Boolean lhs.>              (. expr = lhs;.)
+    | Type<.out Type lhs.>                    (. expr = lhs;.)
+    | Array<.out Array lhs.>                  (. expr = lhs;.)
     | '(' Expr<.out IExpr lhs.> WEAK ')'      (. expr = lhs;.)).
 
-  Ident<.out Ident term.> = identifier       (. term = new Ident(token);.).
-  String<.out String term.> = string         (. term = new String(token);.).
-  Char<.out Char term.> = character          (. term = new Char(token);.).
-  Int<.out Int term.> = integer              (. term = new Int(token);.).
-  Float<.out Float term.> = float            (. term = new Float(token);.).
-  Type<.out Type term.> = type               (. term = new Type(token);.).
+  Ident<.out Ident term.> = identifier        (. term = new Ident(token);.).
+  String<.out String term.> = string          (. term = new String(token);.).
+  Char<.out Char term.> = character           (. term = new Char(token);.).
+  Int<.out Int term.> = integer               (. term = new Int(token);.).
+  Float<.out Float term.> = float             (. term = new Float(token);.).
+  Type<.out Type term.> = type                (. term = new Type(token);.).
   Boolean<.out Boolean term.> =
     ("true" | "false")                        (. term = new Boolean(token);.).
 

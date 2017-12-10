@@ -21,6 +21,10 @@ using System.Collections.Generic;
 
 namespace XLang {
 
+  public interface IExpr : IXLangElement { }
+
+  public interface IStmt : IExpr { }
+
   public partial class XLang : IExpr {
     public string filename;
     public Module module;
@@ -32,10 +36,6 @@ namespace XLang {
       stmts.Add(stmt);
     }
   }
-
-  public interface IStmt : IExpr { }
-
-  public interface IExpr : IXLangElement { }
 
   public partial class LetStmt : IStmt {
     public IExpr ident;

@@ -123,7 +123,14 @@ namespace Moxi {
 
     void _Moxi() {
       Token token = la;
+      _Module(out Module mod);
+      moxi = new Moxi(token) { module = mod };
+    }
+
+    void _Module(out Module mod) {
+      Token token = la;
       Expect(1);
+      mod = new Module(token);
     }
 
 #pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
@@ -150,11 +157,19 @@ namespace Moxi {
 
   public interface IMoxiVisitor {
     void Visit(Moxi element);
+    void Visit(Module element);
   }
 
   public partial class Moxi : IMoxiElement {
     public Token token;
     public Moxi(Token t) { token = t; }
+    public void Accept(IMoxiVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
+  }
+
+  public partial class Module : IMoxiElement {
+    public Token token;
+    public Module(Token t) { token = t; }
     public void Accept(IMoxiVisitor visitor) { visitor.Visit(this); }
     public Token GetToken() { return token; }
   }

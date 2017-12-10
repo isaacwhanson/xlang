@@ -1,5 +1,5 @@
 ﻿//
-//  ExampleVisitor.cs
+//  MoxiAST.cs
 //
 //  Author:
 //       Isaac W Hanson <isaac@starlig.ht>
@@ -18,24 +18,9 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-using System;
+namespace Moxi {
 
-namespace Moxi.Visitors {
-
-  public class ExampleVisitor : MoxiVisitor {
-
-    public static ExampleVisitor Example(Moxi moxi) {
-      ExampleVisitor visitor = new ExampleVisitor();
-      moxi.Accept(visitor);
-      return visitor;
-    }
-
-    public override void Visit(Moxi element) {
-      throw new NotImplementedException();
-    }
-
-    public override void Visit(Module element) {
-      throw new NotImplementedException();
-    }
+  public partial class Moxi {
+    public Module module;
   }
 }

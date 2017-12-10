@@ -30,6 +30,9 @@ IGNORE whitespace + newline
 
 PRODUCTIONS
   Moxi =
-    identifier.
+    Module<out Module mod>                       (. moxi = new Moxi(token) { module = mod };.).
+
+  Module<out Module mod> =
+    identifier (. mod = new Module(token);.).
 
 END Moxi.

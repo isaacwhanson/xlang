@@ -121,13 +121,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XLang.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="XLangAST.cs" />
-    <Compile Include="Printer.cs" />
-    <Compile Include="Builder.cs" />
     <Compile Include="XLangVisitor.cs" />
+    <Compile Include="Visitors\Builder.cs" />
+    <Compile Include="Visitors\Printer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE" />
@@ -140,6 +140,9 @@
       <Name>Coco</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Visitors\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
