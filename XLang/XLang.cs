@@ -29,8 +29,7 @@ namespace XLang {
     static int Main(string[] args) {
       if (args.Length > 0) {
         string filename = args[0];
-        IScanner scanner = new Scanner(filename);
-        Parser.Parse(scanner, out _XLang xlang);
+        Parser.Parse(filename, out _XLang xlang);
         Printer.Print(xlang);
         // LLVMCompiler.Build(xlang);
         return OK;

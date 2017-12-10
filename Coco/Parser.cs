@@ -16,17 +16,23 @@
 
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
-using System.IO;
-
-
 
 using System;
+using System.IO;
 
 namespace at.jku.ssw.Coco {
 
   public class Parser {
 
     public _Coco coco;
+
+    public static Parser Parse(string filename, out _Coco coco) {
+      return Parse(new Scanner(filename), out coco);
+    }
+
+    public static Parser Parse(Stream stream, out _Coco coco) {
+      return Parse(new Scanner(stream), out coco);
+    }
 
     public static Parser Parse(IScanner scanner, out _Coco coco) {
       Parser parser = new Parser(scanner);

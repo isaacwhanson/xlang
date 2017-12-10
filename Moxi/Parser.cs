@@ -18,12 +18,21 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 using System;
+using System.IO;
 
 namespace Moxi {
 
   public class Parser {
 
     public _Moxi moxi;
+
+    public static Parser Parse(string filename, out _Moxi moxi) {
+      return Parse(new Scanner(filename), out moxi);
+    }
+
+    public static Parser Parse(Stream stream, out _Moxi moxi) {
+      return Parse(new Scanner(stream), out moxi);
+    }
 
     public static Parser Parse(IScanner scanner, out _Moxi moxi) {
       Parser parser = new Parser(scanner);

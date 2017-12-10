@@ -31,8 +31,7 @@ namespace Moxi {
     static int Main(string[] args) {
       if (args.Length > 0) {
         string filename = args[0];
-        IScanner scanner = new Scanner(filename);
-        Parser.Parse(scanner, out _Moxi moxi);
+        Parser.Parse(filename, out _Moxi moxi);
         ExampleVisitor.Example(moxi);
         return OK;
       }

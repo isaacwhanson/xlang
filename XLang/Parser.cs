@@ -18,12 +18,21 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 using System;
+using System.IO;
 
 namespace XLang {
 
   public class Parser {
 
     public _XLang xlang;
+
+    public static Parser Parse(string filename, out _XLang xlang) {
+      return Parse(new Scanner(filename), out xlang);
+    }
+
+    public static Parser Parse(Stream stream, out _XLang xlang) {
+      return Parse(new Scanner(stream), out xlang);
+    }
 
     public static Parser Parse(IScanner scanner, out _XLang xlang) {
       Parser parser = new Parser(scanner);
@@ -56,7 +65,6 @@ namespace XLang {
     public Token t;     // last recognized token
     public Token la;    // lookahead token
     int errDist = minErrDist;
-
 
     public Parser(IScanner scanner) {
       this.scanner = scanner;

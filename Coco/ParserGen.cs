@@ -296,6 +296,12 @@ namespace at.jku.ssw.Coco {
     void GenTokens() {
       System.String lowroot = tab.gramSy.name.ToLower();
       gen.WriteLine("\n    public _{0} {1};\n", tab.gramSy.name, lowroot);
+      gen.WriteLine("    public static Parser Parse(string filename, out _{0} {1}) {{", tab.gramSy.name, lowroot);
+      gen.WriteLine("      return Parse(new Scanner(filename), out {0});", lowroot);
+      gen.WriteLine("    }\n");
+      gen.WriteLine("    public static Parser Parse(Stream stream, out _{0} {1}) {{", tab.gramSy.name, lowroot);
+      gen.WriteLine("      return Parse(new Scanner(stream), out {0});", lowroot);
+      gen.WriteLine("    }\n");
       gen.WriteLine("    public static Parser Parse(IScanner scanner, out _{0} {1}) {{", tab.gramSy.name, lowroot);
       gen.WriteLine("      Parser parser = new Parser(scanner);");
       gen.WriteLine("      parser.Parse();");

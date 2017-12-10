@@ -31,8 +31,6 @@ Coco/R itself) does not fall under the GNU General Public License.
 -------------------------------------------------------------------------*/
 $namespace=at.jku.ssw.Coco
 
-using System.IO;
-
 COMPILER Coco
 
  const int id = 0;
