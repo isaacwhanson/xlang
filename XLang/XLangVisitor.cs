@@ -23,55 +23,56 @@ namespace XLang {
 
   public abstract class XLangVisitor : IXLangVisitor {
 
-    public abstract void Visit(_XLang element);
-    public abstract void Visit(_Module element);
-    public abstract void Visit(_LetStmt element);
-    public abstract void Visit(_Ident element);
-    public abstract void Visit(_CondExpr element);
-    public abstract void Visit(_LogOrExpr element);
-    public abstract void Visit(_LogXorExpr element);
-    public abstract void Visit(_LogAndExpr element);
-    public abstract void Visit(_OrExpr element);
-    public abstract void Visit(_XorExpr element);
-    public abstract void Visit(_AndExpr element);
-    public abstract void Visit(_EqlExpr element);
-    public abstract void Visit(_RelExpr element);
-    public abstract void Visit(_ShiftExpr element);
-    public abstract void Visit(_AddExpr element);
-    public abstract void Visit(_MultExpr element);
-    public abstract void Visit(_UnaryExpr element);
-    public abstract void Visit(_String element);
-    public abstract void Visit(_Char element);
-    public abstract void Visit(_Float element);
-    public abstract void Visit(_Int element);
-    public abstract void Visit(_Boolean element);
-    public abstract void Visit(_Array element);
-    public abstract void Visit(_StmtBlock element);
-    public abstract void Visit(_RetStmt element);
-    public abstract void Visit(_BreakStmt element);
-    public abstract void Visit(_ContStmt element);
-    public abstract void Visit(_WhileStmt element);
-    public abstract void Visit(_Type element);
-    public abstract void Visit(_ParamDeclList element);
-    public abstract void Visit(_ParamDecl element);
 
     /* there will be no elements with these types :) */
 #pragma warning disable RECS0083 // Shows NotImplementedException throws in the quick task bar
-    public void Visit(_GlblStmt element) {
+    public void Visit(GlblStmt element) {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Expr element) {
+    public void Visit(Expr element) {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Primitive element) {
+    public void Visit(Primitive element) {
       throw new NotImplementedException();
     }
 
-    public void Visit(_Stmt element) {
+    public void Visit(Stmt element) {
       throw new NotImplementedException();
     }
 #pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar
+
+    public abstract void Visit(XLang element);
+    public abstract void Visit(Module element);
+    public abstract void Visit(LetStmt element);
+    public abstract void Visit(StmtBlock element);
+    public abstract void Visit(RetStmt element);
+    public abstract void Visit(BreakStmt element);
+    public abstract void Visit(ContStmt element);
+    public abstract void Visit(WhileStmt element);
+    public abstract void Visit(Type element);
+    public abstract void Visit(Ident element);
+    public abstract void Visit(ParamDeclList element);
+    public abstract void Visit(ParamDecl element);
+    public abstract void Visit(CondExpr element);
+    public abstract void Visit(LogOrExpr element);
+    public abstract void Visit(LogXorExpr element);
+    public abstract void Visit(LogAndExpr element);
+    public abstract void Visit(OrExpr element);
+    public abstract void Visit(XorExpr element);
+    public abstract void Visit(AndExpr element);
+    public abstract void Visit(EqlExpr element);
+    public abstract void Visit(RelExpr element);
+    public abstract void Visit(ShiftExpr element);
+    public abstract void Visit(AddExpr element);
+    public abstract void Visit(MultExpr element);
+    public abstract void Visit(UnaryExpr element);
+    public abstract void Visit(String element);
+    public abstract void Visit(Char element);
+    public abstract void Visit(Float element);
+    public abstract void Visit(Int element);
+    public abstract void Visit(Boolean element);
+    public abstract void Visit(Array element);
   }
 }

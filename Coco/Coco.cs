@@ -45,7 +45,7 @@ using System.IO;
 
 namespace at.jku.ssw.Coco {
 
-  public class Coco {
+  public class CocoMain {
 
     public static int Main(string[] arg) {
       Console.WriteLine("Coco/R (Apr 19, 2011)");

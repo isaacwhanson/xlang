@@ -31,56 +31,56 @@ IGNORE whitespace + newline
 
 PRODUCTIONS
   XLang =
-    Module<.out _Module module.>              (. xlang = new _XLang(token) { module = module, filename = filename };.).
+    Module<.out Module module.>              (. xlang = new XLang(token) { module = module, filename = filename };.).
 
-  Module<.out _Module module.> =              (. module = new _Module(token);.)
+  Module<.out Module module.> =              (. module = new Module(token);.)
      GlblStmt<.out IStmt stmt0.>              (. module.Add(stmt0);.)
     {GlblStmt<.out IStmt stmt1.>              (. module.Add(stmt1);.)}.
 
   GlblStmt<.out IStmt stmt.> = SYNC
     LetStmt<.out stmt.> SYNC ";".
 
-  StmtBlock<.out _StmtBlock stmt.> =          (. stmt = new _StmtBlock(token);.)
+  StmtBlock<.out StmtBlock stmt.> =          (. stmt = new StmtBlock(token);.)
     "{" {Stmt<.out IStmt stmt0.>              (. stmt.Add(stmt0);.)}
     "}".
 
   Stmt<.out IStmt stmt.> =                    (. stmt = null;.)
-    ( StmtBlock<.out _StmtBlock block.>       (. stmt = block;.)
-    | RetStmt<.out _RetStmt ret.>             (. stmt = ret;.)
-    | BreakStmt<.out _BreakStmt brk.>         (. stmt = brk;.)
-    | ContStmt<.out _ContStmt cont.>          (. stmt = cont;.)
-    | WhileStmt<.out _WhileStmt whil.>        (. stmt = whil;.)) ";".
+    ( StmtBlock<.out StmtBlock block.>       (. stmt = block;.)
+    | RetStmt<.out RetStmt ret.>             (. stmt = ret;.)
+    | BreakStmt<.out BreakStmt brk.>         (. stmt = brk;.)
+    | ContStmt<.out ContStmt cont.>          (. stmt = cont;.)
+    | WhileStmt<.out WhileStmt whil.>        (. stmt = whil;.)) ";".
 
-  WhileStmt<.out _WhileStmt stmt.> =
+  WhileStmt<.out WhileStmt stmt.> =
     "while"
     "(" Expr<.out IExpr expr.>
-    ")" Stmt<.out IStmt stmt0.>               (. stmt = new _WhileStmt(token) { expr = expr, stmt = stmt0 };.).
+    ")" Stmt<.out IStmt stmt0.>               (. stmt = new WhileStmt(token) { expr = expr, stmt = stmt0 };.).
 
-  BreakStmt<.out _BreakStmt stmt.> =
-    "break"                                   (. stmt = new _BreakStmt(token);.).
+  BreakStmt<.out BreakStmt stmt.> =
+    "break"                                   (. stmt = new BreakStmt(token);.).
 
-  ContStmt<.out _ContStmt stmt.> =
-    "continue"                                (. stmt = new _ContStmt(token);.).
+  ContStmt<.out ContStmt stmt.> =
+    "continue"                                (. stmt = new ContStmt(token);.).
 
-  RetStmt<.out _RetStmt stmt.> =
-    "return"                                  (. stmt = new _RetStmt(token);.)
+  RetStmt<.out RetStmt stmt.> =
+    "return"                                  (. stmt = new RetStmt(token);.)
     [Expr<.out IExpr expr.>                   (. stmt.expr = expr;.)].
 
-  LetStmt<.out IStmt let_stmt.> =
-    "let"                                     (. let_stmt = null;.)
-    Type<.out _Type typ.> Ident<.out _Ident ident.>
-    (ParamDeclList<.out _ParamDeclList plist.> "=>" Stmt<.out IStmt stmt.>
-                                              (. let_stmt = new _LetStmt(token) { ident = ident, plist = plist, stmt = stmt };.)
-    | "=" Expr<.out IExpr expr.>              (. let_stmt = new _LetStmt(token) { ident = ident, expr = expr };.)).
+  LetStmt<.out IStmt letstmt.> =
+    "let"                                     (. letstmt = null;.)
+    Type<.out Type typ.> Ident<.out Ident ident.>
+    (ParamDeclList<.out ParamDeclList plist.> "=>" Stmt<.out IStmt stmt.>
+                                              (. letstmt = new LetStmt(token) { ident = ident, plist = plist, stmt = stmt };.)
+    | "=" Expr<.out IExpr expr.>              (. letstmt = new LetStmt(token) { ident = ident, expr = expr };.)).
 
-  ParamDecl<.out _ParamDecl param.> =
-    Type<.out _Type typ0.>
-    Ident<.out _Ident ident0.>                (. param = new _ParamDecl(token) { type = typ0, ident = ident0 };.).
+  ParamDecl<.out ParamDecl param.> =
+    Type<.out Type typ0.>
+    Ident<.out Ident ident0.>                (. param = new ParamDecl(token) { type = typ0, ident = ident0 };.).
 
-  ParamDeclList<.out _ParamDeclList list.> =
-    "("                                       (. list = new _ParamDeclList(token);.)
-    [ParamDecl<.out _ParamDecl p0.>           (. list.Add(p0);.)
-    {"," ParamDecl<.out _ParamDecl p1.>       (. list.Add(p1);.)}]
+  ParamDeclList<.out ParamDeclList list.> =
+    "("                                       (. list = new ParamDeclList(token);.)
+    [ParamDecl<.out ParamDecl p0.>           (. list.Add(p0);.)
+    {"," ParamDecl<.out ParamDecl p1.>       (. list.Add(p1);.)}]
     ")".
 
   Expr<.out IExpr expr.> =
@@ -90,37 +90,37 @@ PRODUCTIONS
     LogOrExpr<.out expr.>
     ['?'                                      (. token = t;.)
      Expr<.out IExpr consequent.>
-     ':' Expr<.out IExpr alternative.>        (. expr = new _CondExpr(token) { condition = expr, consequent = consequent, alternative = alternative };.)].
+     ':' Expr<.out IExpr alternative.>        (. expr = new CondExpr(token) { condition = expr, consequent = consequent, alternative = alternative };.)].
 
   LogOrExpr<.out IExpr expr.> =
     LogXorExpr<.out expr.>
     {"||"                                     (. token = t;.)
-    LogXorExpr<.out IExpr rhs.>               (. expr = new _LogOrExpr(token) { left = expr, right = rhs };.)}.
+    LogXorExpr<.out IExpr rhs.>               (. expr = new LogOrExpr(token) { left = expr, right = rhs };.)}.
 
   LogXorExpr<.out IExpr expr.> =
     LogAndExpr<.out expr.>
     {"^^"                                     (. token = t;.)
-    LogAndExpr<.out IExpr rhs.>               (. expr = new _LogXorExpr(token) { left = expr, right = rhs };.)}.
+    LogAndExpr<.out IExpr rhs.>               (. expr = new LogXorExpr(token) { left = expr, right = rhs };.)}.
 
   LogAndExpr<.out IExpr expr.> =
     OrExpr<.out expr.>
     {"&&"                                     (. token = t;.)
-    OrExpr<.out IExpr rhs.>                   (. expr = new _LogAndExpr(token) { left = expr, right = rhs };.)}.
+    OrExpr<.out IExpr rhs.>                   (. expr = new LogAndExpr(token) { left = expr, right = rhs };.)}.
 
   OrExpr<.out IExpr expr.> =
     XorExpr<.out expr.>
     {'|'                                      (. token = t;.)
-    XorExpr<.out IExpr rhs.>                  (. expr = new _OrExpr(token) { left = expr, right = rhs };.)}.
+    XorExpr<.out IExpr rhs.>                  (. expr = new OrExpr(token) { left = expr, right = rhs };.)}.
 
   XorExpr<.out IExpr expr.> =
     AndExpr<.out expr.>
     {'^'                                      (. token = t;.)
-    AndExpr<.out IExpr rhs.>                  (. expr = new _XorExpr(token) { left = expr, right = rhs };.)}.
+    AndExpr<.out IExpr rhs.>                  (. expr = new XorExpr(token) { left = expr, right = rhs };.)}.
 
   AndExpr<.out IExpr expr.> =
     EqlExpr<.out expr.>
     {'&'                                      (. token = t;.)
-    EqlExpr<.out IExpr rhs.>                  (. expr = new _AndExpr(token) { left = expr, right = rhs };.)}.
+    EqlExpr<.out IExpr rhs.>                  (. expr = new AndExpr(token) { left = expr, right = rhs };.)}.
 
   EqlExpr<.out IExpr expr.> =
     RelExpr<.out expr.>                      {(. EqlOp op; token = la;.)
@@ -128,7 +128,7 @@ PRODUCTIONS
     | "!="                                    (. op = EqlOp.NOTEQUAL;.)
     | "==="                                   (. op = EqlOp.HARDEQUAL;.)
     | "!=="                                   (. op = EqlOp.HARDNOTEQUAL;.))
-    RelExpr<.out IExpr rhs.>                  (. expr = new _EqlExpr(token) { op = op, left = expr, right = rhs };.)}.
+    RelExpr<.out IExpr rhs.>                  (. expr = new EqlExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   RelExpr<.out IExpr expr.> =
     ShiftExpr<.out expr.>                    {(. RelOp op; token = la;.)
@@ -136,56 +136,56 @@ PRODUCTIONS
     | '>'                                     (. op = RelOp.GREATERTHAN;.)
     | "<="                                    (. op = RelOp.LESSTHANEQUAL;.)
     | ">="                                    (. op = RelOp.GREATERTHANEQUAL;.))
-    ShiftExpr<.out IExpr rhs.>                (. expr = new _RelExpr(token) { op = op, left = expr, right = rhs };.)}.
+    ShiftExpr<.out IExpr rhs.>                (. expr = new RelExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   ShiftExpr<.out IExpr expr.> =
     AddExpr<.out expr.>                      {(. ShiftOp op; token = la;.)
     ( "<<"                                    (. op = ShiftOp.LEFT;.)
     | ">>"                                    (. op = ShiftOp.RIGHT;.))
-    AddExpr<.out IExpr rhs.>                  (. expr = new _ShiftExpr(token) { op = op, left = expr, right = rhs };.)}.
+    AddExpr<.out IExpr rhs.>                  (. expr = new ShiftExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   AddExpr<.out IExpr expr.> =
     MultExpr<.out expr.>                     {(. AddOp op; token = la;.)
     ( '+'                                     (. op = AddOp.PLUS;.)
     | '-'                                     (. op = AddOp.MINUS;.))
-    MultExpr<.out IExpr rhs.>                 (. expr = new _AddExpr(token) { op = op, left = expr, right = rhs };.)}.
+    MultExpr<.out IExpr rhs.>                 (. expr = new AddExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   MultExpr<.out IExpr expr.> =
     UnaryExpr<.out expr.>                    {(. MultOp op; token = la;.)
     ( '*'                                     (. op = MultOp.TIMES;.)
     | '/'                                     (. op = MultOp.DIVIDE;.)
     | '%'                                     (. op = MultOp.MODULO;.))
-    UnaryExpr<.out IExpr rhs.>                (. expr = new _MultExpr(token) { op = op, left = expr, right = rhs };.)}.
+    UnaryExpr<.out IExpr rhs.>                (. expr = new MultExpr(token) { op = op, left = expr, right = rhs };.)}.
 
   UnaryExpr<.out IExpr expr.> =               (. expr = null;.)
     (Primitive<.out expr.>                   |(. UnaryOp op;.)
     (('-'                                     (. op = UnaryOp.NEGATE;.)
     | '~'                                     (. op = UnaryOp.COMPLIMENT;.)
     | '!'                                     (. op = UnaryOp.NOT;.))
-    UnaryExpr<.out IExpr lhs.>                (. expr = new _UnaryExpr(token) { op = op, left = lhs };.))).
+    UnaryExpr<.out IExpr lhs.>                (. expr = new UnaryExpr(token) { op = op, left = lhs };.))).
 
   Primitive<.out IExpr expr.> =               (. expr = null;.)
-    ( Ident<.out _Ident lhs.>                 (. expr = lhs;.)
-    | String<.out _String lhs.>               (. expr = lhs;.)
-    | Char<.out _Char lhs.>                   (. expr = lhs;.)
-    | Float<.out _Float lhs.>                 (. expr = lhs;.)
-    | Int<.out _Int lhs.>                     (. expr = lhs;.)
-    | Boolean<.out _Boolean lhs.>             (. expr = lhs;.)
-    | Type<.out _Type lhs.>                   (. expr = lhs;.)
-    | Array<.out _Array lhs.>                 (. expr = lhs;.)
+    ( Ident<.out Ident lhs.>                 (. expr = lhs;.)
+    | String<.out String lhs.>               (. expr = lhs;.)
+    | Char<.out Char lhs.>                   (. expr = lhs;.)
+    | Float<.out Float lhs.>                 (. expr = lhs;.)
+    | Int<.out Int lhs.>                     (. expr = lhs;.)
+    | Boolean<.out Boolean lhs.>             (. expr = lhs;.)
+    | Type<.out Type lhs.>                   (. expr = lhs;.)
+    | Array<.out Array lhs.>                 (. expr = lhs;.)
     | '(' Expr<.out IExpr lhs.> WEAK ')'      (. expr = lhs;.)).
 
-  Ident<.out _Ident term.> = identifier       (. term = new _Ident(token);.).
-  String<.out _String term.> = string         (. term = new _String(token);.).
-  Char<.out _Char term.> = character          (. term = new _Char(token);.).
-  Int<.out _Int term.> = integer              (. term = new _Int(token);.).
-  Float<.out _Float term.> = float            (. term = new _Float(token);.).
-  Type<.out _Type term.> = type               (. term = new _Type(token);.).
-  Boolean<.out _Boolean term.> =
-    ("true" | "false")                        (. term = new _Boolean(token);.).
+  Ident<.out Ident term.> = identifier       (. term = new Ident(token);.).
+  String<.out String term.> = string         (. term = new String(token);.).
+  Char<.out Char term.> = character          (. term = new Char(token);.).
+  Int<.out Int term.> = integer              (. term = new Int(token);.).
+  Float<.out Float term.> = float            (. term = new Float(token);.).
+  Type<.out Type term.> = type               (. term = new Type(token);.).
+  Boolean<.out Boolean term.> =
+    ("true" | "false")                        (. term = new Boolean(token);.).
 
-  Array<.out _Array ra.> =                   
-    '['                                       (. ra = new _Array(token);.)
+  Array<.out Array ra.> =                   
+    '['                                       (. ra = new Array(token);.)
     [Expr<.out IExpr exp0.>                   (. ra.Add(exp0);.)
     {',' Expr<.out IExpr exp1.>               (. ra.Add(exp1);.)}]
     ']'.

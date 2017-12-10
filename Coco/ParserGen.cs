@@ -171,7 +171,7 @@ namespace at.jku.ssw.Coco {
         switch (p.typ) {
           case Node.nt: {
               Indent(indent);
-              gen.Write(p.sym.name + "(");
+              gen.Write("_" + p.sym.name + "(");
               CopySourcePart(p.pos, 0);
               gen.WriteLine(");");
               break;
@@ -295,14 +295,14 @@ namespace at.jku.ssw.Coco {
 
     void GenTokens() {
       System.String lowroot = tab.gramSy.name.ToLower();
-      gen.WriteLine("\n    public _{0} {1};\n", tab.gramSy.name, lowroot);
-      gen.WriteLine("    public static Parser Parse(string filename, out _{0} {1}) {{", tab.gramSy.name, lowroot);
+      gen.WriteLine("\n    public {0} {1};\n", tab.gramSy.name, lowroot);
+      gen.WriteLine("    public static Parser Parse(string filename, out {0} {1}) {{", tab.gramSy.name, lowroot);
       gen.WriteLine("      return Parse(new Scanner(filename), out {0});", lowroot);
       gen.WriteLine("    }\n");
-      gen.WriteLine("    public static Parser Parse(Stream stream, out _{0} {1}) {{", tab.gramSy.name, lowroot);
+      gen.WriteLine("    public static Parser Parse(Stream stream, out {0} {1}) {{", tab.gramSy.name, lowroot);
       gen.WriteLine("      return Parse(new Scanner(stream), out {0});", lowroot);
       gen.WriteLine("    }\n");
-      gen.WriteLine("    public static Parser Parse(IScanner scanner, out _{0} {1}) {{", tab.gramSy.name, lowroot);
+      gen.WriteLine("    public static Parser Parse(IScanner scanner, out {0} {1}) {{", tab.gramSy.name, lowroot);
       gen.WriteLine("      Parser parser = new Parser(scanner);");
       gen.WriteLine("      parser.Parse();");
       gen.WriteLine("      {0} = parser.{0};", lowroot);
@@ -313,7 +313,7 @@ namespace at.jku.ssw.Coco {
       gen.WriteLine("      return parser;");
       gen.WriteLine("    }\n");
       foreach (Symbol sym in tab.terminals) {
-        if (Char.IsLetter(sym.name[0]))
+        if (System.Char.IsLetter(sym.name[0]))
           gen.WriteLine("    public const int _{0} = {1};", sym.name, sym.n);
       }
     }
@@ -339,13 +339,13 @@ namespace at.jku.ssw.Coco {
       gen.WriteLine("  }");
       gen.WriteLine("\n  public interface I{0}Visitor {{", tab.gramSy.name);
       foreach (Symbol sym in tab.nonterminals) {
-        gen.WriteLine("    void Visit(_{0} element);", sym.name);
+        gen.WriteLine("    void Visit({0} element);", sym.name);
       }
       gen.WriteLine("  }");
       foreach (Symbol sym in tab.nonterminals) {
-        gen.WriteLine("\n  public partial class _{0} : I{1}Element {{", sym.name, tab.gramSy.name);
+        gen.WriteLine("\n  public partial class {0} : I{1}Element {{", sym.name, tab.gramSy.name);
         gen.WriteLine("    public Token token;");
-        gen.WriteLine("    public _{0}(Token t) {{ token = t; }}", sym.name);
+        gen.WriteLine("    public {0}(Token t) {{ token = t; }}", sym.name);
         gen.WriteLine("    public void Accept(I{0}Visitor visitor) {{ visitor.Visit(this); }}", tab.gramSy.name);
         gen.WriteLine("  }");
       }
@@ -354,7 +354,7 @@ namespace at.jku.ssw.Coco {
     void GenProductions() {
       foreach (Symbol sym in tab.nonterminals) {
         curSy = sym;
-        gen.Write("\n    void {0}(", sym.name);
+        gen.Write("\n    void _{0}(", sym.name);
         CopySourcePart(sym.attrPos, 0);
         gen.WriteLine(") {");
         gen.WriteLine("      Token token = la;");
@@ -404,7 +404,7 @@ namespace at.jku.ssw.Coco {
       g.CopyFramePart("-->declarations"); CopySourcePart(tab.semDeclPos, 0);
       g.CopyFramePart("-->pragmas"); GenCodePragmas();
       g.CopyFramePart("-->productions"); GenProductions();
-      g.CopyFramePart("-->parseRoot"); gen.WriteLine("      {0}();", tab.gramSy.name); if (tab.checkEOF) gen.Write("      Expect(0);");
+      g.CopyFramePart("-->parseRoot"); gen.WriteLine("      _{0}();", tab.gramSy.name); if (tab.checkEOF) gen.Write("      Expect(0);");
       g.CopyFramePart("-->initialization"); InitSets();
       g.CopyFramePart("-->custom"); GenNodes();
       g.CopyFramePart("-->errors"); gen.Write(err);

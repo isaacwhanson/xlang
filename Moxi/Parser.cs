@@ -24,17 +24,17 @@ namespace Moxi {
 
   public class Parser {
 
-    public _Moxi moxi;
+    public Moxi moxi;
 
-    public static Parser Parse(string filename, out _Moxi moxi) {
+    public static Parser Parse(string filename, out Moxi moxi) {
       return Parse(new Scanner(filename), out moxi);
     }
 
-    public static Parser Parse(Stream stream, out _Moxi moxi) {
+    public static Parser Parse(Stream stream, out Moxi moxi) {
       return Parse(new Scanner(stream), out moxi);
     }
 
-    public static Parser Parse(IScanner scanner, out _Moxi moxi) {
+    public static Parser Parse(IScanner scanner, out Moxi moxi) {
       Parser parser = new Parser(scanner);
       parser.Parse();
       moxi = parser.moxi;
@@ -121,7 +121,7 @@ namespace Moxi {
 
 #pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
 
-    void Moxi() {
+    void _Moxi() {
       Token token = la;
       Expect(1);
     }
@@ -131,7 +131,7 @@ namespace Moxi {
     public void Parse() {
       la = new Token { val = "" };
       Get();
-      Moxi();
+      _Moxi();
       Expect(0);
     }
 
@@ -148,12 +148,12 @@ namespace Moxi {
   }
 
   public interface IMoxiVisitor {
-    void Visit(_Moxi element);
+    void Visit(Moxi element);
   }
 
-  public partial class _Moxi : IMoxiElement {
+  public partial class Moxi : IMoxiElement {
     public Token token;
-    public _Moxi(Token t) { token = t; }
+    public Moxi(Token t) { token = t; }
     public void Accept(IMoxiVisitor visitor) { visitor.Visit(this); }
   }
 

@@ -21,7 +21,7 @@
 namespace Moxi.Visitors {
 
   public abstract class MoxiVisitor : IMoxiVisitor {
-    public abstract void Visit(_Moxi element);
+    public abstract void Visit(Moxi element);
   }
 
 }

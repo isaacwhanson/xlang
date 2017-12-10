@@ -21,7 +21,7 @@ using System;
 
 namespace XLang {
 
-  class XLang {
+  class XLangMain {
 
     const int OK = 0;
     const int WARN = 1;
@@ -29,7 +29,7 @@ namespace XLang {
     static int Main(string[] args) {
       if (args.Length > 0) {
         string filename = args[0];
-        Parser.Parse(filename, out _XLang xlang);
+        Parser.Parse(filename, out XLang xlang);
         Printer.Print(xlang);
         // LLVMCompiler.Build(xlang);
         return OK;

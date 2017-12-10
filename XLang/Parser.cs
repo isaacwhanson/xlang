@@ -24,17 +24,17 @@ namespace XLang {
 
   public class Parser {
 
-    public _XLang xlang;
+    public XLang xlang;
 
-    public static Parser Parse(string filename, out _XLang xlang) {
+    public static Parser Parse(string filename, out XLang xlang) {
       return Parse(new Scanner(filename), out xlang);
     }
 
-    public static Parser Parse(Stream stream, out _XLang xlang) {
+    public static Parser Parse(Stream stream, out XLang xlang) {
       return Parse(new Scanner(stream), out xlang);
     }
 
-    public static Parser Parse(IScanner scanner, out _XLang xlang) {
+    public static Parser Parse(IScanner scanner, out XLang xlang) {
       Parser parser = new Parser(scanner);
       parser.Parse();
       xlang = parser.xlang;
@@ -122,236 +122,236 @@ namespace XLang {
 
 #pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
 
-    void XLang() {
+    void _XLang() {
       Token token = la;
-      Module(out _Module module);
-      xlang = new _XLang(token) { module = module, filename = filename };
+      _Module(out Module module);
+      xlang = new XLang(token) { module = module, filename = filename };
     }
 
-    void Module(out _Module module) {
+    void _Module(out Module module) {
       Token token = la;
-      module = new _Module(token);
-      GlblStmt(out IStmt stmt0);
+      module = new Module(token);
+      _GlblStmt(out IStmt stmt0);
       module.Add(stmt0);
       while (la.kind == 16) {
-        GlblStmt(out IStmt stmt1);
+        _GlblStmt(out IStmt stmt1);
         module.Add(stmt1);
       }
     }
 
-    void GlblStmt(out IStmt stmt) {
+    void _GlblStmt(out IStmt stmt) {
       Token token = la;
       while (!(la.kind == 0 || la.kind == 16)) { SynErr(50); Get(); }
-      LetStmt(out stmt);
+      _LetStmt(out stmt);
       while (!(la.kind == 0 || la.kind == 7)) { SynErr(51); Get(); }
       Expect(7);
     }
 
-    void LetStmt(out IStmt let_stmt) {
+    void _LetStmt(out IStmt letstmt) {
       Token token = la;
       Expect(16);
-      let_stmt = null;
-      Type(out _Type typ);
-      Ident(out _Ident ident);
+      letstmt = null;
+      _Type(out Type typ);
+      _Ident(out Ident ident);
       if (la.kind == 11) {
-        ParamDeclList(out _ParamDeclList plist);
+        _ParamDeclList(out ParamDeclList plist);
         Expect(17);
-        Stmt(out IStmt stmt);
-        let_stmt = new _LetStmt(token) { ident = ident, plist = plist, stmt = stmt };
+        _Stmt(out IStmt stmt);
+        letstmt = new LetStmt(token) { ident = ident, plist = plist, stmt = stmt };
       } else if (la.kind == 18) {
         Get();
-        Expr(out IExpr expr);
-        let_stmt = new _LetStmt(token) { ident = ident, expr = expr };
+        _Expr(out IExpr expr);
+        letstmt = new LetStmt(token) { ident = ident, expr = expr };
       } else SynErr(52);
     }
 
-    void StmtBlock(out _StmtBlock stmt) {
+    void _StmtBlock(out StmtBlock stmt) {
       Token token = la;
-      stmt = new _StmtBlock(token);
+      stmt = new StmtBlock(token);
       Expect(8);
       while (StartOf(1)) {
-        Stmt(out IStmt stmt0);
+        _Stmt(out IStmt stmt0);
         stmt.Add(stmt0);
       }
       Expect(9);
     }
 
-    void Stmt(out IStmt stmt) {
+    void _Stmt(out IStmt stmt) {
       Token token = la;
       stmt = null;
       if (la.kind == 8) {
-        StmtBlock(out _StmtBlock block);
+        _StmtBlock(out StmtBlock block);
         stmt = block;
       } else if (la.kind == 15) {
-        RetStmt(out _RetStmt ret);
+        _RetStmt(out RetStmt ret);
         stmt = ret;
       } else if (la.kind == 13) {
-        BreakStmt(out _BreakStmt brk);
+        _BreakStmt(out BreakStmt brk);
         stmt = brk;
       } else if (la.kind == 14) {
-        ContStmt(out _ContStmt cont);
+        _ContStmt(out ContStmt cont);
         stmt = cont;
       } else if (la.kind == 10) {
-        WhileStmt(out _WhileStmt whil);
+        _WhileStmt(out WhileStmt whil);
         stmt = whil;
       } else SynErr(53);
       Expect(7);
     }
 
-    void RetStmt(out _RetStmt stmt) {
+    void _RetStmt(out RetStmt stmt) {
       Token token = la;
       Expect(15);
-      stmt = new _RetStmt(token);
+      stmt = new RetStmt(token);
       if (StartOf(2)) {
-        Expr(out IExpr expr);
+        _Expr(out IExpr expr);
         stmt.expr = expr;
       }
     }
 
-    void BreakStmt(out _BreakStmt stmt) {
+    void _BreakStmt(out BreakStmt stmt) {
       Token token = la;
       Expect(13);
-      stmt = new _BreakStmt(token);
+      stmt = new BreakStmt(token);
     }
 
-    void ContStmt(out _ContStmt stmt) {
+    void _ContStmt(out ContStmt stmt) {
       Token token = la;
       Expect(14);
-      stmt = new _ContStmt(token);
+      stmt = new ContStmt(token);
     }
 
-    void WhileStmt(out _WhileStmt stmt) {
+    void _WhileStmt(out WhileStmt stmt) {
       Token token = la;
       Expect(10);
       Expect(11);
-      Expr(out IExpr expr);
+      _Expr(out IExpr expr);
       Expect(12);
-      Stmt(out IStmt stmt0);
-      stmt = new _WhileStmt(token) { expr = expr, stmt = stmt0 };
+      _Stmt(out IStmt stmt0);
+      stmt = new WhileStmt(token) { expr = expr, stmt = stmt0 };
     }
 
-    void Expr(out IExpr expr) {
+    void _Expr(out IExpr expr) {
       Token token = la;
-      CondExpr(out expr);
+      _CondExpr(out expr);
     }
 
-    void Type(out _Type term) {
+    void _Type(out Type term) {
       Token token = la;
       Expect(2);
-      term = new _Type(token);
+      term = new Type(token);
     }
 
-    void Ident(out _Ident term) {
+    void _Ident(out Ident term) {
       Token token = la;
       Expect(1);
-      term = new _Ident(token);
+      term = new Ident(token);
     }
 
-    void ParamDeclList(out _ParamDeclList list) {
+    void _ParamDeclList(out ParamDeclList list) {
       Token token = la;
       Expect(11);
-      list = new _ParamDeclList(token);
+      list = new ParamDeclList(token);
       if (la.kind == 2) {
-        ParamDecl(out _ParamDecl p0);
+        _ParamDecl(out ParamDecl p0);
         list.Add(p0);
         while (la.kind == 19) {
           Get();
-          ParamDecl(out _ParamDecl p1);
+          _ParamDecl(out ParamDecl p1);
           list.Add(p1);
         }
       }
       Expect(12);
     }
 
-    void ParamDecl(out _ParamDecl param) {
+    void _ParamDecl(out ParamDecl param) {
       Token token = la;
-      Type(out _Type typ0);
-      Ident(out _Ident ident0);
-      param = new _ParamDecl(token) { type = typ0, ident = ident0 };
+      _Type(out Type typ0);
+      _Ident(out Ident ident0);
+      param = new ParamDecl(token) { type = typ0, ident = ident0 };
     }
 
-    void CondExpr(out IExpr expr) {
+    void _CondExpr(out IExpr expr) {
       Token token = la;
-      LogOrExpr(out expr);
+      _LogOrExpr(out expr);
       if (la.kind == 20) {
         Get();
         token = t;
-        Expr(out IExpr consequent);
+        _Expr(out IExpr consequent);
         Expect(21);
-        Expr(out IExpr alternative);
-        expr = new _CondExpr(token) { condition = expr, consequent = consequent, alternative = alternative };
+        _Expr(out IExpr alternative);
+        expr = new CondExpr(token) { condition = expr, consequent = consequent, alternative = alternative };
       }
     }
 
-    void LogOrExpr(out IExpr expr) {
+    void _LogOrExpr(out IExpr expr) {
       Token token = la;
-      LogXorExpr(out expr);
+      _LogXorExpr(out expr);
       while (la.kind == 22) {
         Get();
         token = t;
-        LogXorExpr(out IExpr rhs);
-        expr = new _LogOrExpr(token) { left = expr, right = rhs };
+        _LogXorExpr(out IExpr rhs);
+        expr = new LogOrExpr(token) { left = expr, right = rhs };
       }
     }
 
-    void LogXorExpr(out IExpr expr) {
+    void _LogXorExpr(out IExpr expr) {
       Token token = la;
-      LogAndExpr(out expr);
+      _LogAndExpr(out expr);
       while (la.kind == 23) {
         Get();
         token = t;
-        LogAndExpr(out IExpr rhs);
-        expr = new _LogXorExpr(token) { left = expr, right = rhs };
+        _LogAndExpr(out IExpr rhs);
+        expr = new LogXorExpr(token) { left = expr, right = rhs };
       }
     }
 
-    void LogAndExpr(out IExpr expr) {
+    void _LogAndExpr(out IExpr expr) {
       Token token = la;
-      OrExpr(out expr);
+      _OrExpr(out expr);
       while (la.kind == 24) {
         Get();
         token = t;
-        OrExpr(out IExpr rhs);
-        expr = new _LogAndExpr(token) { left = expr, right = rhs };
+        _OrExpr(out IExpr rhs);
+        expr = new LogAndExpr(token) { left = expr, right = rhs };
       }
     }
 
-    void OrExpr(out IExpr expr) {
+    void _OrExpr(out IExpr expr) {
       Token token = la;
-      XorExpr(out expr);
+      _XorExpr(out expr);
       while (la.kind == 25) {
         Get();
         token = t;
-        XorExpr(out IExpr rhs);
-        expr = new _OrExpr(token) { left = expr, right = rhs };
+        _XorExpr(out IExpr rhs);
+        expr = new OrExpr(token) { left = expr, right = rhs };
       }
     }
 
-    void XorExpr(out IExpr expr) {
+    void _XorExpr(out IExpr expr) {
       Token token = la;
-      AndExpr(out expr);
+      _AndExpr(out expr);
       while (la.kind == 26) {
         Get();
         token = t;
-        AndExpr(out IExpr rhs);
-        expr = new _XorExpr(token) { left = expr, right = rhs };
+        _AndExpr(out IExpr rhs);
+        expr = new XorExpr(token) { left = expr, right = rhs };
       }
     }
 
-    void AndExpr(out IExpr expr) {
+    void _AndExpr(out IExpr expr) {
       Token token = la;
-      EqlExpr(out expr);
+      _EqlExpr(out expr);
       while (la.kind == 27) {
         Get();
         token = t;
-        EqlExpr(out IExpr rhs);
-        expr = new _AndExpr(token) { left = expr, right = rhs };
+        _EqlExpr(out IExpr rhs);
+        expr = new AndExpr(token) { left = expr, right = rhs };
       }
     }
 
-    void EqlExpr(out IExpr expr) {
+    void _EqlExpr(out IExpr expr) {
       Token token = la;
-      RelExpr(out expr);
+      _RelExpr(out expr);
       while (la.kind == 28 || la.kind == 29 || la.kind == 30 || la.kind == 31) {
         EqlOp op; token = la;
         if (la.kind == 28) {
@@ -367,14 +367,14 @@ namespace XLang {
           Get();
           op = EqlOp.HARDNOTEQUAL;
         }
-        RelExpr(out IExpr rhs);
-        expr = new _EqlExpr(token) { op = op, left = expr, right = rhs };
+        _RelExpr(out IExpr rhs);
+        expr = new EqlExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
-    void RelExpr(out IExpr expr) {
+    void _RelExpr(out IExpr expr) {
       Token token = la;
-      ShiftExpr(out expr);
+      _ShiftExpr(out expr);
       while (la.kind == 32 || la.kind == 33 || la.kind == 34 || la.kind == 35) {
         RelOp op; token = la;
         if (la.kind == 32) {
@@ -390,14 +390,14 @@ namespace XLang {
           Get();
           op = RelOp.GREATERTHANEQUAL;
         }
-        ShiftExpr(out IExpr rhs);
-        expr = new _RelExpr(token) { op = op, left = expr, right = rhs };
+        _ShiftExpr(out IExpr rhs);
+        expr = new RelExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
-    void ShiftExpr(out IExpr expr) {
+    void _ShiftExpr(out IExpr expr) {
       Token token = la;
-      AddExpr(out expr);
+      _AddExpr(out expr);
       while (la.kind == 36 || la.kind == 37) {
         ShiftOp op; token = la;
         if (la.kind == 36) {
@@ -407,14 +407,14 @@ namespace XLang {
           Get();
           op = ShiftOp.RIGHT;
         }
-        AddExpr(out IExpr rhs);
-        expr = new _ShiftExpr(token) { op = op, left = expr, right = rhs };
+        _AddExpr(out IExpr rhs);
+        expr = new ShiftExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
-    void AddExpr(out IExpr expr) {
+    void _AddExpr(out IExpr expr) {
       Token token = la;
-      MultExpr(out expr);
+      _MultExpr(out expr);
       while (la.kind == 38 || la.kind == 39) {
         AddOp op; token = la;
         if (la.kind == 38) {
@@ -424,14 +424,14 @@ namespace XLang {
           Get();
           op = AddOp.MINUS;
         }
-        MultExpr(out IExpr rhs);
-        expr = new _AddExpr(token) { op = op, left = expr, right = rhs };
+        _MultExpr(out IExpr rhs);
+        expr = new AddExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
-    void MultExpr(out IExpr expr) {
+    void _MultExpr(out IExpr expr) {
       Token token = la;
-      UnaryExpr(out expr);
+      _UnaryExpr(out expr);
       while (la.kind == 40 || la.kind == 41 || la.kind == 42) {
         MultOp op; token = la;
         if (la.kind == 40) {
@@ -444,16 +444,16 @@ namespace XLang {
           Get();
           op = MultOp.MODULO;
         }
-        UnaryExpr(out IExpr rhs);
-        expr = new _MultExpr(token) { op = op, left = expr, right = rhs };
+        _UnaryExpr(out IExpr rhs);
+        expr = new MultExpr(token) { op = op, left = expr, right = rhs };
       }
     }
 
-    void UnaryExpr(out IExpr expr) {
+    void _UnaryExpr(out IExpr expr) {
       Token token = la;
       expr = null;
       if (StartOf(3)) {
-        Primitive(out expr);
+        _Primitive(out expr);
       } else if (la.kind == 39 || la.kind == 43 || la.kind == 44) {
         UnaryOp op;
         if (la.kind == 39) {
@@ -466,58 +466,58 @@ namespace XLang {
           Get();
           op = UnaryOp.NOT;
         }
-        UnaryExpr(out IExpr lhs);
-        expr = new _UnaryExpr(token) { op = op, left = lhs };
+        _UnaryExpr(out IExpr lhs);
+        expr = new UnaryExpr(token) { op = op, left = lhs };
       } else SynErr(54);
     }
 
-    void Primitive(out IExpr expr) {
+    void _Primitive(out IExpr expr) {
       Token token = la;
       expr = null;
       switch (la.kind) {
         case 1: {
-            Ident(out _Ident lhs);
+            _Ident(out Ident lhs);
             expr = lhs;
             break;
           }
         case 3: {
-            String(out _String lhs);
+            _String(out String lhs);
             expr = lhs;
             break;
           }
         case 4: {
-            Char(out _Char lhs);
+            _Char(out Char lhs);
             expr = lhs;
             break;
           }
         case 5: {
-            Float(out _Float lhs);
+            _Float(out Float lhs);
             expr = lhs;
             break;
           }
         case 6: {
-            Int(out _Int lhs);
+            _Int(out Int lhs);
             expr = lhs;
             break;
           }
         case 45:   case 46: {
-            Boolean(out _Boolean lhs);
+            _Boolean(out Boolean lhs);
             expr = lhs;
             break;
           }
         case 2: {
-            Type(out _Type lhs);
+            _Type(out Type lhs);
             expr = lhs;
             break;
           }
         case 47: {
-            Array(out _Array lhs);
+            _Array(out Array lhs);
             expr = lhs;
             break;
           }
         case 11: {
             Get();
-            Expr(out IExpr lhs);
+            _Expr(out IExpr lhs);
             ExpectWeak(12, 4);
             expr = lhs;
             break;
@@ -526,50 +526,50 @@ namespace XLang {
       }
     }
 
-    void String(out _String term) {
+    void _String(out String term) {
       Token token = la;
       Expect(3);
-      term = new _String(token);
+      term = new String(token);
     }
 
-    void Char(out _Char term) {
+    void _Char(out Char term) {
       Token token = la;
       Expect(4);
-      term = new _Char(token);
+      term = new Char(token);
     }
 
-    void Float(out _Float term) {
+    void _Float(out Float term) {
       Token token = la;
       Expect(5);
-      term = new _Float(token);
+      term = new Float(token);
     }
 
-    void Int(out _Int term) {
+    void _Int(out Int term) {
       Token token = la;
       Expect(6);
-      term = new _Int(token);
+      term = new Int(token);
     }
 
-    void Boolean(out _Boolean term) {
+    void _Boolean(out Boolean term) {
       Token token = la;
       if (la.kind == 45) {
         Get();
       } else if (la.kind == 46) {
         Get();
       } else SynErr(56);
-      term = new _Boolean(token);
+      term = new Boolean(token);
     }
 
-    void Array(out _Array ra) {
+    void _Array(out Array ra) {
       Token token = la;
       Expect(47);
-      ra = new _Array(token);
+      ra = new Array(token);
       if (StartOf(2)) {
-        Expr(out IExpr exp0);
+        _Expr(out IExpr exp0);
         ra.Add(exp0);
         while (la.kind == 19) {
           Get();
-          Expr(out IExpr exp1);
+          _Expr(out IExpr exp1);
           ra.Add(exp1);
         }
       }
@@ -581,7 +581,7 @@ namespace XLang {
     public void Parse() {
       la = new Token { val = "" };
       Get();
-      XLang();
+      _XLang();
       Expect(0);
     }
 
@@ -602,250 +602,250 @@ namespace XLang {
   }
 
   public interface IXLangVisitor {
-    void Visit(_XLang element);
-    void Visit(_Module element);
-    void Visit(_GlblStmt element);
-    void Visit(_LetStmt element);
-    void Visit(_StmtBlock element);
-    void Visit(_Stmt element);
-    void Visit(_RetStmt element);
-    void Visit(_BreakStmt element);
-    void Visit(_ContStmt element);
-    void Visit(_WhileStmt element);
-    void Visit(_Expr element);
-    void Visit(_Type element);
-    void Visit(_Ident element);
-    void Visit(_ParamDeclList element);
-    void Visit(_ParamDecl element);
-    void Visit(_CondExpr element);
-    void Visit(_LogOrExpr element);
-    void Visit(_LogXorExpr element);
-    void Visit(_LogAndExpr element);
-    void Visit(_OrExpr element);
-    void Visit(_XorExpr element);
-    void Visit(_AndExpr element);
-    void Visit(_EqlExpr element);
-    void Visit(_RelExpr element);
-    void Visit(_ShiftExpr element);
-    void Visit(_AddExpr element);
-    void Visit(_MultExpr element);
-    void Visit(_UnaryExpr element);
-    void Visit(_Primitive element);
-    void Visit(_String element);
-    void Visit(_Char element);
-    void Visit(_Float element);
-    void Visit(_Int element);
-    void Visit(_Boolean element);
-    void Visit(_Array element);
+    void Visit(XLang element);
+    void Visit(Module element);
+    void Visit(GlblStmt element);
+    void Visit(LetStmt element);
+    void Visit(StmtBlock element);
+    void Visit(Stmt element);
+    void Visit(RetStmt element);
+    void Visit(BreakStmt element);
+    void Visit(ContStmt element);
+    void Visit(WhileStmt element);
+    void Visit(Expr element);
+    void Visit(Type element);
+    void Visit(Ident element);
+    void Visit(ParamDeclList element);
+    void Visit(ParamDecl element);
+    void Visit(CondExpr element);
+    void Visit(LogOrExpr element);
+    void Visit(LogXorExpr element);
+    void Visit(LogAndExpr element);
+    void Visit(OrExpr element);
+    void Visit(XorExpr element);
+    void Visit(AndExpr element);
+    void Visit(EqlExpr element);
+    void Visit(RelExpr element);
+    void Visit(ShiftExpr element);
+    void Visit(AddExpr element);
+    void Visit(MultExpr element);
+    void Visit(UnaryExpr element);
+    void Visit(Primitive element);
+    void Visit(String element);
+    void Visit(Char element);
+    void Visit(Float element);
+    void Visit(Int element);
+    void Visit(Boolean element);
+    void Visit(Array element);
   }
 
-  public partial class _XLang : IXLangElement {
+  public partial class XLang : IXLangElement {
     public Token token;
-    public _XLang(Token t) { token = t; }
+    public XLang(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Module : IXLangElement {
+  public partial class Module : IXLangElement {
     public Token token;
-    public _Module(Token t) { token = t; }
+    public Module(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _GlblStmt : IXLangElement {
+  public partial class GlblStmt : IXLangElement {
     public Token token;
-    public _GlblStmt(Token t) { token = t; }
+    public GlblStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _LetStmt : IXLangElement {
+  public partial class LetStmt : IXLangElement {
     public Token token;
-    public _LetStmt(Token t) { token = t; }
+    public LetStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _StmtBlock : IXLangElement {
+  public partial class StmtBlock : IXLangElement {
     public Token token;
-    public _StmtBlock(Token t) { token = t; }
+    public StmtBlock(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Stmt : IXLangElement {
+  public partial class Stmt : IXLangElement {
     public Token token;
-    public _Stmt(Token t) { token = t; }
+    public Stmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _RetStmt : IXLangElement {
+  public partial class RetStmt : IXLangElement {
     public Token token;
-    public _RetStmt(Token t) { token = t; }
+    public RetStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _BreakStmt : IXLangElement {
+  public partial class BreakStmt : IXLangElement {
     public Token token;
-    public _BreakStmt(Token t) { token = t; }
+    public BreakStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _ContStmt : IXLangElement {
+  public partial class ContStmt : IXLangElement {
     public Token token;
-    public _ContStmt(Token t) { token = t; }
+    public ContStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _WhileStmt : IXLangElement {
+  public partial class WhileStmt : IXLangElement {
     public Token token;
-    public _WhileStmt(Token t) { token = t; }
+    public WhileStmt(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Expr : IXLangElement {
+  public partial class Expr : IXLangElement {
     public Token token;
-    public _Expr(Token t) { token = t; }
+    public Expr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Type : IXLangElement {
+  public partial class Type : IXLangElement {
     public Token token;
-    public _Type(Token t) { token = t; }
+    public Type(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Ident : IXLangElement {
+  public partial class Ident : IXLangElement {
     public Token token;
-    public _Ident(Token t) { token = t; }
+    public Ident(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _ParamDeclList : IXLangElement {
+  public partial class ParamDeclList : IXLangElement {
     public Token token;
-    public _ParamDeclList(Token t) { token = t; }
+    public ParamDeclList(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _ParamDecl : IXLangElement {
+  public partial class ParamDecl : IXLangElement {
     public Token token;
-    public _ParamDecl(Token t) { token = t; }
+    public ParamDecl(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _CondExpr : IXLangElement {
+  public partial class CondExpr : IXLangElement {
     public Token token;
-    public _CondExpr(Token t) { token = t; }
+    public CondExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _LogOrExpr : IXLangElement {
+  public partial class LogOrExpr : IXLangElement {
     public Token token;
-    public _LogOrExpr(Token t) { token = t; }
+    public LogOrExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _LogXorExpr : IXLangElement {
+  public partial class LogXorExpr : IXLangElement {
     public Token token;
-    public _LogXorExpr(Token t) { token = t; }
+    public LogXorExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _LogAndExpr : IXLangElement {
+  public partial class LogAndExpr : IXLangElement {
     public Token token;
-    public _LogAndExpr(Token t) { token = t; }
+    public LogAndExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _OrExpr : IXLangElement {
+  public partial class OrExpr : IXLangElement {
     public Token token;
-    public _OrExpr(Token t) { token = t; }
+    public OrExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _XorExpr : IXLangElement {
+  public partial class XorExpr : IXLangElement {
     public Token token;
-    public _XorExpr(Token t) { token = t; }
+    public XorExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _AndExpr : IXLangElement {
+  public partial class AndExpr : IXLangElement {
     public Token token;
-    public _AndExpr(Token t) { token = t; }
+    public AndExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _EqlExpr : IXLangElement {
+  public partial class EqlExpr : IXLangElement {
     public Token token;
-    public _EqlExpr(Token t) { token = t; }
+    public EqlExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _RelExpr : IXLangElement {
+  public partial class RelExpr : IXLangElement {
     public Token token;
-    public _RelExpr(Token t) { token = t; }
+    public RelExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _ShiftExpr : IXLangElement {
+  public partial class ShiftExpr : IXLangElement {
     public Token token;
-    public _ShiftExpr(Token t) { token = t; }
+    public ShiftExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _AddExpr : IXLangElement {
+  public partial class AddExpr : IXLangElement {
     public Token token;
-    public _AddExpr(Token t) { token = t; }
+    public AddExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _MultExpr : IXLangElement {
+  public partial class MultExpr : IXLangElement {
     public Token token;
-    public _MultExpr(Token t) { token = t; }
+    public MultExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _UnaryExpr : IXLangElement {
+  public partial class UnaryExpr : IXLangElement {
     public Token token;
-    public _UnaryExpr(Token t) { token = t; }
+    public UnaryExpr(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Primitive : IXLangElement {
+  public partial class Primitive : IXLangElement {
     public Token token;
-    public _Primitive(Token t) { token = t; }
+    public Primitive(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _String : IXLangElement {
+  public partial class String : IXLangElement {
     public Token token;
-    public _String(Token t) { token = t; }
+    public String(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Char : IXLangElement {
+  public partial class Char : IXLangElement {
     public Token token;
-    public _Char(Token t) { token = t; }
+    public Char(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Float : IXLangElement {
+  public partial class Float : IXLangElement {
     public Token token;
-    public _Float(Token t) { token = t; }
+    public Float(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Int : IXLangElement {
+  public partial class Int : IXLangElement {
     public Token token;
-    public _Int(Token t) { token = t; }
+    public Int(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Boolean : IXLangElement {
+  public partial class Boolean : IXLangElement {
     public Token token;
-    public _Boolean(Token t) { token = t; }
+    public Boolean(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Array : IXLangElement {
+  public partial class Array : IXLangElement {
     public Token token;
-    public _Array(Token t) { token = t; }
+    public Array(Token t) { token = t; }
     public void Accept(IXLangVisitor visitor) { visitor.Visit(this); }
   }
 

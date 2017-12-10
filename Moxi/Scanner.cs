@@ -129,7 +129,7 @@ namespace Moxi {
       Pos = beg;
       while (Pos < end) cbuf[len++] = (char)Read();
       Pos = oldPos;
-      return new String(cbuf, 0, len);
+      return new System.String(cbuf, 0, len);
     }
 
     public int Pos
@@ -173,7 +173,7 @@ namespace Moxi {
         // foresee the maximum length, thus we must adapt
         // the buffer size on demand.
         byte[] newBuf = new byte[bufLen * 2];
-        Array.Copy(buf, newBuf, bufLen);
+        System.Array.Copy(buf, newBuf, bufLen);
         buf = newBuf;
         free = bufLen;
       }
@@ -291,7 +291,7 @@ namespace Moxi {
         NextCh(); int ch1 = ch;
         NextCh(); int ch2 = ch;
         if (ch1 != 0xBB || ch2 != 0xBF) {
-          throw new FatalError(String.Format("illegal byte order mark: EF {0,2:X} {1,2:X}", ch1, ch2));
+          throw new FatalError(System.String.Format("illegal byte order mark: EF {0,2:X} {1,2:X}", ch1, ch2));
         }
         buffer = new UTF8Buffer(buffer); col = 0; charPos = -1;
         NextCh();
@@ -315,7 +315,7 @@ namespace Moxi {
     void AddCh() {
       if (tlen >= tval.Length) {
         char[] newBuf = new char[2 * tval.Length];
-        Array.Copy(tval, 0, newBuf, 0, tval.Length);
+        System.Array.Copy(tval, 0, newBuf, 0, tval.Length);
         tval = newBuf;
       }
       if (ch != Buffer.EOF) {
@@ -542,7 +542,7 @@ namespace Moxi {
         else {t.kind = 3; break;}
 
       }
-      t.val = new String(tval, 0, tlen);
+      t.val = new System.String(tval, 0, tlen);
       return t;
     }
 

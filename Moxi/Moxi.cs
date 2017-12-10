@@ -23,7 +23,7 @@ using Moxi.Visitors;
 
 namespace Moxi {
 
-  class Moxi {
+  class MoxiMain {
 
     const int OK = 0;
     const int WARN = 1;
@@ -31,7 +31,7 @@ namespace Moxi {
     static int Main(string[] args) {
       if (args.Length > 0) {
         string filename = args[0];
-        Parser.Parse(filename, out _Moxi moxi);
+        Parser.Parse(filename, out Moxi moxi);
         ExampleVisitor.Example(moxi);
         return OK;
       }

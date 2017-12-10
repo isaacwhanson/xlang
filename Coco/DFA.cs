@@ -277,7 +277,7 @@ namespace at.jku.ssw.Coco {
     }
 
     public void Fill() {
-      head = new Range(Char.MinValue, Char.MaxValue);
+      head = new Range(System.Char.MinValue, System.Char.MaxValue);
     }
   }
 
@@ -911,7 +911,7 @@ namespace at.jku.ssw.Coco {
     }
 
     string SymName(Symbol sym) {
-      if (Char.IsLetter(sym.name[0])) { // real name value is stored in Tab.literals
+      if (System.Char.IsLetter(sym.name[0])) { // real name value is stored in Tab.literals
         foreach (DictionaryEntry e in tab.literals)
           if ((Symbol)e.Value == sym) return (string)e.Key;
       }
@@ -973,7 +973,7 @@ namespace at.jku.ssw.Coco {
       } else {
         gen.Write("t.kind = {0}; ", endOf.n);
         if (endOf.tokenKind == Symbol.classLitToken) {
-          gen.WriteLine("t.val = new String(tval, 0, tlen); CheckLiteral(); return t;}");
+          gen.WriteLine("t.val = new System.String(tval, 0, tlen); CheckLiteral(); return t;}");
         } else {
           gen.WriteLine("break;}");
         }

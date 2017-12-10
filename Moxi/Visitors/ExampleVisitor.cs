@@ -24,13 +24,13 @@ namespace Moxi.Visitors {
 
   public class ExampleVisitor : MoxiVisitor {
 
-    public static ExampleVisitor Example(_Moxi moxi) {
+    public static ExampleVisitor Example(Moxi moxi) {
       ExampleVisitor visitor = new ExampleVisitor();
       moxi.Accept(visitor);
       return visitor;
     }
 
-    public override void Visit(_Moxi element) {
+    public override void Visit(Moxi element) {
       throw new NotImplementedException();
     }
   }

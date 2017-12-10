@@ -8,7 +8,7 @@
     <RootNamespace>at.jku.ssw.Coco</RootNamespace>
     <AssemblyName>Coco</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <StartupObject>at.jku.ssw.Coco.Coco</StartupObject>
+    <StartupObject>at.jku.ssw.Coco.CocoMain</StartupObject>
     <Description>Coco/R is a compiler generator, which takes an attributed grammar of a source language and generates a scanner and a parser for this language</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

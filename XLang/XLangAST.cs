@@ -21,12 +21,12 @@ using System.Collections.Generic;
 
 namespace XLang {
 
-  public partial class _XLang : IExpr {
+  public partial class XLang : IExpr {
     public string filename;
-    public _Module module;
+    public Module module;
   }
 
-  public partial class _Module {
+  public partial class Module {
     public List<IStmt> stmts = new List<IStmt>();
     public void Add(IStmt stmt) {
       stmts.Add(stmt);
@@ -37,77 +37,77 @@ namespace XLang {
 
   public interface IExpr : IXLangElement { }
 
-  public partial class _LetStmt : IStmt {
+  public partial class LetStmt : IStmt {
     public IExpr ident;
-    public _ParamDeclList plist;
+    public ParamDeclList plist;
     public IExpr expr;
     public IStmt stmt;
   }
 
-  public partial class _ParamDeclList {
-    public List<_ParamDecl> plist;
-    public void Add(_ParamDecl p) {
+  public partial class ParamDeclList {
+    public List<ParamDecl> plist;
+    public void Add(ParamDecl p) {
       plist.Add(p);
     }
   }
 
-  public partial class _ParamDecl {
+  public partial class ParamDecl {
     public IExpr type;
     public IExpr ident;
   }
 
-  public partial class _StmtBlock : IStmt {
+  public partial class StmtBlock : IStmt {
     public List<IStmt> stmts = new List<IStmt>();
     public void Add(IStmt stmt) {
       stmts.Add(stmt);
     }
   }
 
-  public partial class _RetStmt : IStmt {
+  public partial class RetStmt : IStmt {
     public IExpr expr;
   }
 
-  public partial class _BreakStmt : IStmt { }
+  public partial class BreakStmt : IStmt { }
 
-  public partial class _ContStmt : IStmt { }
+  public partial class ContStmt : IStmt { }
 
-  public partial class _WhileStmt : IStmt {
+  public partial class WhileStmt : IStmt {
     public IExpr expr;
     public IStmt stmt;
   }
 
-  public partial class _CondExpr : IExpr {
+  public partial class CondExpr : IExpr {
     public IExpr condition;
     public IExpr consequent;
     public IExpr alternative;
   }
 
-  public partial class _LogOrExpr : IExpr {
+  public partial class LogOrExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _LogXorExpr : IExpr {
+  public partial class LogXorExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _LogAndExpr : IExpr {
+  public partial class LogAndExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _OrExpr : IExpr {
+  public partial class OrExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _XorExpr : IExpr {
+  public partial class XorExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
 
-  public partial class _AndExpr : IExpr {
+  public partial class AndExpr : IExpr {
     public IExpr left;
     public IExpr right;
   }
@@ -115,7 +115,7 @@ namespace XLang {
   public enum EqlOp {
     EQUAL, NOTEQUAL, HARDEQUAL, HARDNOTEQUAL
   }
-  public partial class _EqlExpr : IExpr {
+  public partial class EqlExpr : IExpr {
     public EqlOp op;
     public IExpr left;
     public IExpr right;
@@ -124,7 +124,7 @@ namespace XLang {
   public enum RelOp {
     LESSTHAN, GREATERTHAN, LESSTHANEQUAL, GREATERTHANEQUAL
   }
-  public partial class _RelExpr : IExpr {
+  public partial class RelExpr : IExpr {
     public RelOp op;
     public IExpr left;
     public IExpr right;
@@ -133,7 +133,7 @@ namespace XLang {
   public enum ShiftOp {
     LEFT, RIGHT
   }
-  public partial class _ShiftExpr : IExpr {
+  public partial class ShiftExpr : IExpr {
     public ShiftOp op;
     public IExpr left;
     public IExpr right;
@@ -142,7 +142,7 @@ namespace XLang {
   public enum AddOp {
     PLUS, MINUS
   }
-  public partial class _AddExpr : IExpr {
+  public partial class AddExpr : IExpr {
     public AddOp op;
     public IExpr left;
     public IExpr right;
@@ -151,7 +151,7 @@ namespace XLang {
   public enum MultOp {
     TIMES, DIVIDE, MODULO
   }
-  public partial class _MultExpr : IExpr {
+  public partial class MultExpr : IExpr {
     public MultOp op;
     public IExpr left;
     public IExpr right;
@@ -160,29 +160,29 @@ namespace XLang {
   public enum UnaryOp {
     NEGATE, COMPLIMENT, NOT
   }
-  public partial class _UnaryExpr : IExpr {
+  public partial class UnaryExpr : IExpr {
     public UnaryOp op;
     public IExpr left;
   }
 
-  public partial class _Array : IExpr {
+  public partial class Array : IExpr {
     public List<IExpr> exprs = new List<IExpr>();
     public void Add(IExpr expr) {
       exprs.Add(expr);
     }
   }
 
-  public partial class _Ident : IExpr { }
+  public partial class Ident : IExpr { }
 
-  public partial class _Int : IExpr { }
+  public partial class Int : IExpr { }
 
-  public partial class _Float : IExpr { }
+  public partial class Float : IExpr { }
 
-  public partial class _Char : IExpr { }
+  public partial class Char : IExpr { }
 
-  public partial class _String : IExpr { }
+  public partial class String : IExpr { }
 
-  public partial class _Boolean : IExpr { }
+  public partial class Boolean : IExpr { }
 
-  public partial class _Type : IExpr { }
+  public partial class Type : IExpr { }
 }

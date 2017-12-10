@@ -129,7 +129,7 @@ namespace at.jku.ssw.Coco {
       Pos = beg;
       while (Pos < end) cbuf[len++] = (char)Read();
       Pos = oldPos;
-      return new String(cbuf, 0, len);
+      return new System.String(cbuf, 0, len);
     }
 
     public int Pos
@@ -173,7 +173,7 @@ namespace at.jku.ssw.Coco {
         // foresee the maximum length, thus we must adapt
         // the buffer size on demand.
         byte[] newBuf = new byte[bufLen * 2];
-        Array.Copy(buf, newBuf, bufLen);
+        System.Array.Copy(buf, newBuf, bufLen);
         buf = newBuf;
         free = bufLen;
       }
@@ -304,7 +304,7 @@ namespace at.jku.ssw.Coco {
         NextCh(); int ch1 = ch;
         NextCh(); int ch2 = ch;
         if (ch1 != 0xBB || ch2 != 0xBF) {
-          throw new FatalError(String.Format("illegal byte order mark: EF {0,2:X} {1,2:X}", ch1, ch2));
+          throw new FatalError(System.String.Format("illegal byte order mark: EF {0,2:X} {1,2:X}", ch1, ch2));
         }
         buffer = new UTF8Buffer(buffer); col = 0; charPos = -1;
         NextCh();
@@ -328,7 +328,7 @@ namespace at.jku.ssw.Coco {
     void AddCh() {
       if (tlen >= tval.Length) {
         char[] newBuf = new char[2 * tval.Length];
-        Array.Copy(tval, 0, newBuf, 0, tval.Length);
+        System.Array.Copy(tval, 0, newBuf, 0, tval.Length);
         tval = newBuf;
       }
       if (ch != Buffer.EOF) {
@@ -432,7 +432,7 @@ namespace at.jku.ssw.Coco {
         case 1:
           recEnd = pos; recKind = 1;
           if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch >= 'a' && ch <= 'z') { AddCh(); goto case 1; }
-        else {t.kind = 1; t.val = new String(tval, 0, tlen); CheckLiteral(); return t;}
+        else {t.kind = 1; t.val = new System.String(tval, 0, tlen); CheckLiteral(); return t;}
         case 2:
           recEnd = pos; recKind = 2;
           if (ch >= '0' && ch <= '9') { AddCh(); goto case 2; }
@@ -531,7 +531,7 @@ namespace at.jku.ssw.Coco {
         else {t.kind = 30; break;}
 
       }
-      t.val = new String(tval, 0, tlen);
+      t.val = new System.String(tval, 0, tlen);
       return t;
     }
 

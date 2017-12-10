@@ -24,17 +24,17 @@ namespace at.jku.ssw.Coco {
 
   public class Parser {
 
-    public _Coco coco;
+    public Coco coco;
 
-    public static Parser Parse(string filename, out _Coco coco) {
+    public static Parser Parse(string filename, out Coco coco) {
       return Parse(new Scanner(filename), out coco);
     }
 
-    public static Parser Parse(Stream stream, out _Coco coco) {
+    public static Parser Parse(Stream stream, out Coco coco) {
       return Parse(new Scanner(stream), out coco);
     }
 
-    public static Parser Parse(IScanner scanner, out _Coco coco) {
+    public static Parser Parse(IScanner scanner, out Coco coco) {
       Parser parser = new Parser(scanner);
       parser.Parse();
       coco = parser.coco;
@@ -143,7 +143,7 @@ const int id = 0;
 
 #pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
 
-    void Coco() {
+    void _Coco() {
       Token token = la;
       Symbol sym; Graph g, g1, g2; string gramName; CharSet s; int beg, line;
       if (StartOf(1)) {
@@ -172,28 +172,28 @@ const int id = 0;
       if (la.kind == 8) {
         Get();
         while (la.kind == 1) {
-          SetDecl();
+          _SetDecl();
         }
       }
       if (la.kind == 9) {
         Get();
         while (la.kind == 1 || la.kind == 3 || la.kind == 5) {
-          TokenDecl(Node.t);
+          _TokenDecl(Node.t);
         }
       }
       if (la.kind == 10) {
         Get();
         while (la.kind == 1 || la.kind == 3 || la.kind == 5) {
-          TokenDecl(Node.pr);
+          _TokenDecl(Node.pr);
         }
       }
       while (la.kind == 11) {
         Get();
         bool nested = false;
         Expect(12);
-        TokenExpr(out g1);
+        _TokenExpr(out g1);
         Expect(13);
-        TokenExpr(out g2);
+        _TokenExpr(out g2);
         if (la.kind == 14) {
           Get();
           nested = true;
@@ -202,7 +202,7 @@ const int id = 0;
       }
       while (la.kind == 15) {
         Get();
-        Set(out s);
+        _Set(out s);
         tab.ignored.Or(s);
       }
       while (!(la.kind == 0 || la.kind == 16)) { SynErr(42); Get(); }
@@ -225,17 +225,17 @@ const int id = 0;
         sym.attrPos = null;
         
         if (la.kind == 24 || la.kind == 26) {
-          AttrDecl(sym);
+          _AttrDecl(sym);
         }
         if (!undef)
          if (noAttrs != (sym.attrPos == null))
            SemErr("attribute mismatch between declaration and use of this symbol");
         
         if (la.kind == 39) {
-          SemText(out sym.semPos);
+          _SemText(out sym.semPos);
         }
         ExpectWeak(17, 3);
-        Expression(out g);
+        _Expression(out g);
         sym.graph = g.l;
         tab.Finish(g);
         
@@ -278,7 +278,7 @@ const int id = 0;
       Expect(18);
     }
 
-    void SetDecl() {
+    void _SetDecl() {
       Token token = la;
       CharSet s;
       Expect(1);
@@ -287,17 +287,17 @@ const int id = 0;
       if (c != null) SemErr("name declared twice");
       
       Expect(17);
-      Set(out s);
+      _Set(out s);
       if (s.Elements() == 0) SemErr("character set must not be empty");
       tab.NewCharClass(name, s);
       
       Expect(18);
     }
 
-    void TokenDecl(int typ) {
+    void _TokenDecl(int typ) {
       Token token = la;
       string name; int kind; Symbol sym; Graph g;
-      Sym(out name, out kind);
+      _Sym(out name, out kind);
       sym = tab.FindSym(name);
       if (sym != null) SemErr("name declared twice");
       else {
@@ -309,7 +309,7 @@ const int id = 0;
       while (!(StartOf(5))) { SynErr(43); Get(); }
       if (la.kind == 17) {
         Get();
-        TokenExpr(out g);
+        _TokenExpr(out g);
         Expect(18);
         if (kind == str) SemErr("a literal must not be declared with a structure");
         tab.Finish(g);
@@ -328,42 +328,42 @@ const int id = 0;
         
       } else SynErr(44);
       if (la.kind == 39) {
-        SemText(out sym.semPos);
+        _SemText(out sym.semPos);
         if (typ != Node.pr) SemErr("semantic action not allowed here");
       }
     }
 
-    void TokenExpr(out Graph g) {
+    void _TokenExpr(out Graph g) {
       Token token = la;
       Graph g2;
-      TokenTerm(out g);
+      _TokenTerm(out g);
       bool first = true;
       while (WeakSeparator(28,7,8) ) {
-        TokenTerm(out g2);
+        _TokenTerm(out g2);
         if (first) { tab.MakeFirstAlt(g); first = false; }
         tab.MakeAlternative(g, g2);
         
       }
     }
 
-    void Set(out CharSet s) {
+    void _Set(out CharSet s) {
       Token token = la;
       CharSet s2;
-      SimSet(out s);
+      _SimSet(out s);
       while (la.kind == 20 || la.kind == 21) {
         if (la.kind == 20) {
           Get();
-          SimSet(out s2);
+          _SimSet(out s2);
           s.Or(s2);
         } else {
           Get();
-          SimSet(out s2);
+          _SimSet(out s2);
           s.Subtract(s2);
         }
       }
     }
 
-    void AttrDecl(Symbol sym) {
+    void _AttrDecl(Symbol sym) {
       Token token = la;
       if (la.kind == 24) {
         Get();
@@ -396,7 +396,7 @@ const int id = 0;
       } else SynErr(45);
     }
 
-    void SemText(out Position pos) {
+    void _SemText(out Position pos) {
       Token token = la;
       Expect(39);
       int beg = la.pos; int col = la.col; int line = la.line;
@@ -415,20 +415,20 @@ const int id = 0;
       pos = new Position(beg, t.pos, col, line);
     }
 
-    void Expression(out Graph g) {
+    void _Expression(out Graph g) {
       Token token = la;
       Graph g2;
-      Term(out g);
+      _Term(out g);
       bool first = true;
       while (WeakSeparator(28,15,16) ) {
-        Term(out g2);
+        _Term(out g2);
         if (first) { tab.MakeFirstAlt(g); first = false; }
         tab.MakeAlternative(g, g2);
         
       }
     }
 
-    void SimSet(out CharSet s) {
+    void _SimSet(out CharSet s) {
       Token token = la;
       int n1, n2;
       s = new CharSet();
@@ -445,11 +445,11 @@ const int id = 0;
          if (dfa.ignoreCase) s.Set(char.ToLower(ch));
          else s.Set(ch);
       } else if (la.kind == 5) {
-        Char(out n1);
+        _Char(out n1);
         s.Set(n1);
         if (la.kind == 22) {
           Get();
-          Char(out n2);
+          _Char(out n2);
           for (int i = n1; i <= n2; i++) s.Set(i);
         }
       } else if (la.kind == 23) {
@@ -458,7 +458,7 @@ const int id = 0;
       } else SynErr(46);
     }
 
-    void Char(out int n) {
+    void _Char(out int n) {
       Token token = la;
       Expect(5);
       string name = t.val; n = 0;
@@ -469,7 +469,7 @@ const int id = 0;
       
     }
 
-    void Sym(out string name, out int kind) {
+    void _Sym(out string name, out int kind) {
       Token token = la;
       name = "???"; kind = id;
       if (la.kind == 1) {
@@ -490,21 +490,21 @@ const int id = 0;
       } else SynErr(47);
     }
 
-    void Term(out Graph g) {
+    void _Term(out Graph g) {
       Token token = la;
       Graph g2; Node rslv = null; g = null;
       if (StartOf(17)) {
         if (la.kind == 37) {
           rslv = tab.NewNode(Node.rslv, null, la.line);
-          Resolver(out rslv.pos);
+          _Resolver(out rslv.pos);
           g = new Graph(rslv);
         }
-        Factor(out g2);
+        _Factor(out g2);
         if (rslv != null) tab.MakeSequence(g, g2);
         else g = g2;
         
         while (StartOf(18)) {
-          Factor(out g2);
+          _Factor(out g2);
           tab.MakeSequence(g, g2);
         }
       } else if (StartOf(19)) {
@@ -515,16 +515,16 @@ const int id = 0;
       
     }
 
-    void Resolver(out Position pos) {
+    void _Resolver(out Position pos) {
       Token token = la;
       Expect(37);
       Expect(30);
       int beg = la.pos; int col = la.col; int line = la.line;
-      Condition();
+      _Condition();
       pos = new Position(beg, t.pos, col, line);
     }
 
-    void Factor(out Graph g) {
+    void _Factor(out Graph g) {
       Token token = la;
       string name; int kind; Position pos; bool weak = false; 
       g = null;
@@ -535,7 +535,7 @@ const int id = 0;
               Get();
               weak = true;
             }
-            Sym(out name, out kind);
+            _Sym(out name, out kind);
             Symbol sym = tab.FindSym(name);
             if (sym == null && kind == str)
              sym = tab.literals[name] as Symbol;
@@ -561,7 +561,7 @@ const int id = 0;
             g = new Graph(p);
             
             if (la.kind == 24 || la.kind == 26) {
-              Attribs(p);
+              _Attribs(p);
               if (kind != id) SemErr("a literal must not have attributes");
             }
             if (undef)
@@ -573,26 +573,26 @@ const int id = 0;
           }
         case 30: {
             Get();
-            Expression(out g);
+            _Expression(out g);
             Expect(31);
             break;
           }
         case 32: {
             Get();
-            Expression(out g);
+            _Expression(out g);
             Expect(33);
             tab.MakeOption(g);
             break;
           }
         case 34: {
             Get();
-            Expression(out g);
+            _Expression(out g);
             Expect(35);
             tab.MakeIteration(g);
             break;
           }
         case 39: {
-            SemText(out pos);
+            _SemText(out pos);
             Node p = tab.NewNode(Node.sem, null, 0);
             p.pos = pos;
             g = new Graph(p);
@@ -620,7 +620,7 @@ const int id = 0;
       
     }
 
-    void Attribs(Node p) {
+    void _Attribs(Node p) {
       Token token = la;
       if (la.kind == 24) {
         Get();
@@ -651,12 +651,12 @@ const int id = 0;
       } else SynErr(50);
     }
 
-    void Condition() {
+    void _Condition() {
       Token token = la;
       while (StartOf(20)) {
         if (la.kind == 30) {
           Get();
-          Condition();
+          _Condition();
         } else {
           Get();
         }
@@ -664,30 +664,30 @@ const int id = 0;
       Expect(31);
     }
 
-    void TokenTerm(out Graph g) {
+    void _TokenTerm(out Graph g) {
       Token token = la;
       Graph g2;
-      TokenFactor(out g);
+      _TokenFactor(out g);
       while (StartOf(7)) {
-        TokenFactor(out g2);
+        _TokenFactor(out g2);
         tab.MakeSequence(g, g2);
       }
       if (la.kind == 38) {
         Get();
         Expect(30);
-        TokenExpr(out g2);
+        _TokenExpr(out g2);
         tab.SetContextTrans(g2.l); dfa.hasCtxMoves = true;
         tab.MakeSequence(g, g2);
         Expect(31);
       }
     }
 
-    void TokenFactor(out Graph g) {
+    void _TokenFactor(out Graph g) {
       Token token = la;
       string name; int kind;
       g = null;
       if (la.kind == 1 || la.kind == 3 || la.kind == 5) {
-        Sym(out name, out kind);
+        _Sym(out name, out kind);
         if (kind == id) {
          CharClass c = tab.FindCharClass(name);
          if (c == null) {
@@ -705,16 +705,16 @@ const int id = 0;
         
       } else if (la.kind == 30) {
         Get();
-        TokenExpr(out g);
+        _TokenExpr(out g);
         Expect(31);
       } else if (la.kind == 32) {
         Get();
-        TokenExpr(out g);
+        _TokenExpr(out g);
         Expect(33);
         tab.MakeOption(g); tokenString = noString;
       } else if (la.kind == 34) {
         Get();
-        TokenExpr(out g);
+        _TokenExpr(out g);
         Expect(35);
         tab.MakeIteration(g); tokenString = noString;
       } else SynErr(51);
@@ -727,7 +727,7 @@ const int id = 0;
     public void Parse() {
       la = new Token { val = "" };
       Get();
-      Coco();
+      _Coco();
       Expect(0);
     }
 
@@ -764,131 +764,131 @@ const int id = 0;
   }
 
   public interface ICocoVisitor {
-    void Visit(_Coco element);
-    void Visit(_SetDecl element);
-    void Visit(_TokenDecl element);
-    void Visit(_TokenExpr element);
-    void Visit(_Set element);
-    void Visit(_AttrDecl element);
-    void Visit(_SemText element);
-    void Visit(_Expression element);
-    void Visit(_SimSet element);
-    void Visit(_Char element);
-    void Visit(_Sym element);
-    void Visit(_Term element);
-    void Visit(_Resolver element);
-    void Visit(_Factor element);
-    void Visit(_Attribs element);
-    void Visit(_Condition element);
-    void Visit(_TokenTerm element);
-    void Visit(_TokenFactor element);
+    void Visit(Coco element);
+    void Visit(SetDecl element);
+    void Visit(TokenDecl element);
+    void Visit(TokenExpr element);
+    void Visit(Set element);
+    void Visit(AttrDecl element);
+    void Visit(SemText element);
+    void Visit(Expression element);
+    void Visit(SimSet element);
+    void Visit(Char element);
+    void Visit(Sym element);
+    void Visit(Term element);
+    void Visit(Resolver element);
+    void Visit(Factor element);
+    void Visit(Attribs element);
+    void Visit(Condition element);
+    void Visit(TokenTerm element);
+    void Visit(TokenFactor element);
   }
 
-  public partial class _Coco : ICocoElement {
+  public partial class Coco : ICocoElement {
     public Token token;
-    public _Coco(Token t) { token = t; }
+    public Coco(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _SetDecl : ICocoElement {
+  public partial class SetDecl : ICocoElement {
     public Token token;
-    public _SetDecl(Token t) { token = t; }
+    public SetDecl(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _TokenDecl : ICocoElement {
+  public partial class TokenDecl : ICocoElement {
     public Token token;
-    public _TokenDecl(Token t) { token = t; }
+    public TokenDecl(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _TokenExpr : ICocoElement {
+  public partial class TokenExpr : ICocoElement {
     public Token token;
-    public _TokenExpr(Token t) { token = t; }
+    public TokenExpr(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Set : ICocoElement {
+  public partial class Set : ICocoElement {
     public Token token;
-    public _Set(Token t) { token = t; }
+    public Set(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _AttrDecl : ICocoElement {
+  public partial class AttrDecl : ICocoElement {
     public Token token;
-    public _AttrDecl(Token t) { token = t; }
+    public AttrDecl(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _SemText : ICocoElement {
+  public partial class SemText : ICocoElement {
     public Token token;
-    public _SemText(Token t) { token = t; }
+    public SemText(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Expression : ICocoElement {
+  public partial class Expression : ICocoElement {
     public Token token;
-    public _Expression(Token t) { token = t; }
+    public Expression(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _SimSet : ICocoElement {
+  public partial class SimSet : ICocoElement {
     public Token token;
-    public _SimSet(Token t) { token = t; }
+    public SimSet(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Char : ICocoElement {
+  public partial class Char : ICocoElement {
     public Token token;
-    public _Char(Token t) { token = t; }
+    public Char(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Sym : ICocoElement {
+  public partial class Sym : ICocoElement {
     public Token token;
-    public _Sym(Token t) { token = t; }
+    public Sym(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Term : ICocoElement {
+  public partial class Term : ICocoElement {
     public Token token;
-    public _Term(Token t) { token = t; }
+    public Term(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Resolver : ICocoElement {
+  public partial class Resolver : ICocoElement {
     public Token token;
-    public _Resolver(Token t) { token = t; }
+    public Resolver(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Factor : ICocoElement {
+  public partial class Factor : ICocoElement {
     public Token token;
-    public _Factor(Token t) { token = t; }
+    public Factor(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Attribs : ICocoElement {
+  public partial class Attribs : ICocoElement {
     public Token token;
-    public _Attribs(Token t) { token = t; }
+    public Attribs(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _Condition : ICocoElement {
+  public partial class Condition : ICocoElement {
     public Token token;
-    public _Condition(Token t) { token = t; }
+    public Condition(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _TokenTerm : ICocoElement {
+  public partial class TokenTerm : ICocoElement {
     public Token token;
-    public _TokenTerm(Token t) { token = t; }
+    public TokenTerm(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
-  public partial class _TokenFactor : ICocoElement {
+  public partial class TokenFactor : ICocoElement {
     public Token token;
-    public _TokenFactor(Token t) { token = t; }
+    public TokenFactor(Token t) { token = t; }
     public void Accept(ICocoVisitor visitor) { visitor.Visit(this); }
   }
 
