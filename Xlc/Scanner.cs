@@ -232,8 +232,8 @@ namespace Xlc {
   public class Scanner : IScanner {
     const char EOL = '\n';
     const int eofSym = 0; /* pdt */
-    const int maxT = 4;
-    const int noSym = 4;
+    const int maxT = 16;
+    const int noSym = 16;
 
     public Buffer buffer; // scanner buffer
 
@@ -256,9 +256,21 @@ namespace Xlc {
 
     static Scanner() {
       start = new Dictionary<int, int>(128);
+      for (int i = 49; i <= 57; ++i) start[i] = 9;
       start[46] = 1;
-      start[109] = 3;
-      start[102] = 9;
+      start[36] = 3;
+      start[105] = 5;
+      start[48] = 18;
+      start[34] = 16;
+      start[109] = 21;
+      start[102] = 39;
+      start[40] = 30;
+      start[44] = 31;
+      start[41] = 32;
+      start[123] = 33;
+      start[59] = 34;
+      start[125] = 35;
+      start[110] = 36;
       start[Buffer.EOF] = -1;
 
     }
@@ -324,19 +336,6 @@ namespace Xlc {
     bool Comment0() {
       int level = 1, pos0 = pos, line0 = line, col0 = col, charPos0 = charPos;
       NextCh();
-        for (;;) {
-          if (ch == 10) {
-            level--;
-            if (level == 0) { oldEols = line - line0; NextCh(); return true; }
-            NextCh();
-          } else if (ch == Buffer.EOF) return false;
-          else NextCh();
-        }
-    }
-
-    bool Comment1() {
-      int level = 1, pos0 = pos, line0 = line, col0 = col, charPos0 = charPos;
-      NextCh();
       if (ch == '/') {
         NextCh();
         for (;;) {
@@ -353,7 +352,7 @@ namespace Xlc {
       return false;
     }
 
-    bool Comment2() {
+    bool Comment1() {
       int level = 1, pos0 = pos, line0 = line, col0 = col, charPos0 = charPos;
       NextCh();
       if (ch == '*') {
@@ -389,9 +388,9 @@ namespace Xlc {
 
     Token NextToken() {
       while (ch == ' ' ||
-      ch >= 9 && ch <= 13 || ch == ' '
+      ch >= 9 && ch <= 10 || ch == 13
       ) NextCh();
-      if (ch == '#' && Comment0() || ch == '/' && Comment1() || ch == '/' && Comment2()) return NextToken();
+      if (ch == '/' && Comment0() || ch == '/' && Comment1()) return NextToken();
       int recKind = noSym;
       int recEnd = pos;
       t = new Token { pos = pos, col = col, line = line, charPos = charPos };
@@ -409,38 +408,132 @@ namespace Xlc {
             t.kind = recKind; break;
           } // NextCh already done
         case 1:
-          if (ch >= 'A' && ch <= 'Z' || ch == '_' || ch >= 'a' && ch <= 'z') { AddCh(); goto case 2; }
+          if (ch == '!' || ch >= '#' && ch <= 39 || ch == '+' || ch >= '.' && ch <= ':' || ch >= '<' && ch <= 'Z' || ch >= '^' && ch <= 'z' || ch == '|' || ch == '~' || ch == 8722 || ch >= 8726 && ch <= 8727) { AddCh(); goto case 2; }
         else {goto case 0;}
         case 2:
-        {t.kind = 1; break;}
+          recEnd = pos; recKind = 1;
+          if (ch == '!' || ch >= '#' && ch <= 39 || ch == '+' || ch >= '.' && ch <= ':' || ch >= '<' && ch <= 'Z' || ch >= '^' && ch <= 'z' || ch == '|' || ch == '~' || ch == 8722 || ch >= 8726 && ch <= 8727) { AddCh(); goto case 2; }
+        else {t.kind = 1; break;}
         case 3:
-          if (ch == 'o') { AddCh(); goto case 4; }
+          if (ch == '!' || ch >= '#' && ch <= 39 || ch == '+' || ch >= '.' && ch <= ':' || ch >= '<' && ch <= 'Z' || ch >= '^' && ch <= 'z' || ch == '|' || ch == '~' || ch == 8722 || ch >= 8726 && ch <= 8727) { AddCh(); goto case 4; }
         else {goto case 0;}
         case 4:
-          if (ch == 'd') { AddCh(); goto case 5; }
-        else {goto case 0;}
+          recEnd = pos; recKind = 2;
+          if (ch == '!' || ch >= '#' && ch <= 39 || ch == '+' || ch >= '.' && ch <= ':' || ch >= '<' && ch <= 'Z' || ch >= '^' && ch <= 'z' || ch == '|' || ch == '~' || ch == 8722 || ch >= 8726 && ch <= 8727) { AddCh(); goto case 4; }
+        else {t.kind = 2; break;}
         case 5:
-          if (ch == 'u') { AddCh(); goto case 6; }
+          if (ch == '3') { AddCh(); goto case 6; }
+          else if (ch == '6') { AddCh(); goto case 7; }
         else {goto case 0;}
         case 6:
-          if (ch == 'l') { AddCh(); goto case 7; }
+          if (ch == '2') { AddCh(); goto case 8; }
         else {goto case 0;}
         case 7:
-          if (ch == 'e') { AddCh(); goto case 8; }
+          if (ch == '4') { AddCh(); goto case 8; }
         else {goto case 0;}
         case 8:
-        {t.kind = 2; break;}
+        {t.kind = 3; break;}
         case 9:
-          if (ch == 'u') { AddCh(); goto case 10; }
-        else {goto case 0;}
+          recEnd = pos; recKind = 4;
+          if (ch >= '0' && ch <= '9') { AddCh(); goto case 9; }
+          else if (ch == '_') { AddCh(); goto case 10; }
+        else {t.kind = 4; break;}
         case 10:
-          if (ch == 'n') { AddCh(); goto case 11; }
+          if (ch >= '0' && ch <= '9') { AddCh(); goto case 11; }
         else {goto case 0;}
         case 11:
-          if (ch == 'c') { AddCh(); goto case 12; }
-        else {goto case 0;}
+          recEnd = pos; recKind = 4;
+          if (ch >= '0' && ch <= '9') { AddCh(); goto case 11; }
+        else {t.kind = 4; break;}
         case 12:
-        {t.kind = 3; break;}
+          if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'F' || ch >= 'a' && ch <= 'f') { AddCh(); goto case 13; }
+        else {goto case 0;}
+        case 13:
+          recEnd = pos; recKind = 5;
+          if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'F' || ch >= 'a' && ch <= 'f') { AddCh(); goto case 13; }
+          else if (ch == '_') { AddCh(); goto case 14; }
+        else {t.kind = 5; break;}
+        case 14:
+          if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'F' || ch >= 'a' && ch <= 'f') { AddCh(); goto case 15; }
+        else {goto case 0;}
+        case 15:
+          recEnd = pos; recKind = 5;
+          if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'F' || ch >= 'a' && ch <= 'f') { AddCh(); goto case 15; }
+        else {t.kind = 5; break;}
+        case 16:
+          if (ch <= 9 || ch >= 11 && ch <= '!' || ch >= '#' && ch <= '[' || ch >= ']' && ch <= 65535) { AddCh(); goto case 16; }
+          else if (ch == '"') { AddCh(); goto case 17; }
+          else if (ch == 92) { AddCh(); goto case 19; }
+        else {goto case 0;}
+        case 17:
+        {t.kind = 6; break;}
+        case 18:
+          recEnd = pos; recKind = 4;
+          if (ch >= '0' && ch <= '9') { AddCh(); goto case 9; }
+          else if (ch == '_') { AddCh(); goto case 10; }
+          else if (ch == 'x') { AddCh(); goto case 12; }
+        else {t.kind = 4; break;}
+        case 19:
+          if (ch <= 9 || ch >= 11 && ch <= '!' || ch >= '#' && ch <= '[' || ch >= ']' && ch <= 65535) { AddCh(); goto case 16; }
+          else if (ch == '"') { AddCh(); goto case 20; }
+          else if (ch == 92) { AddCh(); goto case 19; }
+        else {goto case 0;}
+        case 20:
+          recEnd = pos; recKind = 6;
+          if (ch <= 9 || ch >= 11 && ch <= '!' || ch >= '#' && ch <= '[' || ch >= ']' && ch <= 65535) { AddCh(); goto case 16; }
+          else if (ch == '"') { AddCh(); goto case 17; }
+          else if (ch == 92) { AddCh(); goto case 19; }
+        else {t.kind = 6; break;}
+        case 21:
+          if (ch == 'o') { AddCh(); goto case 22; }
+        else {goto case 0;}
+        case 22:
+          if (ch == 'd') { AddCh(); goto case 23; }
+        else {goto case 0;}
+        case 23:
+          if (ch == 'u') { AddCh(); goto case 24; }
+        else {goto case 0;}
+        case 24:
+          if (ch == 'l') { AddCh(); goto case 25; }
+        else {goto case 0;}
+        case 25:
+          if (ch == 'e') { AddCh(); goto case 26; }
+        else {goto case 0;}
+        case 26:
+        {t.kind = 7; break;}
+        case 27:
+          if (ch == 'n') { AddCh(); goto case 28; }
+        else {goto case 0;}
+        case 28:
+          if (ch == 'c') { AddCh(); goto case 29; }
+        else {goto case 0;}
+        case 29:
+        {t.kind = 8; break;}
+        case 30:
+        {t.kind = 9; break;}
+        case 31:
+        {t.kind = 10; break;}
+        case 32:
+        {t.kind = 11; break;}
+        case 33:
+        {t.kind = 12; break;}
+        case 34:
+        {t.kind = 13; break;}
+        case 35:
+        {t.kind = 14; break;}
+        case 36:
+          if (ch == 'o') { AddCh(); goto case 37; }
+        else {goto case 0;}
+        case 37:
+          if (ch == 'p') { AddCh(); goto case 38; }
+        else {goto case 0;}
+        case 38:
+        {t.kind = 15; break;}
+        case 39:
+          if (ch == '3') { AddCh(); goto case 6; }
+          else if (ch == '6') { AddCh(); goto case 7; }
+          else if (ch == 'u') { AddCh(); goto case 27; }
+        else {goto case 0;}
 
       }
       t.val = new System.String(tval, 0, tlen);

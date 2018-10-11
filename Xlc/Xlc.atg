@@ -1,30 +1,58 @@
 ﻿COMPILER Xlc
 
 CHARACTERS
-  lower       = 'a'..'z' + '_'.
+  lower       = 'a'..'z'.
   upper       = 'A'..'Z'.
   letter      = lower + upper.
-  whitespace  = ' ' + '\t' + '\u000b' + '\u000c' + '\f'.
-  newline     = '\r' + '\n'.
-  
+  sign        = '+' + '-'.
+  digit       = '0'..'9'.
+  hexdigit    = digit + 'a'..'f' + 'A'..'F'.
+  newline     = '\n'.
+  whitespace  = '\r' + '\t' + newline.
+  special     = '!' + '#' + '$' + '%' + '&' + '`' + '∗' + '+' + '−' + '.' + '/' + ':' + '<' + '=' + '>' + '?' + '@' + '∖' + '^' + '_' + "'" + '|' + '~'.
+  idchar      = letter + digit + special.
+  notquote    = ANY - '\"' - newline.
+ 
 TOKENS
-  id          = "." letter.
+  moduleId    = "." idchar {idchar}.
+  identifier  = "$" idchar {idchar}.
+  type        = ("i" | "f") ("32" | "64").
+  number      = digit {digit} ["_" digit {digit}].
+  hexNumber   = "0x" hexdigit {hexdigit} ["_" hexdigit {hexdigit}].
+  string      = '"' {notquote | "\\\""} '"'.
 
 COMMENTS FROM "/*" TO "*/" NESTED
-COMMENTS FROM "//" TO "\n"
-COMMENTS FROM "#" TO "\n"
-IGNORE whitespace + newline
+COMMENTS FROM "//" TO newline
+IGNORE whitespace
 
 PRODUCTIONS
   Xlc =
     Module<.out Module mod.> (. xlc = new Xlc(token) { module = mod }; .).
     
   Module<.out Module mod.> =
-    "module" (. mod = new Module(token); .)
-    [id (. mod.id = t.val; .)]
+    "module"               (. mod = new Module(token); .)
+    [moduleId              (. mod.id = t.val; .)]
     {Func<.out Func func.> (. mod.funcs.Add(func); .)}.
     
-  Func<.out Func func.> = (. func = new Func(token); .)
-    "func".
+  Func<.out Func func.> =
+    "func" identifier                       (. func = new Func(token) { id = t.val }; .)
+    ["(" [FuncParam<.out FuncParam param0.> (. func.parameters.Add(param0); .)
+    {"," FuncParam<.out FuncParam paramN.>  (. func.parameters.Add(paramN); .)}]
+    ")" [Type<.out Type rtype.>             (. func.returns.Add(rtype); .)]
+    FuncBody<.out FuncBody body.>           (. func.body = body; .)].
+
+  FuncParam<.out FuncParam param.> =
+    identifier Type<.out Type ptype.> (. param = new FuncParam(token) { id = token.val, type = ptype }; .).
+
+  Type<.out Type type.> =
+    type (. type = new Type(token); .).
+
+  FuncBody<.out FuncBody body.> =
+    "{"                             (. body = new FuncBody(token); .)
+    {Command<.out Command cmd.> ";" (. body.commands.Add(cmd); .)}
+    "}".
+
+  Command<.out Command cmd.> =
+    "nop" (. cmd = new Command(token); .).
 
 END Xlc.

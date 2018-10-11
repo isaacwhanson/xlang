@@ -46,8 +46,13 @@ namespace Xlc {
     }
 
     public const int _EOF = 0;
-    public const int _id = 1;
-    public const int maxT = 4;
+    public const int _moduleId = 1;
+    public const int _identifier = 2;
+    public const int _type = 3;
+    public const int _number = 4;
+    public const int _hexNumber = 5;
+    public const int _string = 6;
+    public const int maxT = 16;
 
     const bool _T = true;
     const bool _x = false;
@@ -125,13 +130,13 @@ namespace Xlc {
 
     void _Module(out Module mod) {
       Token token = la;
-      Expect(2);
+      Expect(7);
       mod = new Module(token); 
       if (la.kind == 1) {
         Get();
         mod.id = t.val; 
       }
-      while (la.kind == 3) {
+      while (la.kind == 8) {
         _Func(out Func func);
         mod.funcs.Add(func); 
       }
@@ -139,8 +144,59 @@ namespace Xlc {
 
     void _Func(out Func func) {
       Token token = la;
-      func = new Func(token); 
+      Expect(8);
+      Expect(2);
+      func = new Func(token) { id = t.val }; 
+      if (la.kind == 9) {
+        Get();
+        if (la.kind == 2) {
+          _FuncParam(out FuncParam param0);
+          func.parameters.Add(param0); 
+          while (la.kind == 10) {
+            Get();
+            _FuncParam(out FuncParam paramN);
+            func.parameters.Add(paramN); 
+          }
+        }
+        Expect(11);
+        if (la.kind == 3) {
+          _Type(out Type rtype);
+          func.returns.Add(rtype); 
+        }
+        _FuncBody(out FuncBody body);
+        func.body = body; 
+      }
+    }
+
+    void _FuncParam(out FuncParam param) {
+      Token token = la;
+      Expect(2);
+      _Type(out Type ptype);
+      param = new FuncParam(token) { id = token.val, type = ptype }; 
+    }
+
+    void _Type(out Type type) {
+      Token token = la;
       Expect(3);
+      type = new Type(token); 
+    }
+
+    void _FuncBody(out FuncBody body) {
+      Token token = la;
+      Expect(12);
+      body = new FuncBody(token); 
+      while (la.kind == 15) {
+        _Command(out Command cmd);
+        Expect(13);
+        body.commands.Add(cmd); 
+      }
+      Expect(14);
+    }
+
+    void _Command(out Command cmd) {
+      Token token = la;
+      Expect(15);
+      cmd = new Command(token); 
     }
 
 #pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
@@ -153,7 +209,7 @@ namespace Xlc {
     }
 
     static readonly bool[,] set = {
-        {_T,_x,_x,_x, _x,_x}
+        {_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x}
 
     };
   } // end Parser
@@ -169,6 +225,10 @@ namespace Xlc {
     void Visit(Xlc element);
     void Visit(Module element);
     void Visit(Func element);
+    void Visit(FuncParam element);
+    void Visit(Type element);
+    void Visit(FuncBody element);
+    void Visit(Command element);
   }
 
   public partial class Xlc : IXlcElement {
@@ -192,6 +252,34 @@ namespace Xlc {
     public Token GetToken() { return token; }
   }
 
+  public partial class FuncParam : IXlcElement {
+    public Token token;
+    public FuncParam(Token t) { token = t; }
+    public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
+  }
+
+  public partial class Type : IXlcElement {
+    public Token token;
+    public Type(Token t) { token = t; }
+    public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
+  }
+
+  public partial class FuncBody : IXlcElement {
+    public Token token;
+    public FuncBody(Token t) { token = t; }
+    public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
+  }
+
+  public partial class Command : IXlcElement {
+    public Token token;
+    public Command(Token t) { token = t; }
+    public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
+  }
+
 #pragma warning restore RECS0001 // Class is declared partial but has only one part
 
   public class Errors {
@@ -203,10 +291,22 @@ namespace Xlc {
       string s;
       switch (n) {
         case 0: s = "EOF expected"; break;
-        case 1: s = "id expected"; break;
-        case 2: s = "\"module\" expected"; break;
-        case 3: s = "\"func\" expected"; break;
-        case 4: s = "??? expected"; break;
+        case 1: s = "moduleId expected"; break;
+        case 2: s = "identifier expected"; break;
+        case 3: s = "type expected"; break;
+        case 4: s = "number expected"; break;
+        case 5: s = "hexNumber expected"; break;
+        case 6: s = "string expected"; break;
+        case 7: s = "\"module\" expected"; break;
+        case 8: s = "\"func\" expected"; break;
+        case 9: s = "\"(\" expected"; break;
+        case 10: s = "\",\" expected"; break;
+        case 11: s = "\")\" expected"; break;
+        case 12: s = "\"{\" expected"; break;
+        case 13: s = "\";\" expected"; break;
+        case 14: s = "\"}\" expected"; break;
+        case 15: s = "\"nop\" expected"; break;
+        case 16: s = "??? expected"; break;
 
         default: s = "error " + n; break;
       }

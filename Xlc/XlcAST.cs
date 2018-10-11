@@ -23,14 +23,33 @@ using System.Collections.Generic;
 
 namespace Xlc
 {
-    public partial class Xlc : IXlcElement
+    public partial class Xlc
     {
         public Module module;
     }
 
-    public partial class Module : IXlcElement
+    public partial class Module
     {
         public string id;
         public List<Func> funcs = new List<Func>();
+    }
+
+    public partial class Func
+    {
+        public string id;
+        public List<FuncParam> parameters = new List<FuncParam>();
+        public List<Type> returns = new List<Type>();
+        public FuncBody body;
+    }
+
+    public partial class FuncParam
+    {
+        public string id;
+        public Type type;
+    }
+
+    public partial class FuncBody
+    {
+        public List<Command> commands = new List<Command>();
     }
 }
