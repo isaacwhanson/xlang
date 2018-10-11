@@ -1,0 +1,30 @@
+﻿COMPILER Xlc
+
+CHARACTERS
+  lower       = 'a'..'z' + '_'.
+  upper       = 'A'..'Z'.
+  letter      = lower + upper.
+  whitespace  = ' ' + '\t' + '\u000b' + '\u000c' + '\f'.
+  newline     = '\r' + '\n'.
+  
+TOKENS
+  id          = "." letter.
+
+COMMENTS FROM "/*" TO "*/" NESTED
+COMMENTS FROM "//" TO "\n"
+COMMENTS FROM "#" TO "\n"
+IGNORE whitespace + newline
+
+PRODUCTIONS
+  Xlc =
+    Module<.out Module mod.> (. xlc = new Xlc(token) { module = mod }; .).
+    
+  Module<.out Module mod.> =
+    "module" (. mod = new Module(token); .)
+    [id (. mod.id = t.val; .)]
+    {Func<.out Func func.> (. mod.funcs.Add(func); .)}.
+    
+  Func<.out Func func.> = (. func = new Func(token); .)
+    "func".
+
+END Xlc.

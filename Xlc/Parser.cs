@@ -20,24 +20,24 @@
 using System;
 using System.IO;
 
-namespace Moxi {
+namespace Xlc {
 
   public class Parser {
 
-    public Moxi moxi;
+    public Xlc xlc;
 
-    public static Parser Parse(string filename, out Moxi moxi) {
-      return Parse(new Scanner(filename), out moxi);
+    public static Parser Parse(string filename, out Xlc xlc) {
+      return Parse(new Scanner(filename), out xlc);
     }
 
-    public static Parser Parse(Stream stream, out Moxi moxi) {
-      return Parse(new Scanner(stream), out moxi);
+    public static Parser Parse(Stream stream, out Xlc xlc) {
+      return Parse(new Scanner(stream), out xlc);
     }
 
-    public static Parser Parse(IScanner scanner, out Moxi moxi) {
+    public static Parser Parse(IScanner scanner, out Xlc xlc) {
       Parser parser = new Parser(scanner);
       parser.Parse();
-      moxi = parser.moxi;
+      xlc = parser.xlc;
       if (parser.errors.count != 0) {
         string errMsg = System.String.Format("{0} syntax error(s)", parser.errors.count);
         throw new FatalError(errMsg);
@@ -46,12 +46,8 @@ namespace Moxi {
     }
 
     public const int _EOF = 0;
-    public const int _identifier = 1;
-    public const int _string = 2;
-    public const int _character = 3;
-    public const int _float = 4;
-    public const int _integer = 5;
-    public const int maxT = 6;
+    public const int _id = 1;
+    public const int maxT = 4;
 
     const bool _T = true;
     const bool _x = false;
@@ -121,16 +117,30 @@ namespace Moxi {
 
 #pragma warning disable RECS0012 // 'if' statement can be re-written as 'switch' statement
 
-    void _Moxi() {
+    void _Xlc() {
       Token token = la;
       _Module(out Module mod);
-      moxi = new Moxi(token) { module = mod };
+      xlc = new Xlc(token) { module = mod }; 
     }
 
     void _Module(out Module mod) {
       Token token = la;
-      Expect(1);
-      mod = new Module(token);
+      Expect(2);
+      mod = new Module(token); 
+      if (la.kind == 1) {
+        Get();
+        mod.id = t.val; 
+      }
+      while (la.kind == 3) {
+        _Func(out Func func);
+        mod.funcs.Add(func); 
+      }
+    }
+
+    void _Func(out Func func) {
+      Token token = la;
+      func = new Func(token); 
+      Expect(3);
     }
 
 #pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
@@ -138,39 +148,47 @@ namespace Moxi {
     public void Parse() {
       la = new Token { val = "" };
       Get();
-      _Moxi();
+      _Xlc();
       Expect(0);
     }
 
     static readonly bool[,] set = {
-        {_T,_x,_x,_x, _x,_x,_x,_x}
+        {_T,_x,_x,_x, _x,_x}
 
     };
   } // end Parser
 
 #pragma warning disable RECS0001
 
-  public interface IMoxiElement {
-    void Accept(IMoxiVisitor visitor);
+  public interface IXlcElement {
+    void Accept(IXlcVisitor visitor);
     Token GetToken();
   }
 
-  public interface IMoxiVisitor {
-    void Visit(Moxi element);
+  public interface IXlcVisitor {
+    void Visit(Xlc element);
     void Visit(Module element);
+    void Visit(Func element);
   }
 
-  public partial class Moxi : IMoxiElement {
+  public partial class Xlc : IXlcElement {
     public Token token;
-    public Moxi(Token t) { token = t; }
-    public void Accept(IMoxiVisitor visitor) { visitor.Visit(this); }
+    public Xlc(Token t) { token = t; }
+    public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
     public Token GetToken() { return token; }
   }
 
-  public partial class Module : IMoxiElement {
+  public partial class Module : IXlcElement {
     public Token token;
     public Module(Token t) { token = t; }
-    public void Accept(IMoxiVisitor visitor) { visitor.Visit(this); }
+    public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
+  }
+
+  public partial class Func : IXlcElement {
+    public Token token;
+    public Func(Token t) { token = t; }
+    public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
     public Token GetToken() { return token; }
   }
 
@@ -185,12 +203,10 @@ namespace Moxi {
       string s;
       switch (n) {
         case 0: s = "EOF expected"; break;
-        case 1: s = "identifier expected"; break;
-        case 2: s = "string expected"; break;
-        case 3: s = "character expected"; break;
-        case 4: s = "float expected"; break;
-        case 5: s = "integer expected"; break;
-        case 6: s = "??? expected"; break;
+        case 1: s = "id expected"; break;
+        case 2: s = "\"module\" expected"; break;
+        case 3: s = "\"func\" expected"; break;
+        case 4: s = "??? expected"; break;
 
         default: s = "error " + n; break;
       }

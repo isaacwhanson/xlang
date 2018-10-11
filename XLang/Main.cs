@@ -30,8 +30,7 @@ namespace XLang {
       if (args.Length > 0) {
         string filename = args[0];
         Parser.Parse(filename, out XLang xlang);
-        Printer.Print(xlang);
-        // LLVMCompiler.Build(xlang);
+        // TODO: call visitor
         return OK;
       }
       Console.WriteLine("No source file specified");

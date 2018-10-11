@@ -19,7 +19,7 @@
 
 using System;
 using System.Collections.Generic;
-using LLVMSharp;
+//using LLVMSharp;
 using Mono.CSharp;
 
 namespace XLang {
@@ -32,13 +32,13 @@ namespace XLang {
       return visitor;
     }
 
-    LLVMModuleRef module;
-    LLVMBuilderRef builder;
-    readonly Dictionary<string, LLVMValueRef> namedValues = new Dictionary<string, LLVMValueRef>();
-    readonly Stack<LLVMValueRef> valueStack = new Stack<LLVMValueRef>();
+    //LLVMModuleRef module;
+    //LLVMBuilderRef builder;
+    //readonly Dictionary<string, LLVMValueRef> namedValues = new Dictionary<string, LLVMValueRef>();
+    //readonly Stack<LLVMValueRef> valueStack = new Stack<LLVMValueRef>();
 
-    readonly LLVMBool LLVMFalse = new LLVMBool(0);
-    readonly LLVMBool LLVMTrue = new LLVMBool(1);
+    //readonly LLVMBool LLVMFalse = new LLVMBool(0);
+    //readonly LLVMBool LLVMTrue = new LLVMBool(1);
 
     Evaluator evaluator = new Evaluator(new CompilerContext(new CompilerSettings(), new ConsoleReportPrinter()));
 
@@ -48,13 +48,13 @@ namespace XLang {
     }
 
     public override void Visit(XLang element) {
-      builder = LLVM.CreateBuilder();
+      //builder = LLVM.CreateBuilder();
       evaluator.Run("using System;");
       element.module.Accept(this);
     }
 
     public override void Visit(Module element) {
-      module = LLVM.ModuleCreateWithName(".xlang");
+      //module = LLVM.ModuleCreateWithName(".xlang");
       foreach (IStmt stmt in element.stmts) {
         stmt.Accept(this);
       }

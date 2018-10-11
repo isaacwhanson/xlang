@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{1CC38FC4-182D-499E-9194-0A969A5ADA4B}</ProjectGuid>
+    <ProjectGuid>{9AB25181-8913-41EC-A7B4-1F30ED13A0CD}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Moxi</RootNamespace>
-    <AssemblyName>Moxi</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>Xlc</RootNamespace>
+    <AssemblyName>Xlc</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,7 +24,7 @@
         <Command>
           <type>Custom</type>
           <name>Coco/R</name>
-          <command>mono ${SolutionDir}/Coco/bin/${ProjectConfigName}/Coco.exe Moxi.atg -namespace Moxi -frames ${SolutionDir}/Coco</command>
+          <command>mono ${SolutionDir}/Coco/bin/${ProjectConfigName}/Coco.exe Xlc.atg -namespace Xlc -frames ${SolutionDir}/Coco</command>
           <workingdir>${ProjectDir}</workingdir>
         </Command>
       </CustomCommands>
@@ -42,27 +42,21 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Scanner.cs" />
-    <Compile Include="Visitors\ExampleVisitor.cs" />
-    <Compile Include="MoxiAST.cs" />
-    <Compile Include="MoxiVisitor.cs" />
+    <Compile Include="XlcAST.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coco\Coco.csproj">
       <Project>{2568D485-CBA5-4E9F-AC11-900DF89E5798}</Project>
       <Name>Coco</Name>
-      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Moxi.atg" />
-    <None Include="LICENSE" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Visitors\" />
+    <None Include="Xlc.atg" />
+    <None Include="example.x" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

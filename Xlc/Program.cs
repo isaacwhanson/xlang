@@ -1,10 +1,10 @@
 ﻿//
-//  MoxiVisitor.cs
+//  Program.cs
 //
 //  Author:
-//       Isaac W Hanson <isaac@starlig.ht>
+//       ihanson <>
 //
-//  Copyright (c) 2017 
+//  Copyright (c) 2018 ${CopyrightHolder}
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,10 +18,26 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-namespace Moxi.Visitors {
+using System;
 
-  public abstract class MoxiVisitor : IMoxiVisitor {
-    public abstract void Visit(Moxi element);
-    public abstract void Visit(Module element);
-  }
+namespace Xlc {
+
+    class MainClass {
+
+        const int OK = 0;
+        const int WARN = 1;
+
+        static int Main(string[] args)
+        {
+            if (args.Length > 0)
+            {
+                string filename = args[0];
+                Parser.Parse(filename, out Xlc xlang);
+                // TODO: call visitor
+                return OK;
+            }
+            Console.WriteLine("No source file specified");
+            return WARN;
+        }
+    }
 }

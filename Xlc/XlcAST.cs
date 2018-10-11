@@ -1,10 +1,10 @@
 ﻿//
-//  Moxi.cs
+//  EmptyClass.cs
 //
 //  Author:
-//       Isaac W Hanson <isaac@starlig.ht>
+//       ihanson <>
 //
-//  Copyright (c) 2017 
+//  Copyright (c) 2018 ${CopyrightHolder}
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -19,25 +19,18 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
-using Moxi.Visitors;
+using System.Collections.Generic;
 
-namespace Moxi {
-
-  class MoxiMain {
-
-    const int OK = 0;
-    const int WARN = 1;
-
-    static int Main(string[] args) {
-      if (args.Length > 0) {
-        string filename = args[0];
-        Parser.Parse(filename, out Moxi moxi);
-        ExampleVisitor.Example(moxi);
-        return OK;
-      }
-      Console.WriteLine("No source file specified");
-      return WARN;
+namespace Xlc
+{
+    public partial class Xlc : IXlcElement
+    {
+        public Module module;
     }
-  }
 
+    public partial class Module : IXlcElement
+    {
+        public string id;
+        public List<Func> funcs = new List<Func>();
+    }
 }

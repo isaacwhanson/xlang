@@ -2,9 +2,9 @@
 //  AssemblyInfo.cs
 //
 //  Author:
-//       Isaac W Hanson <isaac@starlig.ht>
+//       ihanson <>
 //
-//  Copyright (c) 2017 
+//  Copyright (c) 2018 ${CopyrightHolder}
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("Moxi")]
+[assembly: AssemblyTitle("Xlc")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]

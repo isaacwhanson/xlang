@@ -43,3 +43,4 @@ Thumbs.db
 *.cs.old
 trace.txt
 test.xl
+.vs/
