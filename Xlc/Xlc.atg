@@ -11,7 +11,7 @@ CHARACTERS
   idchar      = ascii - control - ' ' - '"' - ",;()[]{}".
  
 TOKENS
-  string      = '"' {stringchar | '\\' ('n'|'r'|'t'|'"'|'\''|'\\'|('u' hexdigit {hexdigit})|(hexdigit hexdigit))} '"'.
+  string      = '"' {stringchar | '\\' ('n'|'r'|'t'|'"'|"'"|'\\'|('u' hexdigit {hexdigit})|(hexdigit hexdigit))} '"'.
   id          = '$' idchar {idchar}.
   valtype     = ('i' | 'f') ("32" | "64").
   integer     = [sign] (digit {digit} | "0x" hexdigit {hexdigit}).
@@ -32,8 +32,8 @@ PRODUCTIONS
     
   Module<.out Module mod.> =
     "module"                               (. mod = new Module(token); .)
-    [string                                (. mod.name = t.val; .)] ";"
-    {ModuleField<.out IModuleField field.> (. mod.fields.Add(field); .) ";"}.
+    [string                                (. mod.name = t.val; .)] ';'
+    {ModuleField<.out IModuleField field.> (. mod.fields.Add(field); .) ';'}.
 
   ModuleField<.out IModuleField field.> =  (. field = null; .)
     (Func<.out Func func.>                 (. field = func; .)
@@ -51,9 +51,9 @@ PRODUCTIONS
 
   FuncType<.out FuncType functype.> =
     "fn"                                         (. functype = new FuncType(token); .)
-    "(" [Param<.out Param param0.>               (. functype.parameters.Add(param0); .)
-    {"," Param<.out Param paramN.>               (. functype.parameters.Add(paramN); .)}]
-    ")" "[" [ResultType<.out ResultType result.> (. functype.results.Add(result); .)] "]".
+    '(' [Param<.out Param param0.>               (. functype.parameters.Add(param0); .)
+    {',' Param<.out Param paramN.>               (. functype.parameters.Add(paramN); .)}]
+    ')' '[' [ResultType<.out ResultType result.> (. functype.results.Add(result); .)] ']'.
 
   Param<.out Param param.> =
     id valtype (. param = new Param(token) { id = token.val, valtype = t.val }; .).
@@ -88,19 +88,19 @@ PRODUCTIONS
 
   BlockInstr<.out BlockInstr block.> =
     "block"                        (. block = new BlockInstr(token); .)
-    "[" [valtype                   (. block.valtype = t.val; .)] "]"
-    "{" {Instr<.out IInstr instr.> (. block.instrs.Add(instr); .) ";"} "}".
+    '[' [valtype                   (. block.valtype = t.val; .)] ']'
+    '{' {Instr<.out IInstr instr.> (. block.instrs.Add(instr); .) ';'} '}'.
 
   LoopInstr<.out LoopInstr loop.> =
     "loop"                         (. loop = new LoopInstr(token); .)
-    "[" [valtype                   (. loop.valtype = t.val; .)] "]"
-    "{" {Instr<.out IInstr instr.> (. loop.instrs.Add(instr); .) ";"} "}".
+    '[' [valtype                   (. loop.valtype = t.val; .)] ']'
+    '{' {Instr<.out IInstr instr.> (. loop.instrs.Add(instr); .) ';'} '}'.
 
   IfInstr<.out IfInstr ifinstr.> =
     "if"                                    (. ifinstr = new IfInstr(token); .)
-    "[" [valtype                            (. ifinstr.valtype = t.val; .)] "]"
-    "{" {Instr<.out IInstr instr.>          (. ifinstr.instrs.Add(instr); .) ";"} "}"
-    ["else" "{" {Instr<.out IInstr einstr.> (. ifinstr.elses.Add(einstr); .) ";"} "}"].
+    '[' [valtype                            (. ifinstr.valtype = t.val; .)] ']'
+    '{' {Instr<.out IInstr instr.>          (. ifinstr.instrs.Add(instr); .) ';'} '}'
+    ["else" '{' {Instr<.out IInstr einstr.> (. ifinstr.elses.Add(einstr); .) ';'} '}'].
 
   NoArgInstr<.out NoArgInstr noarg.> = (. noarg = null; .)
     ("nop"
@@ -150,14 +150,14 @@ PRODUCTIONS
 
   BrTableInstr<.out BrTableInstr brtable.> =
     "br_table" (. brtable = new BrTableInstr(token); .)
-    "[" [id    (. brtable.labels.Add(t.val); .)
-    {"," id    (. brtable.labels.Add(t.val); .)}]
-    "]" id     (. brtable.default_lbl = t.val; .).
+    '[' [id    (. brtable.labels.Add(t.val); .)
+    {',' id    (. brtable.labels.Add(t.val); .)}]
+    ']' id     (. brtable.default_lbl = t.val; .).
 
   FoldedExpr<.out FoldedExpr folded.> =
-   "("                                  (. folded = new FoldedExpr(token); .)
+   '('                                  (. folded = new FoldedExpr(token); .)
    PlainInstr<.out IInstr instr0.>      (. folded.instrs.Add(instr0); .)
-   {"," PlainInstr<.out IInstr instrN.> (. folded.instrs.Add(instrN); .)} ")".
+   {',' PlainInstr<.out IInstr instrN.> (. folded.instrs.Add(instrN); .)} ')'.
 
   Import<.out Import import.> =
     "import" string                          (. import = new Import(token) { module = t.val }; .)
@@ -191,22 +191,22 @@ PRODUCTIONS
 
   GlobalField<.out GlobalField globalfield.> = (. globalfield = new GlobalField(token); .)
     Global<.out Global global.>                (. globalfield.global = global; .)
-    "{" {Instr<.out IInstr instr.>             (. globalfield.instrs.Add(instr); .) ";"} "}".
+    '{' {Instr<.out IInstr instr.>             (. globalfield.instrs.Add(instr); .) ';'} '}'.
 
   Func<.out Func func.> =
     FuncType<.out FuncType functype.> (. func = new Func(token) { functype = functype }; .)
-    "{" {Instr<.out IInstr instr.>    (. func.instrs.Add(instr); .) ";"} "}".
+    '{' {Instr<.out IInstr instr.>    (. func.instrs.Add(instr); .) ';'} '}'.
 
   Elem<.out Elem elem.> =
     "elem" id                               (. elem = new Elem(token) { id = t.val }; .)
-    "offset" "{" {Instr<.out IInstr instr.> (. elem.offset.Add(instr); .) ";"} "}"
-    "[" [id                                 (. elem.ids.Add(t.val); .)
-    {"," id                                 (. elem.ids.Add(t.val); .)}] "]".
+    "offset" '{' {Instr<.out IInstr instr.> (. elem.offset.Add(instr); .) ';'} '}'
+    '[' [id                                 (. elem.ids.Add(t.val); .)
+    {',' id                                 (. elem.ids.Add(t.val); .)}] ']'.
 
   Data<.out Data data.> =
     "data" id                               (. data = new Data(token) { id = t.val }; .)
-    "offset" "{" {Instr<.out IInstr instr.> (. data.offset.Add(instr); .) ";"} "}"
-    "[" [string                             (. data.strings.Add(t.val); .)
-    {"," string                             (. data.strings.Add(t.val); .)}] "]".
+    "offset" '{' {Instr<.out IInstr instr.> (. data.offset.Add(instr); .) ';'} '}'
+    '[' [string                             (. data.strings.Add(t.val); .)
+    {',' string                             (. data.strings.Add(t.val); .)}] ']'.
 
 END Xlc.

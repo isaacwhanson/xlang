@@ -23,6 +23,12 @@ using System.Collections.Generic;
 
 namespace Xlc
 {
+    public interface IModuleField : IXlcElement { }
+
+    public interface IImportDesc : IXlcElement { }
+
+    public interface IInstr : IXlcElement { }
+
     public partial class Xlc
     {
         public Module module;
@@ -33,8 +39,6 @@ namespace Xlc
         public string name;
         public List<IModuleField> fields = new List<IModuleField>();
     }
-
-    public interface IModuleField : IXlcElement { }
 
     public partial class Func : IModuleField
     {
@@ -49,34 +53,16 @@ namespace Xlc
         public IImportDesc desc;
     }
 
-    public interface IImportDesc : IXlcElement { }
-
-    public partial class FuncType : IImportDesc
-    {
-        public List<Param> parameters = new List<Param>();
-        public List<ResultType> results = new List<ResultType>();
-    }
-
-    public partial class Param
-    {
-        public string id;
-        public string valtype;
-    }
-
-    public partial class ResultType
-    {
-        public string valtype;
-    }
-
     public partial class Export : IModuleField
     {
         public string name;
         public ExportDesc desc;
     }
 
-    public partial class ExportDesc
+    public partial class GlobalField : IModuleField
     {
-        public string id;
+        public Global global;
+        public List<IInstr> instrs = new List<IInstr>();
     }
 
     public partial class Table : IModuleField, IImportDesc
@@ -89,24 +75,6 @@ namespace Xlc
     {
         public string id;
         public Limits limits;
-    }
-
-    public partial class GlobalField : IModuleField
-    {
-        public Global global;
-        public List<IInstr> instrs = new List<IInstr>();
-    }
-
-    public partial class GlobalType
-    {
-        public bool mutable;
-        public string valtype;
-    }
-
-    public partial class Global : IImportDesc
-    {
-        public string id;
-        public GlobalType gtype;
     }
 
     public partial class Elem : IModuleField
@@ -128,7 +96,39 @@ namespace Xlc
         public List<IInstr> offset = new List<IInstr>();
     }
 
-    public interface IInstr : IXlcElement { }
+    public partial class FuncType : IImportDesc
+    {
+        public List<Param> parameters = new List<Param>();
+        public List<ResultType> results = new List<ResultType>();
+    }
+
+    public partial class Global : IImportDesc
+    {
+        public string id;
+        public GlobalType gtype;
+    }
+
+    public partial class Param
+    {
+        public string id;
+        public string valtype;
+    }
+
+    public partial class ResultType
+    {
+        public string valtype;
+    }
+
+    public partial class GlobalType
+    {
+        public bool mutable;
+        public string valtype;
+    }
+
+    public partial class ExportDesc
+    {
+        public string id;
+    }
 
     public partial class FoldedExpr : IInstr
     {
