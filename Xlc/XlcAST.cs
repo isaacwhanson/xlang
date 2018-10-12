@@ -36,7 +36,22 @@ namespace Xlc
 
     public interface IModuleField : IXlcElement { }
 
-    public partial class FuncType : IModuleField
+    public partial class Func : IModuleField
+    {
+        public FuncType functype;
+        public List<IInstr> instrs = new List<IInstr>();
+    }
+
+    public partial class Import : IModuleField
+    {
+        public string module;
+        public string name;
+        public IImportDesc desc;
+    }
+
+    public interface IImportDesc : IXlcElement { }
+
+    public partial class FuncType : IImportDesc
     {
         public List<Param> parameters = new List<Param>();
         public List<ResultType> results = new List<ResultType>();
@@ -53,9 +68,115 @@ namespace Xlc
         public string valtype;
     }
 
-    public partial class Import : IModuleField
+    public partial class Export : IModuleField
     {
-
+        public string name;
+        public ExportDesc desc;
     }
 
+    public partial class ExportDesc
+    {
+        public string id;
+    }
+
+    public partial class Table : IModuleField, IImportDesc
+    {
+        public string id;
+        public Limits limits;
+    }
+
+    public partial class Memory : IModuleField, IImportDesc
+    {
+        public string id;
+        public Limits limits;
+    }
+
+    public partial class GlobalField : IModuleField
+    {
+        public Global global;
+        public List<IInstr> instrs = new List<IInstr>();
+    }
+
+    public partial class GlobalType
+    {
+        public bool mutable;
+        public string valtype;
+    }
+
+    public partial class Global : IImportDesc
+    {
+        public string id;
+        public GlobalType gtype;
+    }
+
+    public partial class Elem : IModuleField
+    {
+        public string id;
+        public List<string> ids;
+        public List<IInstr> offset = new List<IInstr>();
+    }
+
+    public partial class Start : IModuleField
+    {
+        public string id;
+    }
+
+    public partial class Data : IModuleField
+    {
+        public string id;
+        public List<string> strings;
+        public List<IInstr> offset = new List<IInstr>();
+    }
+
+    public interface IInstr : IXlcElement { }
+
+    public partial class FoldedExpr : IInstr
+    {
+        public IInstr parent;
+        public List<IInstr> instrs = new List<IInstr>();
+    }
+
+    public partial class BlockInstr : IInstr
+    {
+        public string valtype;
+        public List<IInstr> instrs = new List<IInstr>();
+    }
+
+    public partial class LoopInstr : IInstr
+    {
+        public string valtype;
+        public List<IInstr> instrs = new List<IInstr>();
+    }
+
+    public partial class IfInstr : IInstr
+    {
+        public string valtype;
+        public List<IInstr> instrs = new List<IInstr>();
+        public List<IInstr> elses = new List<IInstr>();
+    }
+
+    public partial class NoArgInstr : IInstr { }
+
+    public partial class IdArgInstr : IInstr
+    {
+        public string id;
+    }
+
+    public partial class MemArgInstr : IInstr
+    {
+        public string offset;
+        public string align;
+    }
+
+    public partial class BrTableInstr : IInstr
+    {
+        public List<string> labels = new List<string>();
+        public string default_lbl;
+    }
+
+    public partial class Limits
+    {
+        public string min;
+        public string max;
+    }
 }

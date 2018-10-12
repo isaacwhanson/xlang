@@ -1,25 +1,29 @@
 ﻿COMPILER Xlc
-/* x language compiler */
+
 CHARACTERS
   sign        = '+' + '-'.
   digit       = '0'..'9'.
   hexdigit    = digit + 'a'..'f' + 'A'..'F'.
-  newline     = '\n'.
-  whitespace  = ' ' + '\r' + '\t' + newline.
-  instring    = ANY - '"' - newline.
-  idchar      = instring - whitespace - ",;[]".
+  ascii       = '\u0000'..'\u007f'.
+  control     = '\u0000'..'\u001f' + '\u007f'.
+  whitespace  = '\r' + '\n' + '\t'.
+  stringchar  = ANY - control - '"' - '\\'.
+  idchar      = ascii - control - ' ' - '"' - ",;()[]{}".
  
 TOKENS
-  string      = '"' {instring | "\\\"" | "\\n"} '"'.
+  string      = '"' {stringchar | '\\' ('n'|'r'|'t'|'"'|'\''|'\\'|('u' hexdigit {hexdigit})|(hexdigit hexdigit))} '"'.
   id          = '$' idchar {idchar}.
   valtype     = ('i' | 'f') ("32" | "64").
-  num         = [sign] digit {digit}.
-  hexnum      = [sign] "0x" hexdigit {hexdigit}.
-  float       = ([sign] digit {digit} '.' digit {digit}) | "inf" | "nan".
-  hexfloat    = ([sign] "0x" hexdigit {hexdigit} '.' hexdigit {hexdigit}) | "nan:0x" hexdigit {hexdigit}.
+  integer     = [sign] (digit {digit} | "0x" hexdigit {hexdigit}).
+  float       = ([sign] (
+                    digit {digit} '.' digit {digit} [('e'|'E') [sign] digit {digit}]
+                  | "0x" hexdigit {hexdigit} '.' hexdigit {hexdigit} [('p'|'P') [sign] hexdigit {hexdigit}]))
+                | [sign] "inf"
+                | "nan"
+                | "nan:0x" hexdigit {hexdigit}.
 
 COMMENTS FROM "/*" TO "*/" NESTED
-COMMENTS FROM "//" TO newline
+COMMENTS FROM "//" TO '\n'
 IGNORE whitespace
 
 PRODUCTIONS
@@ -28,19 +32,28 @@ PRODUCTIONS
     
   Module<.out Module mod.> =
     "module"                               (. mod = new Module(token); .)
-    [string                                (. mod.name = t.val; .)]
-    {ModuleField<.out IModuleField field.> (. mod.fields.Add(field); .)}.
+    [string                                (. mod.name = t.val; .)] ";"
+    {ModuleField<.out IModuleField field.> (. mod.fields.Add(field); .) ";"}.
 
-  ModuleField<.out IModuleField field.> = (. field = null; .)
-    ( FuncType<.out FuncType functype.>   (. field = functype; .)
-    | Import<.out Import import.>         (. field = import; .)).
+  ModuleField<.out IModuleField field.> =  (. field = null; .)
+    (Func<.out Func func.>                 (. field = func; .)
+    |Import<.out Import import.>           (. field = import; .)
+    |Table<.out Table table.>              (. field = table; .)
+    |Memory<.out Memory memory.>           (. field = memory; .)
+    |GlobalField<.out GlobalField global.> (. field = global; .)
+    |Export<.out Export export.>           (. field = export; .)
+    |Start<.out Start start.>              (. field = start; .)
+    |Elem<.out Elem elem.>                 (. field = elem; .)
+    |Data<.out Data data.>                 (. field = data; .)).
+
+  Start<.out Start start.> =
+    "start" id (. start = new Start(token) { id = t.val }; .).
 
   FuncType<.out FuncType functype.> =
     "fn"                                         (. functype = new FuncType(token); .)
     "(" [Param<.out Param param0.>               (. functype.parameters.Add(param0); .)
     {"," Param<.out Param paramN.>               (. functype.parameters.Add(paramN); .)}]
-    ")" "[" [ResultType<.out ResultType result.> (. functype.results.Add(result); .)]
-    "]".
+    ")" "[" [ResultType<.out ResultType result.> (. functype.results.Add(result); .)] "]".
 
   Param<.out Param param.> =
     id valtype (. param = new Param(token) { id = token.val, valtype = t.val }; .).
@@ -48,7 +61,152 @@ PRODUCTIONS
   ResultType<.out ResultType result.> =
     valtype (. result = new ResultType(token) { valtype = t.val }; .).
 
+  Limits<.out Limits limits.> =
+    integer       (. limits = new Limits(token) { min = t.val }; .)
+    [':' integer] (. limits.max = t.val; .).
+
+  GlobalType<.out GlobalType gtype.> =
+            (. bool mutable = false; .)
+    ["mut"  (. mutable = true; .)]
+    valtype (. gtype = new GlobalType(token) { mutable = mutable, valtype = t.val }; .).
+
+  Instr<.out IInstr instr.> =                 (. instr = null; .)
+    (StructInstr<.out IInstr strct.>          (. instr = strct; .)
+    |PlainInstr<.out IInstr plain.>           (. instr = plain; .)).
+
+  StructInstr<.out IInstr instr.> =     (. instr = null; .)
+    (BlockInstr<.out BlockInstr block.> (. instr = block; .)
+    |LoopInstr<.out LoopInstr loop.>    (. instr = loop; .)
+    |IfInstr<.out IfInstr ifinstr.>     (. instr = ifinstr; .)).
+
+  PlainInstr<.out IInstr instr.> =            (. instr = null; .)
+    (NoArgInstr<.out NoArgInstr noarg.>       (. instr = noarg; .)
+    |IdArgInstr<.out IdArgInstr idinstr.>     (. instr = idinstr; .)
+    |MemArgInstr<.out MemArgInstr meminstr.>  (. instr = meminstr; .)
+    |BrTableInstr<.out BrTableInstr brtable.> (. instr = brtable; .))
+    [FoldedExpr<.out FoldedExpr folded.>      (. folded.parent = instr; instr = folded; .)].
+
+  BlockInstr<.out BlockInstr block.> =
+    "block"                        (. block = new BlockInstr(token); .)
+    "[" [valtype                   (. block.valtype = t.val; .)] "]"
+    "{" {Instr<.out IInstr instr.> (. block.instrs.Add(instr); .) ";"} "}".
+
+  LoopInstr<.out LoopInstr loop.> =
+    "loop"                         (. loop = new LoopInstr(token); .)
+    "[" [valtype                   (. loop.valtype = t.val; .)] "]"
+    "{" {Instr<.out IInstr instr.> (. loop.instrs.Add(instr); .) ";"} "}".
+
+  IfInstr<.out IfInstr ifinstr.> =
+    "if"                                    (. ifinstr = new IfInstr(token); .)
+    "[" [valtype                            (. ifinstr.valtype = t.val; .)] "]"
+    "{" {Instr<.out IInstr instr.>          (. ifinstr.instrs.Add(instr); .) ";"} "}"
+    ["else" "{" {Instr<.out IInstr einstr.> (. ifinstr.elses.Add(einstr); .) ";"} "}"].
+
+  NoArgInstr<.out NoArgInstr noarg.> = (. noarg = null; .)
+    ("nop"
+    |"drop"
+    |"select"
+    |"unreachable"
+    |"return"
+    |"mem.size"
+    |"mem.grow"
+    |"i32.eqz"|"i32.eq"|"i32.ne"|"i32.lt_u"|"i32.lt_s"|"i32.gt_u"|"i32.gt_s"
+    |"i32.le_u"|"i32.le_s"|"i32.ge_u"|"i32.ge_s"
+    |"i64.eqz"|"i64.eq"|"i64.ne"|"i64.lt_u"|"i64.lt_s"|"i64.gt_u"|"i64.gt_s"
+    |"i64.le_u"|"i64.le_s"|"i64.ge_u"|"i64.ge_s"
+    |"f32.eq"|"f32.ne"|"f32.lt"|"f32.gt"|"f32.le"|"f32.ge"
+    |"f64.eq"|"f64.ne"|"f64.lt"|"f64.gt"|"f64.le"|"f64.ge"
+    |"i32.clz"|"i32.ctz"|"i32.popcnt"|"i32.add"|"i32.sub"|"i32.mul"
+    |"i32.div_s"|"i32.div_u"|"i32.rem_s"|"i32.rem_u"|"i32.and"|"i32.or"|"i32.xor"
+    |"i32.shl"|"i32.shr_s"|"i32.shr_u"|"i32.rotl"|"i32.rotr"
+    |"i64.clz"|"i64.ctz"|"i64.popcnt"|"i64.add"|"i64.sub"|"i64.mul"
+    |"i64.div_s"|"i64.div_u"|"i64.rem_s"|"i64.rem_u"|"i64.and"|"i64.or"|"i64.xor"
+    |"i64.shl"|"i64.shr_s"|"i64.shr_u"|"i64.rotl"|"i64.rotr"
+    |"f32.abs"|"f32.neg"|"f32.ceil"|"f32.floor"|"f32.trunc"|"f32.nearest"|"f32.sqrt"
+    |"f32.add"|"f32.sub"|"f32.mul"|"f32.div"|"f32.min"|"f32.max"|"f32.copysign"
+    |"f64.abs"|"f64.neg"|"f64.ceil"|"f64.floor"|"f64.trunc"|"f64.nearest"|"f64.sqrt"
+    |"f64.add"|"f64.sub"|"f64.mul"|"f64.div"|"f64.min"|"f64.max"|"f64.copysign"
+    |"i32.wrap/i64"|"i32.trunc_s/f32"|"i32.trunc_u/f32"|"i32.trunc_s/f64"|"i32.trunc_u/f64"
+    |"i64.extend_s/i32"|"i64.extend_u/i32"|"i64.trunc_s/f32"|"i64.trunc_u/f32"|"i64.trunc_s/f64"|"i64.trunc_u/f64"
+    |"f32.convert_s/i32"|"f32.convert_u/i32"|"f32.convert_s/i64"|"f32.convert_u/i64"|"f32.demote/f64"
+    |"f64.convert_s/i32"|"f64.convert_u/i32"|"f64.convert_s/i64"|"f64.convert_u/i64"|"f64.promote/f32"
+    |"i32.reinterpret/f32"|"i64.reinterpret/f64"|"f32.reinterpret/i32"|"f64.reinterpret/i64"
+    |integer|float) (. noarg = new NoArgInstr(token); .).
+
+  IdArgInstr<.out IdArgInstr idinstr.> = (. idinstr = null; .)
+    ("setl"|"getl"|"tee"|"setg"|"getg"
+    |"call"|"call_indirect"
+    |"br"|"br_if")
+    id (. idinstr = new IdArgInstr(token) { id = t.val }; .).
+
+  MemArgInstr<.out MemArgInstr meminstr.> = (. meminstr = null; .)
+    ("i32.load"|"i64.load"|"f32.load"|"f64.load"
+    |"i32.load8_s"|"i32.load8_u"|"i32.load16_s"|"i32.load16_u"
+    |"i64.load8_s"|"i64.load8_u"|"i64.load16_s"|"i64.load16_u"|"i64.load32_s"|"i64.load32_u"
+    |"i32.store"|"i64.store"|"f32.store"|"f64.store"
+    |"i32.store8"|"i32.store16"|"i64.store8"|"i64.store16"|"i64.store32")
+    integer     (. string offset = t.val; .)
+    ':' integer (. meminstr = new MemArgInstr(token) { offset = offset, align = t.val }; .).
+
+  BrTableInstr<.out BrTableInstr brtable.> =
+    "br_table" (. brtable = new BrTableInstr(token); .)
+    "[" [id    (. brtable.labels.Add(t.val); .)
+    {"," id    (. brtable.labels.Add(t.val); .)}]
+    "]" id     (. brtable.default_lbl = t.val; .).
+
+  FoldedExpr<.out FoldedExpr folded.> =
+   "("                                  (. folded = new FoldedExpr(token); .)
+   PlainInstr<.out IInstr instr0.>      (. folded.instrs.Add(instr0); .)
+   {"," PlainInstr<.out IInstr instrN.> (. folded.instrs.Add(instrN); .)} ")".
+
   Import<.out Import import.> =
-    "import" (. import = new Import(token); .).
+    "import" string                          (. import = new Import(token) { module = t.val }; .)
+    string                                   (. import.name = t.val; .)
+    ImportDesc<.out IImportDesc importdesc.> (. import.desc = importdesc; .).
+
+  Export<.out Export export.> =
+    "export" string                         (. export = new Export(token) { name = t.val }; .)
+    ExportDesc<.out ExportDesc exportdesc.> (. export.desc = exportdesc; .).
+
+  ExportDesc<.out ExportDesc exportdesc.> =
+    ("fn"|"table"|"memory"|"global") id (. exportdesc = new ExportDesc(token) { id = t.val }; .).
+
+  ImportDesc<.out IImportDesc importdesc.> = (. importdesc = null; .)
+    (FuncType<.out FuncType functype.>       (. importdesc = functype; .)
+    |Table<.out Table table.>                (. importdesc = table; .)
+    |Memory<.out Memory memory.>             (. importdesc = memory; .)
+    |Global<.out Global global.>             (. importdesc = global; .)).
+
+  Table<.out Table table.> =
+    "table" id                  (. table = new Table(token) { id = t.val }; .)
+    Limits<.out Limits limits.> (. table.limits = limits; .).
+
+  Memory<.out Memory memory.> =
+    "memory" id                 (. memory = new Memory(token) { id = t.val }; .)
+    Limits<.out Limits limits.> (. memory.limits = limits; .).
+
+  Global<.out Global global.> =
+    "global" id                        (. global = new Global(token) { id = t.val }; .)
+    GlobalType<.out GlobalType gtype.> (. global.gtype = gtype; .).
+
+  GlobalField<.out GlobalField globalfield.> = (. globalfield = new GlobalField(token); .)
+    Global<.out Global global.>                (. globalfield.global = global; .)
+    "{" {Instr<.out IInstr instr.>             (. globalfield.instrs.Add(instr); .) ";"} "}".
+
+  Func<.out Func func.> =
+    FuncType<.out FuncType functype.> (. func = new Func(token) { functype = functype }; .)
+    "{" {Instr<.out IInstr instr.>    (. func.instrs.Add(instr); .) ";"} "}".
+
+  Elem<.out Elem elem.> =
+    "elem" id                               (. elem = new Elem(token) { id = t.val }; .)
+    "offset" "{" {Instr<.out IInstr instr.> (. elem.offset.Add(instr); .) ";"} "}"
+    "[" [id                                 (. elem.ids.Add(t.val); .)
+    {"," id                                 (. elem.ids.Add(t.val); .)}] "]".
+
+  Data<.out Data data.> =
+    "data" id                               (. data = new Data(token) { id = t.val }; .)
+    "offset" "{" {Instr<.out IInstr instr.> (. data.offset.Add(instr); .) ";"} "}"
+    "[" [string                             (. data.strings.Add(t.val); .)
+    {"," string                             (. data.strings.Add(t.val); .)}] "]".
 
 END Xlc.
