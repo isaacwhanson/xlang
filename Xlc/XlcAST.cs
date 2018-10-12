@@ -30,26 +30,32 @@ namespace Xlc
 
     public partial class Module
     {
-        public string id;
-        public List<Func> funcs = new List<Func>();
+        public string name;
+        public List<IModuleField> fields = new List<IModuleField>();
     }
 
-    public partial class Func
+    public interface IModuleField : IXlcElement { }
+
+    public partial class FuncType : IModuleField
     {
-        public string id;
-        public List<FuncParam> parameters = new List<FuncParam>();
-        public List<Type> returns = new List<Type>();
-        public FuncBody body;
+        public List<Param> parameters = new List<Param>();
+        public List<ResultType> results = new List<ResultType>();
     }
 
-    public partial class FuncParam
+    public partial class Param
     {
         public string id;
-        public Type type;
+        public string valtype;
     }
 
-    public partial class FuncBody
+    public partial class ResultType
     {
-        public List<Command> commands = new List<Command>();
+        public string valtype;
     }
+
+    public partial class Import : IModuleField
+    {
+
+    }
+
 }

@@ -1,25 +1,22 @@
 ﻿COMPILER Xlc
-
+/* x language compiler */
 CHARACTERS
-  lower       = 'a'..'z'.
-  upper       = 'A'..'Z'.
-  letter      = lower + upper.
   sign        = '+' + '-'.
   digit       = '0'..'9'.
   hexdigit    = digit + 'a'..'f' + 'A'..'F'.
   newline     = '\n'.
-  whitespace  = '\r' + '\t' + newline.
-  special     = '!' + '#' + '$' + '%' + '&' + '`' + '∗' + '+' + '−' + '.' + '/' + ':' + '<' + '=' + '>' + '?' + '@' + '∖' + '^' + '_' + "'" + '|' + '~'.
-  idchar      = letter + digit + special.
-  notquote    = ANY - '\"' - newline.
+  whitespace  = ' ' + '\r' + '\t' + newline.
+  instring    = ANY - '"' - newline.
+  idchar      = instring - whitespace - ",;[]".
  
 TOKENS
-  moduleId    = "." idchar {idchar}.
-  identifier  = "$" idchar {idchar}.
-  type        = ("i" | "f") ("32" | "64").
-  number      = digit {digit} ["_" digit {digit}].
-  hexNumber   = "0x" hexdigit {hexdigit} ["_" hexdigit {hexdigit}].
-  string      = '"' {notquote | "\\\""} '"'.
+  string      = '"' {instring | "\\\"" | "\\n"} '"'.
+  id          = '$' idchar {idchar}.
+  valtype     = ('i' | 'f') ("32" | "64").
+  num         = [sign] digit {digit}.
+  hexnum      = [sign] "0x" hexdigit {hexdigit}.
+  float       = ([sign] digit {digit} '.' digit {digit}) | "inf" | "nan".
+  hexfloat    = ([sign] "0x" hexdigit {hexdigit} '.' hexdigit {hexdigit}) | "nan:0x" hexdigit {hexdigit}.
 
 COMMENTS FROM "/*" TO "*/" NESTED
 COMMENTS FROM "//" TO newline
@@ -30,29 +27,28 @@ PRODUCTIONS
     Module<.out Module mod.> (. xlc = new Xlc(token) { module = mod }; .).
     
   Module<.out Module mod.> =
-    "module"               (. mod = new Module(token); .)
-    [moduleId              (. mod.id = t.val; .)]
-    {Func<.out Func func.> (. mod.funcs.Add(func); .)}.
-    
-  Func<.out Func func.> =
-    "func" identifier                       (. func = new Func(token) { id = t.val }; .)
-    ["(" [FuncParam<.out FuncParam param0.> (. func.parameters.Add(param0); .)
-    {"," FuncParam<.out FuncParam paramN.>  (. func.parameters.Add(paramN); .)}]
-    ")" [Type<.out Type rtype.>             (. func.returns.Add(rtype); .)]
-    FuncBody<.out FuncBody body.>           (. func.body = body; .)].
+    "module"                               (. mod = new Module(token); .)
+    [string                                (. mod.name = t.val; .)]
+    {ModuleField<.out IModuleField field.> (. mod.fields.Add(field); .)}.
 
-  FuncParam<.out FuncParam param.> =
-    identifier Type<.out Type ptype.> (. param = new FuncParam(token) { id = token.val, type = ptype }; .).
+  ModuleField<.out IModuleField field.> = (. field = null; .)
+    ( FuncType<.out FuncType functype.>   (. field = functype; .)
+    | Import<.out Import import.>         (. field = import; .)).
 
-  Type<.out Type type.> =
-    type (. type = new Type(token); .).
+  FuncType<.out FuncType functype.> =
+    "fn"                                         (. functype = new FuncType(token); .)
+    "(" [Param<.out Param param0.>               (. functype.parameters.Add(param0); .)
+    {"," Param<.out Param paramN.>               (. functype.parameters.Add(paramN); .)}]
+    ")" "[" [ResultType<.out ResultType result.> (. functype.results.Add(result); .)]
+    "]".
 
-  FuncBody<.out FuncBody body.> =
-    "{"                             (. body = new FuncBody(token); .)
-    {Command<.out Command cmd.> ";" (. body.commands.Add(cmd); .)}
-    "}".
+  Param<.out Param param.> =
+    id valtype (. param = new Param(token) { id = token.val, valtype = t.val }; .).
 
-  Command<.out Command cmd.> =
-    "nop" (. cmd = new Command(token); .).
+  ResultType<.out ResultType result.> =
+    valtype (. result = new ResultType(token) { valtype = t.val }; .).
+
+  Import<.out Import import.> =
+    "import" (. import = new Import(token); .).
 
 END Xlc.

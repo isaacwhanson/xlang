@@ -46,12 +46,13 @@ namespace Xlc {
     }
 
     public const int _EOF = 0;
-    public const int _moduleId = 1;
-    public const int _identifier = 2;
-    public const int _type = 3;
-    public const int _number = 4;
-    public const int _hexNumber = 5;
-    public const int _string = 6;
+    public const int _string = 1;
+    public const int _id = 2;
+    public const int _valtype = 3;
+    public const int _num = 4;
+    public const int _hexnum = 5;
+    public const int _float = 6;
+    public const int _hexfloat = 7;
     public const int maxT = 16;
 
     const bool _T = true;
@@ -130,73 +131,70 @@ namespace Xlc {
 
     void _Module(out Module mod) {
       Token token = la;
-      Expect(7);
+      Expect(8);
       mod = new Module(token); 
       if (la.kind == 1) {
         Get();
-        mod.id = t.val; 
+        mod.name = t.val; 
       }
-      while (la.kind == 8) {
-        _Func(out Func func);
-        mod.funcs.Add(func); 
+      while (la.kind == 9 || la.kind == 15) {
+        _ModuleField(out IModuleField field);
+        mod.fields.Add(field); 
       }
     }
 
-    void _Func(out Func func) {
+    void _ModuleField(out IModuleField field) {
       Token token = la;
-      Expect(8);
-      Expect(2);
-      func = new Func(token) { id = t.val }; 
+      field = null; 
       if (la.kind == 9) {
-        Get();
-        if (la.kind == 2) {
-          _FuncParam(out FuncParam param0);
-          func.parameters.Add(param0); 
-          while (la.kind == 10) {
-            Get();
-            _FuncParam(out FuncParam paramN);
-            func.parameters.Add(paramN); 
-          }
+        _FuncType(out FuncType functype);
+        field = functype; 
+      } else if (la.kind == 15) {
+        _Import(out Import import);
+        field = import; 
+      } else SynErr(17);
+    }
+
+    void _FuncType(out FuncType functype) {
+      Token token = la;
+      Expect(9);
+      functype = new FuncType(token); 
+      Expect(10);
+      if (la.kind == 2) {
+        _Param(out Param param0);
+        functype.parameters.Add(param0); 
+        while (la.kind == 11) {
+          Get();
+          _Param(out Param paramN);
+          functype.parameters.Add(paramN); 
         }
-        Expect(11);
-        if (la.kind == 3) {
-          _Type(out Type rtype);
-          func.returns.Add(rtype); 
-        }
-        _FuncBody(out FuncBody body);
-        func.body = body; 
       }
-    }
-
-    void _FuncParam(out FuncParam param) {
-      Token token = la;
-      Expect(2);
-      _Type(out Type ptype);
-      param = new FuncParam(token) { id = token.val, type = ptype }; 
-    }
-
-    void _Type(out Type type) {
-      Token token = la;
-      Expect(3);
-      type = new Type(token); 
-    }
-
-    void _FuncBody(out FuncBody body) {
-      Token token = la;
       Expect(12);
-      body = new FuncBody(token); 
-      while (la.kind == 15) {
-        _Command(out Command cmd);
-        Expect(13);
-        body.commands.Add(cmd); 
+      Expect(13);
+      if (la.kind == 3) {
+        _ResultType(out ResultType result);
+        functype.results.Add(result); 
       }
       Expect(14);
     }
 
-    void _Command(out Command cmd) {
+    void _Import(out Import import) {
       Token token = la;
       Expect(15);
-      cmd = new Command(token); 
+      import = new Import(token); 
+    }
+
+    void _Param(out Param param) {
+      Token token = la;
+      Expect(2);
+      Expect(3);
+      param = new Param(token) { id = token.val, valtype = t.val }; 
+    }
+
+    void _ResultType(out ResultType result) {
+      Token token = la;
+      Expect(3);
+      result = new ResultType(token) { valtype = t.val }; 
     }
 
 #pragma warning restore RECS0012 // 'if' statement can be re-written as 'switch' statement
@@ -224,11 +222,11 @@ namespace Xlc {
   public interface IXlcVisitor {
     void Visit(Xlc element);
     void Visit(Module element);
-    void Visit(Func element);
-    void Visit(FuncParam element);
-    void Visit(Type element);
-    void Visit(FuncBody element);
-    void Visit(Command element);
+    void Visit(ModuleField element);
+    void Visit(FuncType element);
+    void Visit(Import element);
+    void Visit(Param element);
+    void Visit(ResultType element);
   }
 
   public partial class Xlc : IXlcElement {
@@ -245,37 +243,37 @@ namespace Xlc {
     public Token GetToken() { return token; }
   }
 
-  public partial class Func : IXlcElement {
+  public partial class ModuleField : IXlcElement {
     public Token token;
-    public Func(Token t) { token = t; }
+    public ModuleField(Token t) { token = t; }
     public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
     public Token GetToken() { return token; }
   }
 
-  public partial class FuncParam : IXlcElement {
+  public partial class FuncType : IXlcElement {
     public Token token;
-    public FuncParam(Token t) { token = t; }
+    public FuncType(Token t) { token = t; }
     public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
     public Token GetToken() { return token; }
   }
 
-  public partial class Type : IXlcElement {
+  public partial class Import : IXlcElement {
     public Token token;
-    public Type(Token t) { token = t; }
+    public Import(Token t) { token = t; }
     public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
     public Token GetToken() { return token; }
   }
 
-  public partial class FuncBody : IXlcElement {
+  public partial class Param : IXlcElement {
     public Token token;
-    public FuncBody(Token t) { token = t; }
+    public Param(Token t) { token = t; }
     public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
     public Token GetToken() { return token; }
   }
 
-  public partial class Command : IXlcElement {
+  public partial class ResultType : IXlcElement {
     public Token token;
-    public Command(Token t) { token = t; }
+    public ResultType(Token t) { token = t; }
     public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
     public Token GetToken() { return token; }
   }
@@ -291,22 +289,23 @@ namespace Xlc {
       string s;
       switch (n) {
         case 0: s = "EOF expected"; break;
-        case 1: s = "moduleId expected"; break;
-        case 2: s = "identifier expected"; break;
-        case 3: s = "type expected"; break;
-        case 4: s = "number expected"; break;
-        case 5: s = "hexNumber expected"; break;
-        case 6: s = "string expected"; break;
-        case 7: s = "\"module\" expected"; break;
-        case 8: s = "\"func\" expected"; break;
-        case 9: s = "\"(\" expected"; break;
-        case 10: s = "\",\" expected"; break;
-        case 11: s = "\")\" expected"; break;
-        case 12: s = "\"{\" expected"; break;
-        case 13: s = "\";\" expected"; break;
-        case 14: s = "\"}\" expected"; break;
-        case 15: s = "\"nop\" expected"; break;
+        case 1: s = "string expected"; break;
+        case 2: s = "id expected"; break;
+        case 3: s = "valtype expected"; break;
+        case 4: s = "num expected"; break;
+        case 5: s = "hexnum expected"; break;
+        case 6: s = "float expected"; break;
+        case 7: s = "hexfloat expected"; break;
+        case 8: s = "\"module\" expected"; break;
+        case 9: s = "\"fn\" expected"; break;
+        case 10: s = "\"(\" expected"; break;
+        case 11: s = "\",\" expected"; break;
+        case 12: s = "\")\" expected"; break;
+        case 13: s = "\"[\" expected"; break;
+        case 14: s = "\"]\" expected"; break;
+        case 15: s = "\"import\" expected"; break;
         case 16: s = "??? expected"; break;
+        case 17: s = "invalid ModuleField"; break;
 
         default: s = "error " + n; break;
       }
