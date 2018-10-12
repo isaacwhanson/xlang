@@ -50,7 +50,7 @@ PRODUCTIONS
     "start" id (. start = new Start(token) { id = t.val }; .).
 
   FuncType<.out FuncType functype.> =
-    "fn"                                         (. functype = new FuncType(token); .)
+    "fn" id                                      (. functype = new FuncType(token) { id = t.val }; .)
     '(' [Param<.out Param param0.>               (. functype.parameters.Add(param0); .)
     {',' Param<.out Param paramN.>               (. functype.parameters.Add(paramN); .)}]
     ')' '[' [ResultType<.out ResultType result.> (. functype.results.Add(result); .)] ']'.

@@ -98,6 +98,7 @@ namespace Xlc
 
     public partial class FuncType : IImportDesc
     {
+        public string id;
         public List<Param> parameters = new List<Param>();
         public List<ResultType> results = new List<ResultType>();
     }

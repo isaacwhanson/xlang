@@ -323,7 +323,8 @@ namespace Xlc {
     void _FuncType(out FuncType functype) {
       Token token = la;
       Expect(9);
-      functype = new FuncType(token); 
+      Expect(2);
+      functype = new FuncType(token) { id = t.val }; 
       Expect(10);
       if (la.kind == 2) {
         _Param(out Param param0);

@@ -50,14 +50,21 @@ namespace Xlc.Visitors {
             throw new NotImplementedException();
         }
 
-        public void Visit(Func element)
+        public void Visit(Func func)
         {
-            throw new NotImplementedException();
+            func.functype.Accept(this);
+            foreach(IInstr instr in func.instrs)
+            {
+                instr.Accept(this);
+            }
+            Console.WriteLine(")");
         }
 
-        public void Visit(Import element)
+        public void Visit(Import import)
         {
-            throw new NotImplementedException();
+            Console.Write("(import {0} {1} ", import.module, import.name);
+            import.desc.Accept(this);
+            Console.WriteLine(")");
         }
 
         public void Visit(Table element)
@@ -95,9 +102,18 @@ namespace Xlc.Visitors {
             throw new NotImplementedException();
         }
 
-        public void Visit(FuncType element)
+        public void Visit(FuncType functype)
         {
-            throw new NotImplementedException();
+            Console.Write("(func ");
+            Console.Write(functype.id);
+            foreach (Param parameter in functype.parameters)
+            {
+                parameter.Accept(this);
+            }
+            foreach (ResultType result in functype.results)
+            {
+                result.Accept(this);
+            }
         }
 
         public void Visit(Param element)
