@@ -20,18 +20,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 namespace Xlc.Visitors {
-    public class WasmVisitor : IXlcVisitor
+    public class WasmVisitor : BaseVisitor
     {
-        public WasmVisitor()
+        public override void Visit(Xlc xlc)
         {
+            xlc.module.Accept(this);
         }
 
-        public void Visit(Xlc xlc)
-        {
-          xlc.module.Accept(this);
-        }
-
-        public void Visit(Module module)
+        public override void Visit(Module module)
         {
             Console.Write("(module ");
             if (!string.IsNullOrEmpty(module.name))
@@ -45,7 +41,7 @@ namespace Xlc.Visitors {
             Console.WriteLine(")");
         }
 
-        public void Visit(Func func)
+        public override void Visit(Func func)
         {
             func.functype.Accept(this);
             foreach(IInstr instr in func.instrs)
@@ -55,53 +51,28 @@ namespace Xlc.Visitors {
             Console.WriteLine(")");
         }
 
-        public void Visit(Import import)
+        public override void Visit(Import import)
         {
             Console.Write("(import {0} {1} ", import.module, import.name);
             import.desc.Accept(this);
             Console.WriteLine(")");
         }
 
-        public void Visit(Table table)
+        public override void Visit(Table table)
         {
             Console.Write("(table {0} ", table.id);
             table.limits.Accept(this);
             Console.WriteLine(")");
         }
 
-        public void Visit(Memory element)
+        public override void Visit(Export export)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(GlobalField element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(Export element)
-        {
-            Console.Write("(export {0} ", element.name);
-            element.desc.Accept(this);
+            Console.Write("(export {0} ", export.name);
+            export.desc.Accept(this);
             Console.WriteLine(")");
         }
 
-        public void Visit(Start element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(Elem element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(Data element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(FuncType functype)
+        public override void Visit(FuncType functype)
         {
             Console.Write("(func {0} ", functype.id);
             foreach (Param parameter in functype.parameters)
@@ -114,92 +85,103 @@ namespace Xlc.Visitors {
             }
         }
 
-        public void Visit(Param parameter)
+        public override void Visit(Param parameter)
         {
             Console.Write("(param {0} {1}) ", parameter.id, parameter.valtype);
         }
 
-        public void Visit(ResultType result)
+        public override void Visit(ResultType result)
         {
             Console.Write("(result {0}) ", result.valtype);
         }
 
-        public void Visit(Limits limits)
+        public override void Visit(Limits limits)
         {
             Console.Write("{0} {1}", limits.min, limits.max);
         }
 
-        public void Visit(GlobalType element)
+        public override void Visit(NoArgInstr noArgInstr)
         {
-            throw new NotImplementedException();
+            Console.Write("{0} ", noArgInstr.token.val);
         }
 
-        public void Visit(BlockInstr element)
+        public override void Visit(IdArgInstr idArgInstr)
         {
-            throw new NotImplementedException();
+            Console.Write("{0} {1} ", idArgInstr.token.val, idArgInstr.id);
         }
 
-        public void Visit(LoopInstr element)
+        public override void Visit(FoldedExpr foldedExpr)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(IfInstr element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(NoArgInstr noarg)
-        {
-            Console.Write("{0} ", noarg.token.val);
-        }
-
-        public void Visit(IdArgInstr idarg)
-        {
-            Console.Write("{0} {1} ", idarg.token.val, idarg.id);
-        }
-
-        public void Visit(MemArgInstr element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(BrTableInstr element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(FoldedExpr folded)
-        {
-            foreach (IInstr instr in folded.instrs)
+            foreach (IInstr instr in foldedExpr.instrs)
             {
                 instr.Accept(this);
             }
-            folded.parent.Accept(this);
+            foldedExpr.parent.Accept(this);
         }
 
-        public void Visit(ExportDesc export)
+        public override void Visit(ExportDesc exportDesc)
         {
-            Console.Write("({0} {1}) ", export.token.val, export.id);
+            Console.Write("({0} {1})", exportDesc.token.val, exportDesc.id);
         }
 
-        public void Visit(Global element)
+        public override void Visit(Memory memory)
         {
             throw new NotImplementedException();
         }
 
-        // these delegate to interfaces, will not implement.
-#pragma warning disable RECS0083 // Shows NotImplementedException throws in the quick task bar
-        public void Visit(ModuleField element) { throw new NotImplementedException(); }
+        public override void Visit(GlobalField globalField)
+        {
+            throw new NotImplementedException();
+        }
 
-        public void Visit(Instr element) { throw new NotImplementedException(); }
+        public override void Visit(Start start)
+        {
+            throw new NotImplementedException();
+        }
 
-        public void Visit(StructInstr element) { throw new NotImplementedException(); }
+        public override void Visit(Elem elem)
+        {
+            throw new NotImplementedException();
+        }
 
-        public void Visit(PlainInstr element) { throw new NotImplementedException(); }
+        public override void Visit(Data data)
+        {
+            throw new NotImplementedException();
+        }
 
-        public void Visit(ImportDesc element) { throw new NotImplementedException(); }
-#pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar
+        public override void Visit(GlobalType globalType)
+        {
+            throw new NotImplementedException();
+        }
 
+        public override void Visit(BlockInstr block)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Visit(LoopInstr loop)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Visit(IfInstr ifInstr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Visit(MemArgInstr memArgInstr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Visit(BrTableInstr brTableInstr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Visit(Global global)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

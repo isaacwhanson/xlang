@@ -48,6 +48,7 @@
     <Compile Include="Scanner.cs" />
     <Compile Include="XlcAST.cs" />
     <Compile Include="Visitors\WasmVisitor.cs" />
+    <Compile Include="Visitors\BaseVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Coco\Coco.csproj">
@@ -57,7 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Xlc.atg" />
-    <None Include="example.x" />
+    <None Include="example.wat" />
+    <None Include="example.xlc" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Visitors\" />
