@@ -36,18 +36,13 @@ namespace Xlc.Visitors {
             Console.Write("(module ");
             if (!string.IsNullOrEmpty(module.name))
             {
-                Console.Write(module.name);
+                Console.WriteLine(module.name);
             }
             foreach (IModuleField field in module.fields)
             {
                 field.Accept(this);
             }
             Console.WriteLine(")");
-        }
-
-        public void Visit(ModuleField element)
-        {
-            throw new NotImplementedException();
         }
 
         public void Visit(Func func)
@@ -67,9 +62,11 @@ namespace Xlc.Visitors {
             Console.WriteLine(")");
         }
 
-        public void Visit(Table element)
+        public void Visit(Table table)
         {
-            throw new NotImplementedException();
+            Console.Write("(table {0} ", table.id);
+            table.limits.Accept(this);
+            Console.WriteLine(")");
         }
 
         public void Visit(Memory element)
@@ -84,7 +81,9 @@ namespace Xlc.Visitors {
 
         public void Visit(Export element)
         {
-            throw new NotImplementedException();
+            Console.Write("(export {0} ", element.name);
+            element.desc.Accept(this);
+            Console.WriteLine(")");
         }
 
         public void Visit(Start element)
@@ -104,8 +103,7 @@ namespace Xlc.Visitors {
 
         public void Visit(FuncType functype)
         {
-            Console.Write("(func ");
-            Console.Write(functype.id);
+            Console.Write("(func {0} ", functype.id);
             foreach (Param parameter in functype.parameters)
             {
                 parameter.Accept(this);
@@ -116,37 +114,22 @@ namespace Xlc.Visitors {
             }
         }
 
-        public void Visit(Param element)
+        public void Visit(Param parameter)
         {
-            throw new NotImplementedException();
+            Console.Write("(param {0} {1}) ", parameter.id, parameter.valtype);
         }
 
-        public void Visit(ResultType element)
+        public void Visit(ResultType result)
         {
-            throw new NotImplementedException();
+            Console.Write("(result {0}) ", result.valtype);
         }
 
-        public void Visit(Limits element)
+        public void Visit(Limits limits)
         {
-            throw new NotImplementedException();
+            Console.Write("{0} {1}", limits.min, limits.max);
         }
 
         public void Visit(GlobalType element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(Instr element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(StructInstr element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(PlainInstr element)
         {
             throw new NotImplementedException();
         }
@@ -166,14 +149,14 @@ namespace Xlc.Visitors {
             throw new NotImplementedException();
         }
 
-        public void Visit(NoArgInstr element)
+        public void Visit(NoArgInstr noarg)
         {
-            throw new NotImplementedException();
+            Console.Write("{0} ", noarg.token.val);
         }
 
-        public void Visit(IdArgInstr element)
+        public void Visit(IdArgInstr idarg)
         {
-            throw new NotImplementedException();
+            Console.Write("{0} {1} ", idarg.token.val, idarg.id);
         }
 
         public void Visit(MemArgInstr element)
@@ -186,24 +169,37 @@ namespace Xlc.Visitors {
             throw new NotImplementedException();
         }
 
-        public void Visit(FoldedExpr element)
+        public void Visit(FoldedExpr folded)
         {
-            throw new NotImplementedException();
+            foreach (IInstr instr in folded.instrs)
+            {
+                instr.Accept(this);
+            }
+            folded.parent.Accept(this);
         }
 
-        public void Visit(ImportDesc element)
+        public void Visit(ExportDesc export)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Visit(ExportDesc element)
-        {
-            throw new NotImplementedException();
+            Console.Write("({0} {1}) ", export.token.val, export.id);
         }
 
         public void Visit(Global element)
         {
             throw new NotImplementedException();
         }
+
+        // these delegate to interfaces, will not implement.
+#pragma warning disable RECS0083 // Shows NotImplementedException throws in the quick task bar
+        public void Visit(ModuleField element) { throw new NotImplementedException(); }
+
+        public void Visit(Instr element) { throw new NotImplementedException(); }
+
+        public void Visit(StructInstr element) { throw new NotImplementedException(); }
+
+        public void Visit(PlainInstr element) { throw new NotImplementedException(); }
+
+        public void Visit(ImportDesc element) { throw new NotImplementedException(); }
+#pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar
+
     }
 }

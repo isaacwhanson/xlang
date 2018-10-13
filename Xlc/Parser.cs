@@ -1556,7 +1556,7 @@ namespace Xlc {
         case 6: s = "\"module\" expected"; break;
         case 7: s = "\";\" expected"; break;
         case 8: s = "\"start\" expected"; break;
-        case 9: s = "\"fn\" expected"; break;
+        case 9: s = "\"func\" expected"; break;
         case 10: s = "\"(\" expected"; break;
         case 11: s = "\",\" expected"; break;
         case 12: s = "\")\" expected"; break;
@@ -1700,11 +1700,11 @@ namespace Xlc {
         case 150: s = "\"i64.reinterpret/f64\" expected"; break;
         case 151: s = "\"f32.reinterpret/i32\" expected"; break;
         case 152: s = "\"f64.reinterpret/i64\" expected"; break;
-        case 153: s = "\"setl\" expected"; break;
-        case 154: s = "\"getl\" expected"; break;
-        case 155: s = "\"tee\" expected"; break;
-        case 156: s = "\"setg\" expected"; break;
-        case 157: s = "\"getg\" expected"; break;
+        case 153: s = "\"set_local\" expected"; break;
+        case 154: s = "\"get_local\" expected"; break;
+        case 155: s = "\"tee_local\" expected"; break;
+        case 156: s = "\"set_global\" expected"; break;
+        case 157: s = "\"get_global\" expected"; break;
         case 158: s = "\"call\" expected"; break;
         case 159: s = "\"call_indirect\" expected"; break;
         case 160: s = "\"br\" expected"; break;

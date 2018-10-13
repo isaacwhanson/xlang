@@ -50,7 +50,7 @@ PRODUCTIONS
     "start" id (. start = new Start(token) { id = t.val }; .).
 
   FuncType<.out FuncType functype.> =
-    "fn" id                                      (. functype = new FuncType(token) { id = t.val }; .)
+    "func" id                                      (. functype = new FuncType(token) { id = t.val }; .)
     '(' [Param<.out Param param0.>               (. functype.parameters.Add(param0); .)
     {',' Param<.out Param paramN.>               (. functype.parameters.Add(paramN); .)}]
     ')' '[' [ResultType<.out ResultType result.> (. functype.results.Add(result); .)] ']'.
@@ -134,7 +134,7 @@ PRODUCTIONS
     |integer|float) (. noarg = new NoArgInstr(token); .).
 
   IdArgInstr<.out IdArgInstr idinstr.> = (. idinstr = null; .)
-    ("setl"|"getl"|"tee"|"setg"|"getg"
+    ("set_local"|"get_local"|"tee_local"|"set_global"|"get_global"
     |"call"|"call_indirect"
     |"br"|"br_if")
     id (. idinstr = new IdArgInstr(token) { id = t.val }; .).
@@ -169,7 +169,7 @@ PRODUCTIONS
     ExportDesc<.out ExportDesc exportdesc.> (. export.desc = exportdesc; .).
 
   ExportDesc<.out ExportDesc exportdesc.> =
-    ("fn"|"table"|"memory"|"global") id (. exportdesc = new ExportDesc(token) { id = t.val }; .).
+    ("func"|"table"|"memory"|"global") id (. exportdesc = new ExportDesc(token) { id = t.val }; .).
 
   ImportDesc<.out IImportDesc importdesc.> = (. importdesc = null; .)
     (FuncType<.out FuncType functype.>       (. importdesc = functype; .)

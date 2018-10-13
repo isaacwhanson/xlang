@@ -19,7 +19,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
-
+using Xlc.Visitors;
 namespace Xlc {
 
     class MainClass {
@@ -32,8 +32,9 @@ namespace Xlc {
             if (args.Length > 0)
             {
                 string filename = args[0];
-                Parser.Parse(filename, out Xlc xlang);
-                // TODO: call visitor
+                Parser.Parse(filename, out Xlc xlc);
+                IXlcVisitor visitor = new WasmVisitor();
+                xlc.Accept(visitor);
                 return OK;
             }
             Console.WriteLine("No source file specified");
