@@ -36,7 +36,7 @@ namespace Xlc
 
     public partial class Module
     {
-        public string name;
+        //public string name;
         public List<IModuleField> fields = new List<IModuleField>();
     }
 
@@ -173,6 +173,11 @@ namespace Xlc
     {
         public List<string> labels = new List<string>();
         public string default_lbl;
+    }
+
+    public partial class Const : IInstr
+    {
+        public bool wide = false;
     }
 
     public partial class Limits

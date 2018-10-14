@@ -44,3 +44,4 @@ Thumbs.db
 trace.txt
 test.xl
 .vs/
+*.wasm

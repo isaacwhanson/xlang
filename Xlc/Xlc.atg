@@ -12,7 +12,12 @@ CHARACTERS
  
 TOKENS
   string      = '"' {stringchar | '\\' ('n'|'r'|'t'|'"'|"'"|'\\'|('u' hexdigit {hexdigit})|(hexdigit hexdigit))} '"'.
-  id          = '$' idchar {idchar}.
+  localidx    = '$' idchar {idchar}.
+  globalidx   = '@' idchar {idchar}.
+  funcidx     = '.' idchar {idchar}.
+  tableidx    = '#' idchar {idchar}.
+  memidx      = '&' idchar {idchar}.
+  labelidx    = ':' idchar {idchar}.
   valtype     = ('i' | 'f') ("32" | "64").
   integer     = [sign] (digit {digit} | "0x" hexdigit {hexdigit}).
   float       = ([sign] (
@@ -30,9 +35,7 @@ PRODUCTIONS
   Xlc =
     Module<.out Module mod.> (. xlc = new Xlc(token) { module = mod }; .).
     
-  Module<.out Module mod.> =
-    "module"                               (. mod = new Module(token); .)
-    [string                                (. mod.name = t.val; .)] ';'
+  Module<.out Module mod.> =               (. mod = new Module(token); .)
     {ModuleField<.out IModuleField field.> (. mod.fields.Add(field); .) ';'}.
 
   ModuleField<.out IModuleField field.> =  (. field = null; .)
@@ -47,16 +50,16 @@ PRODUCTIONS
     |Data<.out Data data.>                 (. field = data; .)).
 
   Start<.out Start start.> =
-    "start" id (. start = new Start(token) { id = t.val }; .).
+    "start" funcidx (. start = new Start(token) { id = t.val }; .).
 
   FuncType<.out FuncType functype.> =
-    "func" id                                      (. functype = new FuncType(token) { id = t.val }; .)
+    funcidx                                      (. functype = new FuncType(token) { id = t.val }; .)
     '(' [Param<.out Param param0.>               (. functype.parameters.Add(param0); .)
     {',' Param<.out Param paramN.>               (. functype.parameters.Add(paramN); .)}]
     ')' '[' [ResultType<.out ResultType result.> (. functype.results.Add(result); .)] ']'.
 
   Param<.out Param param.> =
-    id valtype (. param = new Param(token) { id = token.val, valtype = t.val }; .).
+    localidx valtype (. param = new Param(token) { id = token.val, valtype = t.val }; .).
 
   ResultType<.out ResultType result.> =
     valtype (. result = new ResultType(token) { valtype = t.val }; .).
@@ -83,7 +86,8 @@ PRODUCTIONS
     (NoArgInstr<.out NoArgInstr noarg.>       (. instr = noarg; .)
     |IdArgInstr<.out IdArgInstr idinstr.>     (. instr = idinstr; .)
     |MemArgInstr<.out MemArgInstr meminstr.>  (. instr = meminstr; .)
-    |BrTableInstr<.out BrTableInstr brtable.> (. instr = brtable; .))
+    |BrTableInstr<.out BrTableInstr brtable.> (. instr = brtable; .)
+    |Const<.out IInstr constinstr.>           (. instr = constinstr; .))
     [FoldedExpr<.out FoldedExpr folded.>      (. folded.parent = instr; instr = folded; .)].
 
   BlockInstr<.out BlockInstr block.> =
@@ -131,13 +135,17 @@ PRODUCTIONS
     |"f32.convert_s/i32"|"f32.convert_u/i32"|"f32.convert_s/i64"|"f32.convert_u/i64"|"f32.demote/f64"
     |"f64.convert_s/i32"|"f64.convert_u/i32"|"f64.convert_s/i64"|"f64.convert_u/i64"|"f64.promote/f32"
     |"i32.reinterpret/f32"|"i64.reinterpret/f64"|"f32.reinterpret/i32"|"f64.reinterpret/i64"
-    |integer|float) (. noarg = new NoArgInstr(token); .).
+    ) (. noarg = new NoArgInstr(token); .).
+
+  Const<.out IInstr constinstr.> = (. bool wide = false; .)
+    (integer|float)[('l'|'L')      (. wide = true; .)] (. constinstr = new Const(token){ wide = wide }; .).
+    
 
   IdArgInstr<.out IdArgInstr idinstr.> = (. idinstr = null; .)
-    ("set_local"|"get_local"|"tee_local"|"set_global"|"get_global"
-    |"call"|"call_indirect"
-    |"br"|"br_if")
-    id (. idinstr = new IdArgInstr(token) { id = t.val }; .).
+    ([("set"|"get"|"tee")] (localidx|globalidx)
+    |("call"|"call_indirect") funcidx
+    |("br"|"br_if") labelidx)
+    (. idinstr = new IdArgInstr(token) { id = t.val }; .).
 
   MemArgInstr<.out MemArgInstr meminstr.> = (. meminstr = null; .)
     ("i32.load"|"i64.load"|"f32.load"|"f64.load"
@@ -150,9 +158,9 @@ PRODUCTIONS
 
   BrTableInstr<.out BrTableInstr brtable.> =
     "br_table" (. brtable = new BrTableInstr(token); .)
-    '[' [id    (. brtable.labels.Add(t.val); .)
-    {',' id    (. brtable.labels.Add(t.val); .)}]
-    ']' id     (. brtable.default_lbl = t.val; .).
+    '[' [labelidx    (. brtable.labels.Add(t.val); .)
+    {',' labelidx    (. brtable.labels.Add(t.val); .)}]
+    ']' labelidx     (. brtable.default_lbl = t.val; .).
 
   FoldedExpr<.out FoldedExpr folded.> =
    '('                                  (. folded = new FoldedExpr(token); .)
@@ -169,7 +177,11 @@ PRODUCTIONS
     ExportDesc<.out ExportDesc exportdesc.> (. export.desc = exportdesc; .).
 
   ExportDesc<.out ExportDesc exportdesc.> =
-    ("func"|"table"|"memory"|"global") id (. exportdesc = new ExportDesc(token) { id = t.val }; .).
+    ((funcidx)
+    |(tableidx)
+    |(memidx)
+    |(globalidx))
+    (. exportdesc = new ExportDesc(token) { id = t.val }; .).
 
   ImportDesc<.out IImportDesc importdesc.> = (. importdesc = null; .)
     (FuncType<.out FuncType functype.>       (. importdesc = functype; .)
@@ -178,15 +190,15 @@ PRODUCTIONS
     |Global<.out Global global.>             (. importdesc = global; .)).
 
   Table<.out Table table.> =
-    "table" id                  (. table = new Table(token) { id = t.val }; .)
+    tableidx            (. table = new Table(token) { id = t.val }; .)
     Limits<.out Limits limits.> (. table.limits = limits; .).
 
   Memory<.out Memory memory.> =
-    "memory" id                 (. memory = new Memory(token) { id = t.val }; .)
+    memidx             (. memory = new Memory(token) { id = t.val }; .)
     Limits<.out Limits limits.> (. memory.limits = limits; .).
 
   Global<.out Global global.> =
-    "global" id                        (. global = new Global(token) { id = t.val }; .)
+    globalidx                          (. global = new Global(token) { id = t.val }; .)
     GlobalType<.out GlobalType gtype.> (. global.gtype = gtype; .).
 
   GlobalField<.out GlobalField globalfield.> = (. globalfield = new GlobalField(token); .)
@@ -198,13 +210,13 @@ PRODUCTIONS
     '{' {Instr<.out IInstr instr.>    (. func.instrs.Add(instr); .) ';'} '}'.
 
   Elem<.out Elem elem.> =
-    "elem" id                               (. elem = new Elem(token) { id = t.val }; .)
+    "elem" tableidx                         (. elem = new Elem(token) { id = t.val }; .)
     "offset" '{' {Instr<.out IInstr instr.> (. elem.offset.Add(instr); .) ';'} '}'
-    '[' [id                                 (. elem.ids.Add(t.val); .)
-    {',' id                                 (. elem.ids.Add(t.val); .)}] ']'.
+    '[' [funcidx                            (. elem.ids.Add(t.val); .)
+    {',' funcidx                            (. elem.ids.Add(t.val); .)}] ']'.
 
   Data<.out Data data.> =
-    "data" id                               (. data = new Data(token) { id = t.val }; .)
+    "data" memidx                           (. data = new Data(token) { id = t.val }; .)
     "offset" '{' {Instr<.out IInstr instr.> (. data.offset.Add(instr); .) ';'} '}'
     '[' [string                             (. data.strings.Add(t.val); .)
     {',' string                             (. data.strings.Add(t.val); .)}] ']'.

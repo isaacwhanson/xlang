@@ -22,6 +22,36 @@ using System;
 namespace Xlc.Visitors {
     public class WasmVisitor : BaseVisitor
     {
+        public string FixId(string id)
+        {
+            if (id.StartsWith("$", StringComparison.Ordinal)) { return id; }
+            else if (id.StartsWith("@", StringComparison.Ordinal))
+            {
+                return string.Format("$gbl_{0}", id.Substring(1));
+            }
+            else if (id.StartsWith("#", StringComparison.Ordinal))
+            {
+                return string.Format("$tbl_{0}", id.Substring(1));
+            }
+            else if (id.StartsWith(":", StringComparison.Ordinal))
+            {
+                return string.Format("$lbl_{0}", id.Substring(1));
+            }
+            else if (id.StartsWith("&", StringComparison.Ordinal))
+            {
+                return string.Format("$mem_{0}", id.Substring(1));
+            }
+            else if (id.StartsWith(".", StringComparison.Ordinal))
+            {
+                return string.Format("$fnc_{0}", id.Substring(1));
+            }
+            else if (id.StartsWith("%", StringComparison.Ordinal))
+            {
+                return string.Format("$mod_{0}", id.Substring(1));
+            }
+            else { return id; }
+        }
+
         public override void Visit(Xlc xlc)
         {
             xlc.module.Accept(this);
@@ -29,11 +59,11 @@ namespace Xlc.Visitors {
 
         public override void Visit(Module module)
         {
-            Console.Write("(module ");
-            if (!string.IsNullOrEmpty(module.name))
+            Console.WriteLine("(module ");
+            /*if (!string.IsNullOrEmpty(module.name))
             {
-                Console.WriteLine(module.name);
-            }
+                Console.WriteLine(FixId(module.name));
+            }*/
             foreach (IModuleField field in module.fields)
             {
                 field.Accept(this);
@@ -60,7 +90,7 @@ namespace Xlc.Visitors {
 
         public override void Visit(Table table)
         {
-            Console.Write("(table {0} ", table.id);
+            Console.Write("(table {0} ", FixId(table.id));
             table.limits.Accept(this);
             Console.WriteLine(")");
         }
@@ -74,7 +104,7 @@ namespace Xlc.Visitors {
 
         public override void Visit(FuncType functype)
         {
-            Console.Write("(func {0} ", functype.id);
+            Console.Write("(func {0} ", FixId(functype.id));
             foreach (Param parameter in functype.parameters)
             {
                 parameter.Accept(this);
@@ -87,7 +117,7 @@ namespace Xlc.Visitors {
 
         public override void Visit(Param parameter)
         {
-            Console.Write("(param {0} {1}) ", parameter.id, parameter.valtype);
+            Console.Write("(param {0} {1}) ", FixId(parameter.id), parameter.valtype);
         }
 
         public override void Visit(ResultType result)
@@ -107,7 +137,31 @@ namespace Xlc.Visitors {
 
         public override void Visit(IdArgInstr idArgInstr)
         {
-            Console.Write("{0} {1} ", idArgInstr.token.val, idArgInstr.id);
+            string val = idArgInstr.token.val;
+            string id = idArgInstr.id;
+            if (val == "set" || val == "get" || val == "tee")
+            {
+                if (id.StartsWith("@", StringComparison.Ordinal))
+                {
+                    val = val + "_global";
+                }
+                else if (id.StartsWith("$", StringComparison.Ordinal))
+                {
+                    val = val + "_local";
+                }
+            }
+            else if (val == id)
+            {
+                if (id.StartsWith("@", StringComparison.Ordinal))
+                {
+                    val = "get_global";
+                }
+                else if (id.StartsWith("$", StringComparison.Ordinal))
+                {
+                    val = "get_local";
+                }
+            }
+            Console.Write("{0} {1} ", val, FixId(idArgInstr.id));
         }
 
         public override void Visit(FoldedExpr foldedExpr)
@@ -121,7 +175,25 @@ namespace Xlc.Visitors {
 
         public override void Visit(ExportDesc exportDesc)
         {
-            Console.Write("({0} {1})", exportDesc.token.val, exportDesc.id);
+            string val = exportDesc.token.val;
+            string exportType = "";
+            if (val.StartsWith("@", StringComparison.Ordinal))
+            {
+                exportType = "global";
+            }
+            else if (val.StartsWith("#", StringComparison.Ordinal))
+            {
+                exportType = "table";
+            }
+            else if (val.StartsWith("&", StringComparison.Ordinal))
+            {
+                exportType = "memory";
+            }
+            else if (val.StartsWith(".", StringComparison.Ordinal))
+            {
+                exportType = "func";
+            }
+            Console.Write("({0} {1})", exportType, FixId(exportDesc.id));
         }
 
         public override void Visit(Memory memory)
@@ -131,7 +203,13 @@ namespace Xlc.Visitors {
 
         public override void Visit(GlobalField globalField)
         {
-            throw new NotImplementedException();
+            Console.Write("(global {0} ", FixId(globalField.global.id));
+            globalField.global.gtype.Accept(this);
+            foreach (IInstr instr in globalField.instrs)
+            {
+                instr.Accept(this);
+            }
+            Console.WriteLine(")");
         }
 
         public override void Visit(Start start)
@@ -151,7 +229,7 @@ namespace Xlc.Visitors {
 
         public override void Visit(GlobalType globalType)
         {
-            throw new NotImplementedException();
+            Console.Write("({0} {1}) ", globalType.mutable ? "mut" : "", globalType.valtype);
         }
 
         public override void Visit(BlockInstr block)
@@ -181,7 +259,21 @@ namespace Xlc.Visitors {
 
         public override void Visit(Global global)
         {
-            throw new NotImplementedException();
+            Console.Write("(global {0} ", FixId(global.id));
+            global.gtype.Accept(this);
+            Console.WriteLine(")");
+        }
+
+        public override void Visit(Const constant)
+        {
+            string bits = "32";
+            string iorf = "i";
+            if (constant.wide) { bits = "64"; }
+            if (constant.token.val.Contains("."))
+            {
+                iorf = "f";
+            }
+            Console.Write("{0}{1}.const {2} ", iorf, bits, constant.token.val);
         }
     }
 }

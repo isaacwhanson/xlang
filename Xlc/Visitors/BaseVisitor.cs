@@ -46,6 +46,7 @@ namespace Xlc.Visitors {
         public abstract void Visit(IdArgInstr idArgInstr);
         public abstract void Visit(MemArgInstr memArgInstr);
         public abstract void Visit(BrTableInstr brTableInstr);
+        public abstract void Visit(Const constant);
         public abstract void Visit(FoldedExpr foldedExpr);
         public abstract void Visit(ExportDesc exportDesc);
         public abstract void Visit(Global global);
@@ -60,6 +61,7 @@ namespace Xlc.Visitors {
         public void Visit(PlainInstr element) { throw new NotImplementedException(); }
 
         public void Visit(ImportDesc element) { throw new NotImplementedException(); }
+
 #pragma warning restore RECS0083 // Shows NotImplementedException throws in the quick task bar
     }
 }
