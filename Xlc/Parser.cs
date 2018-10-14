@@ -240,13 +240,8 @@ namespace Xlc {
       globalfield = new GlobalField(token); 
       _Global(out Global global);
       globalfield.global = global; 
-      Expect(21);
-      while (StartOf(2)) {
-        _Instr(out IInstr instr);
-        globalfield.instrs.Add(instr); 
-        Expect(11);
-      }
-      Expect(22);
+      _InstrList(out InstrList instrs);
+      globalfield.instrs = instrs; 
     }
 
     void _Export(out Export export) {
@@ -469,28 +464,22 @@ namespace Xlc {
       Token token = la;
       Expect(24);
       ifinstr = new IfInstr(token); 
+      if (la.kind == 13) {
+        _FoldedExpr(out FoldedExpr folded);
+        ifinstr.folded = folded; 
+      }
       Expect(16);
       if (la.kind == 8) {
-        Get();
-        ifinstr.valtype = t.val; 
+        _ResultType(out ResultType rslt);
+        ifinstr.result = rslt; 
       }
       Expect(17);
-      Expect(21);
-      while (StartOf(2)) {
-        _Instr(out IInstr instr);
-        ifinstr.instrs.Add(instr); 
-        Expect(11);
-      }
-      Expect(22);
+      _InstrList(out InstrList instrs);
+      ifinstr.instrs = instrs; 
       if (la.kind == 25) {
         Get();
-        Expect(21);
-        while (StartOf(2)) {
-          _Instr(out IInstr einstr);
-          ifinstr.elses.Add(einstr); 
-          Expect(11);
-        }
-        Expect(22);
+        _InstrList(out InstrList elses);
+        ifinstr.elses = elses; 
       }
     }
 
@@ -1216,6 +1205,18 @@ namespace Xlc {
       Expect(15);
     }
 
+    void _InstrList(out InstrList instrs) {
+      Token token = la;
+      instrs = new InstrList(token); 
+      Expect(21);
+      while (StartOf(2)) {
+        _Instr(out IInstr instr);
+        instrs.instrs.Add(instr); 
+        Expect(11);
+      }
+      Expect(22);
+    }
+
     void _ImportDesc(out IImportDesc importdesc) {
       Token token = la;
       importdesc = null; 
@@ -1315,6 +1316,7 @@ namespace Xlc {
     void Visit(BrTableInstr element);
     void Visit(Const element);
     void Visit(FoldedExpr element);
+    void Visit(InstrList element);
     void Visit(ImportDesc element);
     void Visit(ExportDesc element);
     void Visit(Global element);
@@ -1519,6 +1521,13 @@ namespace Xlc {
   public partial class FoldedExpr : IXlcElement {
     public Token token;
     public FoldedExpr(Token t) { token = t; }
+    public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
+    public Token GetToken() { return token; }
+  }
+
+  public partial class InstrList : IXlcElement {
+    public Token token;
+    public InstrList(Token t) { token = t; }
     public void Accept(IXlcVisitor visitor) { visitor.Visit(this); }
     public Token GetToken() { return token; }
   }

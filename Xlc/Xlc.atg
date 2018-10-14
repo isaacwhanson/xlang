@@ -101,10 +101,14 @@ PRODUCTIONS
     '{' {Instr<.out IInstr instr.> (. loop.instrs.Add(instr); .) ';'} '}'.
 
   IfInstr<.out IfInstr ifinstr.> =
-    "if"                                    (. ifinstr = new IfInstr(token); .)
-    '[' [valtype                            (. ifinstr.valtype = t.val; .)] ']'
-    '{' {Instr<.out IInstr instr.>          (. ifinstr.instrs.Add(instr); .) ';'} '}'
-    ["else" '{' {Instr<.out IInstr einstr.> (. ifinstr.elses.Add(einstr); .) ';'} '}'].
+    "if"                                     (. ifinstr = new IfInstr(token); .)
+    [FoldedExpr<.out FoldedExpr folded.>     (. ifinstr.folded = folded; .)]
+    '[' [ResultType<.out ResultType rslt.>   (. ifinstr.result = rslt; .)] ']'
+    InstrList<.out InstrList instrs.>        (. ifinstr.instrs = instrs; .)
+    ["else" InstrList<.out InstrList elses.> (. ifinstr.elses = elses; .)].
+
+  InstrList<.out InstrList instrs.> =  (. instrs = new InstrList(token); .)
+    '{' {Instr<.out IInstr instr.>     (. instrs.instrs.Add(instr); .) ';'} '}'.
 
   NoArgInstr<.out NoArgInstr noarg.> = (. noarg = null; .)
     ("nop"
@@ -203,7 +207,7 @@ PRODUCTIONS
 
   GlobalField<.out GlobalField globalfield.> = (. globalfield = new GlobalField(token); .)
     Global<.out Global global.>                (. globalfield.global = global; .)
-    '{' {Instr<.out IInstr instr.>             (. globalfield.instrs.Add(instr); .) ';'} '}'.
+    InstrList<.out InstrList instrs.>          (. globalfield.instrs = instrs; .).
 
   Func<.out Func func.> =
     FuncType<.out FuncType functype.> (. func = new Func(token) { functype = functype }; .)

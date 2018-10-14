@@ -50,6 +50,7 @@ namespace Xlc.Visitors {
         public abstract void Visit(FoldedExpr foldedExpr);
         public abstract void Visit(ExportDesc exportDesc);
         public abstract void Visit(Global global);
+        public abstract void Visit(InstrList instrs);
 
 #pragma warning disable RECS0083 // Shows NotImplementedException throws in the quick task bar
         public void Visit(ModuleField element) { throw new NotImplementedException(); }

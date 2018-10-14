@@ -24,7 +24,10 @@ namespace Xlc.Visitors {
     {
         public string FixId(string id)
         {
-            if (id.StartsWith("$", StringComparison.Ordinal)) { return id; }
+            if (id.StartsWith("$", StringComparison.Ordinal))
+            {
+                return string.Format("$lcl_{0}", id.Substring(1));
+            }
             else if (id.StartsWith("@", StringComparison.Ordinal))
             {
                 return string.Format("$gbl_{0}", id.Substring(1));
@@ -170,7 +173,10 @@ namespace Xlc.Visitors {
             {
                 instr.Accept(this);
             }
-            foldedExpr.parent.Accept(this);
+            if (foldedExpr.parent != null)
+            {
+                foldedExpr.parent.Accept(this);
+            }
         }
 
         public override void Visit(ExportDesc exportDesc)
@@ -205,10 +211,7 @@ namespace Xlc.Visitors {
         {
             Console.Write("(global {0} ", FixId(globalField.global.id));
             globalField.global.gtype.Accept(this);
-            foreach (IInstr instr in globalField.instrs)
-            {
-                instr.Accept(this);
-            }
+            globalField.instrs.Accept(this);
             Console.WriteLine(")");
         }
 
@@ -244,7 +247,16 @@ namespace Xlc.Visitors {
 
         public override void Visit(IfInstr ifInstr)
         {
-            throw new NotImplementedException();
+            if (ifInstr.folded != null)
+            {
+                ifInstr.folded.Accept(this);
+            }
+            Console.Write("if ");
+            ifInstr.result.Accept(this);
+            ifInstr.instrs.Accept(this);
+            Console.Write("else ");
+            ifInstr.elses.Accept(this);
+            Console.Write("end ");
         }
 
         public override void Visit(MemArgInstr memArgInstr)
@@ -274,6 +286,14 @@ namespace Xlc.Visitors {
                 iorf = "f";
             }
             Console.Write("{0}{1}.const {2} ", iorf, bits, constant.token.val);
+        }
+
+        public override void Visit(InstrList instrs)
+        {
+            foreach (IInstr instr in instrs.instrs)
+            {
+                instr.Accept(this);
+            }
         }
     }
 }

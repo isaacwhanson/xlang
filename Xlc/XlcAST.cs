@@ -62,7 +62,7 @@ namespace Xlc
     public partial class GlobalField : IModuleField
     {
         public Global global;
-        public List<IInstr> instrs = new List<IInstr>();
+        public InstrList instrs;
     }
 
     public partial class Table : IModuleField, IImportDesc
@@ -151,9 +151,10 @@ namespace Xlc
 
     public partial class IfInstr : IInstr
     {
-        public string valtype;
-        public List<IInstr> instrs = new List<IInstr>();
-        public List<IInstr> elses = new List<IInstr>();
+        public ResultType result;
+        public FoldedExpr folded;
+        public InstrList instrs;
+        public InstrList elses;
     }
 
     public partial class NoArgInstr : IInstr { }
@@ -184,5 +185,10 @@ namespace Xlc
     {
         public string min;
         public string max;
+    }
+
+    public partial class InstrList
+    {
+        public List<IInstr> instrs = new List<IInstr>();
     }
 }
