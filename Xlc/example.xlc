@@ -1,28 +1,13 @@
-﻿import "console" "log" .log ($msg i32) [];
-
-@what? mut i32 { 42; };
-
-/*
- * 1    - i32
- * 1.0  - f32
- * 1L   - i64
- * 1.0L - f64
- */
-// add "what"
-.add-what? ($a i32) [i32] {
-  i32.add ($a, @what?);
-  i32.add (10);
-  call .log (@what?);
-};
+﻿from "console" import "log" as .log ($msg i32) [];
 
 .fib ($n i32) [i32] {
   if (i32.le_u ($n, 1)) [i32] {
     1;
   } else {
-    call .fib (i32.sub ($n, 1));
-    call .fib (i32.sub ($n, 2));
+    call .fib(i32.sub($n, 1));
+    call .fib(i32.sub($n, 2));
     i32.add;
   };
 };
 
-export "add_what" .add-what?;
+export "fib" .fib;

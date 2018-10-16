@@ -56,7 +56,7 @@ namespace Xlc {
     public const int _valtype = 8;
     public const int _integer = 9;
     public const int _float = 10;
-    public const int maxT = 194;
+    public const int maxT = 196;
 
     const bool _T = true;
     const bool _x = false;
@@ -171,7 +171,7 @@ namespace Xlc {
             field = global; 
             break;
           }
-        case 190: {
+        case 192: {
             _Export(out Export export);
             field = export; 
             break;
@@ -181,17 +181,17 @@ namespace Xlc {
             field = start; 
             break;
           }
-        case 191: {
+        case 193: {
             _Elem(out Elem elem);
             field = elem; 
             break;
           }
-        case 193: {
+        case 195: {
             _Data(out Data data);
             field = data; 
             break;
           }
-        default: SynErr(195); break;
+        default: SynErr(197); break;
       }
     }
 
@@ -208,10 +208,12 @@ namespace Xlc {
       Expect(189);
       Expect(1);
       import = new Import(token) { module = t.val }; 
+      Expect(190);
       Expect(1);
       import.name = t.val; 
-      _ImportDesc(out IImportDesc importdesc);
-      import.desc = importdesc; 
+      Expect(191);
+      _ImportDesc(out IImportDesc desc);
+      import.desc = desc; 
     }
 
     void _Table(out Table table) {
@@ -241,7 +243,7 @@ namespace Xlc {
 
     void _Export(out Export export) {
       Token token = la;
-      Expect(190);
+      Expect(192);
       Expect(1);
       export = new Export(token) { name = t.val }; 
       _ExportDesc(out ExportDesc exportdesc);
@@ -257,10 +259,10 @@ namespace Xlc {
 
     void _Elem(out Elem elem) {
       Token token = la;
-      Expect(191);
+      Expect(193);
       Expect(5);
       elem = new Elem(token) { id = t.val }; 
-      Expect(192);
+      Expect(194);
       _InstrList(out InstrList instrs);
       elem.offset = instrs; 
       Expect(16);
@@ -278,10 +280,10 @@ namespace Xlc {
 
     void _Data(out Data data) {
       Token token = la;
-      Expect(193);
+      Expect(195);
       Expect(6);
       data = new Data(token) { id = t.val }; 
-      Expect(192);
+      Expect(194);
       _InstrList(out InstrList instrs);
       data.offset = instrs; 
       Expect(16);
@@ -365,7 +367,7 @@ namespace Xlc {
       } else if (StartOf(2)) {
         _PlainInstr(out IInstr plain);
         instr = plain; 
-      } else SynErr(196);
+      } else SynErr(198);
     }
 
     void _StructInstr(out IInstr instr) {
@@ -380,7 +382,7 @@ namespace Xlc {
       } else if (la.kind == 22) {
         _IfInstr(out IfInstr ifinstr);
         instr = ifinstr; 
-      } else SynErr(197);
+      } else SynErr(199);
     }
 
     void _PlainInstr(out IInstr instr) {
@@ -401,7 +403,7 @@ namespace Xlc {
       } else if (la.kind == 9 || la.kind == 10) {
         _Const(out IInstr constinstr);
         instr = constinstr; 
-      } else SynErr(198);
+      } else SynErr(200);
       if (la.kind == 13) {
         _FoldedExpr(out FoldedExpr folded);
         folded.parent = instr; instr = folded; 
@@ -971,7 +973,7 @@ namespace Xlc {
             Get();
             break;
           }
-        default: SynErr(199); break;
+        default: SynErr(201); break;
       }
       noarg = new NoArgInstr(token); 
     }
@@ -993,7 +995,7 @@ namespace Xlc {
           Get();
         } else if (la.kind == 3) {
           Get();
-        } else SynErr(200);
+        } else SynErr(202);
       } else if (la.kind == 161 || la.kind == 162) {
         if (la.kind == 161) {
           Get();
@@ -1008,7 +1010,7 @@ namespace Xlc {
           Get();
         }
         Expect(7);
-      } else SynErr(201);
+      } else SynErr(203);
       idinstr = new IdArgInstr(token) { id = t.val }; 
     }
 
@@ -1108,7 +1110,7 @@ namespace Xlc {
             Get();
             break;
           }
-        default: SynErr(202); break;
+        default: SynErr(204); break;
       }
       Expect(9);
       string offset = t.val; 
@@ -1143,7 +1145,7 @@ namespace Xlc {
         Get();
       } else if (la.kind == 10) {
         Get();
-      } else SynErr(203);
+      } else SynErr(205);
       if (la.kind == 156 || la.kind == 157) {
         if (la.kind == 156) {
           Get();
@@ -1196,7 +1198,7 @@ namespace Xlc {
       } else if (la.kind == 3) {
         _Global(out Global global);
         importdesc = global; 
-      } else SynErr(204);
+      } else SynErr(206);
     }
 
     void _ExportDesc(out ExportDesc exportdesc) {
@@ -1209,7 +1211,7 @@ namespace Xlc {
         Get();
       } else if (la.kind == 3) {
         Get();
-      } else SynErr(205);
+      } else SynErr(207);
       exportdesc = new ExportDesc(token) { id = t.val }; 
     }
 
@@ -1231,14 +1233,14 @@ namespace Xlc {
     }
 
     static readonly bool[,] set = {
-        {_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-    {_x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _x,_T,_x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x},
-    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x}
+        {_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+    {_x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_T,_x,_T, _x,_x},
+    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
+    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x}
 
     };
   } // end Parser
@@ -1571,109 +1573,109 @@ namespace Xlc {
         case 41: s = "\"i32.le_s\" expected"; break;
         case 42: s = "\"i32.ge_u\" expected"; break;
         case 43: s = "\"i32.ge_s\" expected"; break;
-        case 44: s = "\"i64.eqz\" expected"; break;
-        case 45: s = "\"i64.eq\" expected"; break;
-        case 46: s = "\"i64.ne\" expected"; break;
-        case 47: s = "\"i64.lt_u\" expected"; break;
-        case 48: s = "\"i64.lt_s\" expected"; break;
-        case 49: s = "\"i64.gt_u\" expected"; break;
-        case 50: s = "\"i64.gt_s\" expected"; break;
-        case 51: s = "\"i64.le_u\" expected"; break;
-        case 52: s = "\"i64.le_s\" expected"; break;
-        case 53: s = "\"i64.ge_u\" expected"; break;
-        case 54: s = "\"i64.ge_s\" expected"; break;
-        case 55: s = "\"f32.eq\" expected"; break;
-        case 56: s = "\"f32.ne\" expected"; break;
-        case 57: s = "\"f32.lt\" expected"; break;
-        case 58: s = "\"f32.gt\" expected"; break;
-        case 59: s = "\"f32.le\" expected"; break;
-        case 60: s = "\"f32.ge\" expected"; break;
-        case 61: s = "\"f64.eq\" expected"; break;
-        case 62: s = "\"f64.ne\" expected"; break;
-        case 63: s = "\"f64.lt\" expected"; break;
-        case 64: s = "\"f64.gt\" expected"; break;
-        case 65: s = "\"f64.le\" expected"; break;
-        case 66: s = "\"f64.ge\" expected"; break;
-        case 67: s = "\"i32.clz\" expected"; break;
-        case 68: s = "\"i32.ctz\" expected"; break;
-        case 69: s = "\"i32.popcnt\" expected"; break;
-        case 70: s = "\"i32.add\" expected"; break;
-        case 71: s = "\"i32.sub\" expected"; break;
-        case 72: s = "\"i32.mul\" expected"; break;
-        case 73: s = "\"i32.div_s\" expected"; break;
-        case 74: s = "\"i32.div_u\" expected"; break;
-        case 75: s = "\"i32.rem_s\" expected"; break;
-        case 76: s = "\"i32.rem_u\" expected"; break;
-        case 77: s = "\"i32.and\" expected"; break;
-        case 78: s = "\"i32.or\" expected"; break;
-        case 79: s = "\"i32.xor\" expected"; break;
-        case 80: s = "\"i32.shl\" expected"; break;
-        case 81: s = "\"i32.shr_s\" expected"; break;
-        case 82: s = "\"i32.shr_u\" expected"; break;
-        case 83: s = "\"i32.rotl\" expected"; break;
-        case 84: s = "\"i32.rotr\" expected"; break;
-        case 85: s = "\"i64.clz\" expected"; break;
-        case 86: s = "\"i64.ctz\" expected"; break;
-        case 87: s = "\"i64.popcnt\" expected"; break;
-        case 88: s = "\"i64.add\" expected"; break;
-        case 89: s = "\"i64.sub\" expected"; break;
-        case 90: s = "\"i64.mul\" expected"; break;
-        case 91: s = "\"i64.div_s\" expected"; break;
-        case 92: s = "\"i64.div_u\" expected"; break;
-        case 93: s = "\"i64.rem_s\" expected"; break;
-        case 94: s = "\"i64.rem_u\" expected"; break;
-        case 95: s = "\"i64.and\" expected"; break;
-        case 96: s = "\"i64.or\" expected"; break;
-        case 97: s = "\"i64.xor\" expected"; break;
-        case 98: s = "\"i64.shl\" expected"; break;
-        case 99: s = "\"i64.shr_s\" expected"; break;
-        case 100: s = "\"i64.shr_u\" expected"; break;
-        case 101: s = "\"i64.rotl\" expected"; break;
-        case 102: s = "\"i64.rotr\" expected"; break;
-        case 103: s = "\"f32.abs\" expected"; break;
-        case 104: s = "\"f32.neg\" expected"; break;
-        case 105: s = "\"f32.ceil\" expected"; break;
-        case 106: s = "\"f32.floor\" expected"; break;
-        case 107: s = "\"f32.trunc\" expected"; break;
-        case 108: s = "\"f32.nearest\" expected"; break;
-        case 109: s = "\"f32.sqrt\" expected"; break;
-        case 110: s = "\"f32.add\" expected"; break;
-        case 111: s = "\"f32.sub\" expected"; break;
-        case 112: s = "\"f32.mul\" expected"; break;
-        case 113: s = "\"f32.div\" expected"; break;
-        case 114: s = "\"f32.min\" expected"; break;
-        case 115: s = "\"f32.max\" expected"; break;
-        case 116: s = "\"f32.copysign\" expected"; break;
-        case 117: s = "\"f64.abs\" expected"; break;
-        case 118: s = "\"f64.neg\" expected"; break;
-        case 119: s = "\"f64.ceil\" expected"; break;
-        case 120: s = "\"f64.floor\" expected"; break;
-        case 121: s = "\"f64.trunc\" expected"; break;
-        case 122: s = "\"f64.nearest\" expected"; break;
-        case 123: s = "\"f64.sqrt\" expected"; break;
-        case 124: s = "\"f64.add\" expected"; break;
-        case 125: s = "\"f64.sub\" expected"; break;
-        case 126: s = "\"f64.mul\" expected"; break;
-        case 127: s = "\"f64.div\" expected"; break;
-        case 128: s = "\"f64.min\" expected"; break;
-        case 129: s = "\"f64.max\" expected"; break;
-        case 130: s = "\"f64.copysign\" expected"; break;
-        case 131: s = "\"i32.wrap/i64\" expected"; break;
-        case 132: s = "\"i32.trunc_s/f32\" expected"; break;
-        case 133: s = "\"i32.trunc_u/f32\" expected"; break;
-        case 134: s = "\"i32.trunc_s/f64\" expected"; break;
-        case 135: s = "\"i32.trunc_u/f64\" expected"; break;
-        case 136: s = "\"i64.extend_s/i32\" expected"; break;
-        case 137: s = "\"i64.extend_u/i32\" expected"; break;
-        case 138: s = "\"i64.trunc_s/f32\" expected"; break;
-        case 139: s = "\"i64.trunc_u/f32\" expected"; break;
-        case 140: s = "\"i64.trunc_s/f64\" expected"; break;
-        case 141: s = "\"i64.trunc_u/f64\" expected"; break;
-        case 142: s = "\"f32.convert_s/i32\" expected"; break;
-        case 143: s = "\"f32.convert_u/i32\" expected"; break;
-        case 144: s = "\"f32.convert_s/i64\" expected"; break;
-        case 145: s = "\"f32.convert_u/i64\" expected"; break;
-        case 146: s = "\"f32.demote/f64\" expected"; break;
+        case 44: s = "\"i32.clz\" expected"; break;
+        case 45: s = "\"i32.ctz\" expected"; break;
+        case 46: s = "\"i32.popcnt\" expected"; break;
+        case 47: s = "\"i32.add\" expected"; break;
+        case 48: s = "\"i32.sub\" expected"; break;
+        case 49: s = "\"i32.mul\" expected"; break;
+        case 50: s = "\"i32.div_s\" expected"; break;
+        case 51: s = "\"i32.div_u\" expected"; break;
+        case 52: s = "\"i32.rem_s\" expected"; break;
+        case 53: s = "\"i32.rem_u\" expected"; break;
+        case 54: s = "\"i32.and\" expected"; break;
+        case 55: s = "\"i32.or\" expected"; break;
+        case 56: s = "\"i32.xor\" expected"; break;
+        case 57: s = "\"i32.shl\" expected"; break;
+        case 58: s = "\"i32.shr_s\" expected"; break;
+        case 59: s = "\"i32.shr_u\" expected"; break;
+        case 60: s = "\"i32.rotl\" expected"; break;
+        case 61: s = "\"i32.rotr\" expected"; break;
+        case 62: s = "\"i32.wrap/i64\" expected"; break;
+        case 63: s = "\"i32.trunc_s/f32\" expected"; break;
+        case 64: s = "\"i32.trunc_u/f32\" expected"; break;
+        case 65: s = "\"i32.trunc_s/f64\" expected"; break;
+        case 66: s = "\"i32.trunc_u/f64\" expected"; break;
+        case 67: s = "\"i64.eqz\" expected"; break;
+        case 68: s = "\"i64.eq\" expected"; break;
+        case 69: s = "\"i64.ne\" expected"; break;
+        case 70: s = "\"i64.lt_u\" expected"; break;
+        case 71: s = "\"i64.lt_s\" expected"; break;
+        case 72: s = "\"i64.gt_u\" expected"; break;
+        case 73: s = "\"i64.gt_s\" expected"; break;
+        case 74: s = "\"i64.le_u\" expected"; break;
+        case 75: s = "\"i64.le_s\" expected"; break;
+        case 76: s = "\"i64.ge_u\" expected"; break;
+        case 77: s = "\"i64.ge_s\" expected"; break;
+        case 78: s = "\"i64.clz\" expected"; break;
+        case 79: s = "\"i64.ctz\" expected"; break;
+        case 80: s = "\"i64.popcnt\" expected"; break;
+        case 81: s = "\"i64.add\" expected"; break;
+        case 82: s = "\"i64.sub\" expected"; break;
+        case 83: s = "\"i64.mul\" expected"; break;
+        case 84: s = "\"i64.div_s\" expected"; break;
+        case 85: s = "\"i64.div_u\" expected"; break;
+        case 86: s = "\"i64.rem_s\" expected"; break;
+        case 87: s = "\"i64.rem_u\" expected"; break;
+        case 88: s = "\"i64.and\" expected"; break;
+        case 89: s = "\"i64.or\" expected"; break;
+        case 90: s = "\"i64.xor\" expected"; break;
+        case 91: s = "\"i64.shl\" expected"; break;
+        case 92: s = "\"i64.shr_s\" expected"; break;
+        case 93: s = "\"i64.shr_u\" expected"; break;
+        case 94: s = "\"i64.rotl\" expected"; break;
+        case 95: s = "\"i64.rotr\" expected"; break;
+        case 96: s = "\"i64.extend_s/i32\" expected"; break;
+        case 97: s = "\"i64.extend_u/i32\" expected"; break;
+        case 98: s = "\"i64.trunc_s/f32\" expected"; break;
+        case 99: s = "\"i64.trunc_u/f32\" expected"; break;
+        case 100: s = "\"i64.trunc_s/f64\" expected"; break;
+        case 101: s = "\"i64.trunc_u/f64\" expected"; break;
+        case 102: s = "\"f32.eq\" expected"; break;
+        case 103: s = "\"f32.ne\" expected"; break;
+        case 104: s = "\"f32.lt\" expected"; break;
+        case 105: s = "\"f32.gt\" expected"; break;
+        case 106: s = "\"f32.le\" expected"; break;
+        case 107: s = "\"f32.ge\" expected"; break;
+        case 108: s = "\"f32.abs\" expected"; break;
+        case 109: s = "\"f32.neg\" expected"; break;
+        case 110: s = "\"f32.ceil\" expected"; break;
+        case 111: s = "\"f32.floor\" expected"; break;
+        case 112: s = "\"f32.trunc\" expected"; break;
+        case 113: s = "\"f32.nearest\" expected"; break;
+        case 114: s = "\"f32.sqrt\" expected"; break;
+        case 115: s = "\"f32.add\" expected"; break;
+        case 116: s = "\"f32.sub\" expected"; break;
+        case 117: s = "\"f32.mul\" expected"; break;
+        case 118: s = "\"f32.div\" expected"; break;
+        case 119: s = "\"f32.min\" expected"; break;
+        case 120: s = "\"f32.max\" expected"; break;
+        case 121: s = "\"f32.copysign\" expected"; break;
+        case 122: s = "\"f32.convert_s/i32\" expected"; break;
+        case 123: s = "\"f32.convert_u/i32\" expected"; break;
+        case 124: s = "\"f32.convert_s/i64\" expected"; break;
+        case 125: s = "\"f32.convert_u/i64\" expected"; break;
+        case 126: s = "\"f32.demote/f64\" expected"; break;
+        case 127: s = "\"f64.eq\" expected"; break;
+        case 128: s = "\"f64.ne\" expected"; break;
+        case 129: s = "\"f64.lt\" expected"; break;
+        case 130: s = "\"f64.gt\" expected"; break;
+        case 131: s = "\"f64.le\" expected"; break;
+        case 132: s = "\"f64.ge\" expected"; break;
+        case 133: s = "\"f64.abs\" expected"; break;
+        case 134: s = "\"f64.neg\" expected"; break;
+        case 135: s = "\"f64.ceil\" expected"; break;
+        case 136: s = "\"f64.floor\" expected"; break;
+        case 137: s = "\"f64.trunc\" expected"; break;
+        case 138: s = "\"f64.nearest\" expected"; break;
+        case 139: s = "\"f64.sqrt\" expected"; break;
+        case 140: s = "\"f64.add\" expected"; break;
+        case 141: s = "\"f64.sub\" expected"; break;
+        case 142: s = "\"f64.mul\" expected"; break;
+        case 143: s = "\"f64.div\" expected"; break;
+        case 144: s = "\"f64.min\" expected"; break;
+        case 145: s = "\"f64.max\" expected"; break;
+        case 146: s = "\"f64.copysign\" expected"; break;
         case 147: s = "\"f64.convert_s/i32\" expected"; break;
         case 148: s = "\"f64.convert_u/i32\" expected"; break;
         case 149: s = "\"f64.convert_s/i64\" expected"; break;
@@ -1716,23 +1718,25 @@ namespace Xlc {
         case 186: s = "\"i64.store16\" expected"; break;
         case 187: s = "\"i64.store32\" expected"; break;
         case 188: s = "\"br_table\" expected"; break;
-        case 189: s = "\"import\" expected"; break;
-        case 190: s = "\"export\" expected"; break;
-        case 191: s = "\"elem\" expected"; break;
-        case 192: s = "\"offset\" expected"; break;
-        case 193: s = "\"data\" expected"; break;
-        case 194: s = "??? expected"; break;
-        case 195: s = "invalid ModuleField"; break;
-        case 196: s = "invalid Instr"; break;
-        case 197: s = "invalid StructInstr"; break;
-        case 198: s = "invalid PlainInstr"; break;
-        case 199: s = "invalid NoArgInstr"; break;
-        case 200: s = "invalid IdArgInstr"; break;
-        case 201: s = "invalid IdArgInstr"; break;
-        case 202: s = "invalid MemArgInstr"; break;
-        case 203: s = "invalid Const"; break;
-        case 204: s = "invalid ImportDesc"; break;
-        case 205: s = "invalid ExportDesc"; break;
+        case 189: s = "\"from\" expected"; break;
+        case 190: s = "\"import\" expected"; break;
+        case 191: s = "\"as\" expected"; break;
+        case 192: s = "\"export\" expected"; break;
+        case 193: s = "\"elem\" expected"; break;
+        case 194: s = "\"offset\" expected"; break;
+        case 195: s = "\"data\" expected"; break;
+        case 196: s = "??? expected"; break;
+        case 197: s = "invalid ModuleField"; break;
+        case 198: s = "invalid Instr"; break;
+        case 199: s = "invalid StructInstr"; break;
+        case 200: s = "invalid PlainInstr"; break;
+        case 201: s = "invalid NoArgInstr"; break;
+        case 202: s = "invalid IdArgInstr"; break;
+        case 203: s = "invalid IdArgInstr"; break;
+        case 204: s = "invalid MemArgInstr"; break;
+        case 205: s = "invalid Const"; break;
+        case 206: s = "invalid ImportDesc"; break;
+        case 207: s = "invalid ExportDesc"; break;
 
         default: s = "error " + n; break;
       }

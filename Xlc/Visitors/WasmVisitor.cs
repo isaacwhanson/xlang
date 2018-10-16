@@ -19,24 +19,21 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
+using System.Collections.Generic;
+
 namespace Xlc.Visitors {
   public class WasmVisitor : BaseVisitor {
+
     public string FixId(string id) {
-      if (id.StartsWith("$", StringComparison.Ordinal)) {
-        return string.Format("$lcl_{0}", id.Substring(1));
-      } else if (id.StartsWith("@", StringComparison.Ordinal)) {
-        return string.Format("$gbl_{0}", id.Substring(1));
-      } else if (id.StartsWith("#", StringComparison.Ordinal)) {
-        return string.Format("$tbl_{0}", id.Substring(1));
-      } else if (id.StartsWith(":", StringComparison.Ordinal)) {
-        return string.Format("$lbl_{0}", id.Substring(1));
-      } else if (id.StartsWith("&", StringComparison.Ordinal)) {
-        return string.Format("$mem_{0}", id.Substring(1));
-      } else if (id.StartsWith(".", StringComparison.Ordinal)) {
-        return string.Format("$fnc_{0}", id.Substring(1));
-      } else if (id.StartsWith("%", StringComparison.Ordinal)) {
-        return string.Format("$mod_{0}", id.Substring(1));
-      } else { return id; }
+      Dictionary<string, string> idMap = new Dictionary<string, string> {
+        {"$", "$lcl"},
+        {"@", "$gbl"},
+        {"#", "$tbl"},
+        {":", "$lbl"},
+        {"&", "$mem"},
+        {".", "$fnc"}
+      };
+      return string.Format("{0}_{1}", idMap[id.Substring(0, 1)], id.Substring(1));
     }
 
     public override void Visit(Xlc xlc) {
