@@ -45,10 +45,6 @@ namespace Xlc.Visitors {
 
     public override void Visit(Module module) {
       Console.WriteLine("(module ");
-      /*if (!string.IsNullOrEmpty(module.name))
-      {
-          Console.WriteLine(FixId(module.name));
-      }*/
       foreach (IModuleField field in module.fields) {
         field.Accept(this);
       }
@@ -56,7 +52,13 @@ namespace Xlc.Visitors {
     }
 
     public override void Visit(Func func) {
-      func.functype.Accept(this);
+      Console.Write("(func {0} ", FixId(func.functype.id));
+      foreach (Param parameter in func.functype.parameters) {
+        parameter.Accept(this);
+      }
+      foreach (ResultType result in func.functype.results) {
+        result.Accept(this);
+      }
       foreach (IInstr instr in func.instrs.instrs) {
         instr.Accept(this);
       }
@@ -89,6 +91,7 @@ namespace Xlc.Visitors {
       foreach (ResultType result in functype.results) {
         result.Accept(this);
       }
+      Console.Write(")");
     }
 
     public override void Visit(Param parameter) {
@@ -151,7 +154,9 @@ namespace Xlc.Visitors {
     }
 
     public override void Visit(Memory memory) {
-      throw new NotImplementedException();
+      Console.Write("(memory {0} ", FixId(memory.id));
+      memory.limits.Accept(this);
+      Console.WriteLine(")");
     }
 
     public override void Visit(GlobalField globalField) {
@@ -162,15 +167,27 @@ namespace Xlc.Visitors {
     }
 
     public override void Visit(Start start) {
-      throw new NotImplementedException();
+      Console.WriteLine("(start {0})", FixId(start.id));
     }
 
     public override void Visit(Elem elem) {
-      throw new NotImplementedException();
+      Console.Write("(elem {0} (offset ", FixId(elem.id));
+      elem.offset.Accept(this);
+      Console.Write(") ");
+      foreach (string fid in elem.ids) {
+        Console.Write("{0} ", FixId(fid));
+      }
+      Console.WriteLine(")");
     }
 
     public override void Visit(Data data) {
-      throw new NotImplementedException();
+      Console.Write("(data {0} (offset ", FixId(data.id));
+      data.offset.Accept(this);
+      Console.Write(") ");
+      foreach (string dstr in data.strings) {
+        Console.Write("{0} ", dstr);
+      }
+      Console.WriteLine(")");
     }
 
     public override void Visit(GlobalType globalType) {
@@ -178,11 +195,17 @@ namespace Xlc.Visitors {
     }
 
     public override void Visit(BlockInstr block) {
-      throw new NotImplementedException();
+      Console.Write("block ");
+      block.result.Accept(this);
+      block.instrs.Accept(this);
+      Console.Write("end ");
     }
 
     public override void Visit(LoopInstr loop) {
-      throw new NotImplementedException();
+      Console.Write("loop ");
+      loop.result.Accept(this);
+      loop.instrs.Accept(this);
+      Console.Write("end ");
     }
 
     public override void Visit(IfInstr ifInstr) {
@@ -198,11 +221,18 @@ namespace Xlc.Visitors {
     }
 
     public override void Visit(MemArgInstr memArgInstr) {
-      throw new NotImplementedException();
+      Console.Write("{0} offset={1} align={2} ",
+                    memArgInstr.token.val,
+                    memArgInstr.offset,
+                    memArgInstr.align);
     }
 
     public override void Visit(BrTableInstr brTableInstr) {
-      throw new NotImplementedException();
+      Console.Write("br_table ");
+      foreach(string label in brTableInstr.labels) {
+        Console.Write("{0} ", FixId(label));
+      }
+      Console.Write("{0} ", FixId(brTableInstr.default_lbl));
     }
 
     public override void Visit(Global global) {
