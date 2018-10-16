@@ -21,174 +21,146 @@
 using System;
 using System.Collections.Generic;
 
-namespace Xlc
-{
-    public interface IModuleField : IXlcElement { }
+namespace Xlc {
+  public interface IModuleField : IXlcElement { }
 
-    public interface IImportDesc : IXlcElement { }
+  public interface IImportDesc : IXlcElement { }
 
-    public interface IInstr : IXlcElement { }
+  public interface IInstr : IXlcElement { }
 
-    public partial class Xlc
-    {
-        public Module module;
-    }
+  public partial class Xlc {
+    public Module module;
+  }
 
-    public partial class Module
-    {
-        //public string name;
-        public List<IModuleField> fields = new List<IModuleField>();
-    }
+  public partial class Module {
+    //public string name;
+    public List<IModuleField> fields = new List<IModuleField>();
+  }
 
-    public partial class Func : IModuleField
-    {
-        public FuncType functype;
-        public List<IInstr> instrs = new List<IInstr>();
-    }
+  public partial class Func : IModuleField {
+    public FuncType functype;
+    public InstrList instrs;
+  }
 
-    public partial class Import : IModuleField
-    {
-        public string module;
-        public string name;
-        public IImportDesc desc;
-    }
+  public partial class Import : IModuleField {
+    public string module;
+    public string name;
+    public IImportDesc desc;
+  }
 
-    public partial class Export : IModuleField
-    {
-        public string name;
-        public ExportDesc desc;
-    }
+  public partial class Export : IModuleField {
+    public string name;
+    public ExportDesc desc;
+  }
 
-    public partial class GlobalField : IModuleField
-    {
-        public Global global;
-        public InstrList instrs;
-    }
+  public partial class GlobalField : IModuleField {
+    public Global global;
+    public InstrList instrs;
+  }
 
-    public partial class Table : IModuleField, IImportDesc
-    {
-        public string id;
-        public Limits limits;
-    }
+  public partial class Table : IModuleField, IImportDesc {
+    public string id;
+    public Limits limits;
+  }
 
-    public partial class Memory : IModuleField, IImportDesc
-    {
-        public string id;
-        public Limits limits;
-    }
+  public partial class Memory : IModuleField, IImportDesc {
+    public string id;
+    public Limits limits;
+  }
 
-    public partial class Elem : IModuleField
-    {
-        public string id;
-        public List<string> ids;
-        public List<IInstr> offset = new List<IInstr>();
-    }
+  public partial class Elem : IModuleField {
+    public string id;
+    public List<string> ids;
+    public InstrList offset;
+  }
 
-    public partial class Start : IModuleField
-    {
-        public string id;
-    }
+  public partial class Start : IModuleField {
+    public string id;
+  }
 
-    public partial class Data : IModuleField
-    {
-        public string id;
-        public List<string> strings;
-        public List<IInstr> offset = new List<IInstr>();
-    }
+  public partial class Data : IModuleField {
+    public string id;
+    public List<string> strings;
+    public InstrList offset;
+  }
 
-    public partial class FuncType : IImportDesc
-    {
-        public string id;
-        public List<Param> parameters = new List<Param>();
-        public List<ResultType> results = new List<ResultType>();
-    }
+  public partial class FuncType : IImportDesc {
+    public string id;
+    public List<Param> parameters = new List<Param>();
+    public List<ResultType> results = new List<ResultType>();
+  }
 
-    public partial class Global : IImportDesc
-    {
-        public string id;
-        public GlobalType gtype;
-    }
+  public partial class Global : IImportDesc {
+    public string id;
+    public GlobalType gtype;
+  }
 
-    public partial class Param
-    {
-        public string id;
-        public string valtype;
-    }
+  public partial class Param {
+    public string id;
+    public string valtype;
+  }
 
-    public partial class ResultType
-    {
-        public string valtype;
-    }
+  public partial class ResultType {
+    public string valtype;
+  }
 
-    public partial class GlobalType
-    {
-        public bool mutable;
-        public string valtype;
-    }
+  public partial class GlobalType {
+    public bool mutable;
+    public string valtype;
+  }
 
-    public partial class ExportDesc
-    {
-        public string id;
-    }
+  public partial class ExportDesc {
+    public string id;
+  }
 
-    public partial class FoldedExpr : IInstr
-    {
-        public IInstr parent;
-        public List<IInstr> instrs = new List<IInstr>();
-    }
+  public partial class FoldedExpr : IInstr {
+    public IInstr parent;
+    public List<IInstr> instrs = new List<IInstr>();
+  }
 
-    public partial class BlockInstr : IInstr
-    {
-        public string valtype;
-        public List<IInstr> instrs = new List<IInstr>();
-    }
+  public partial class BlockInstr : IInstr {
+    public ResultType result;
+    public InstrList instrs;
+  }
 
-    public partial class LoopInstr : IInstr
-    {
-        public string valtype;
-        public List<IInstr> instrs = new List<IInstr>();
-    }
+  public partial class LoopInstr : IInstr {
+    public ResultType result;
+    public InstrList instrs;
+  }
 
-    public partial class IfInstr : IInstr
-    {
-        public ResultType result;
-        public FoldedExpr folded;
-        public InstrList instrs;
-        public InstrList elses;
-    }
+  public partial class IfInstr : IInstr {
+    public ResultType result;
+    public FoldedExpr folded;
+    public InstrList instrs;
+    public InstrList elses;
+  }
 
-    public partial class NoArgInstr : IInstr { }
+  public partial class NoArgInstr : IInstr { }
 
-    public partial class IdArgInstr : IInstr
-    {
-        public string id;
-    }
+  public partial class IdArgInstr : IInstr {
+    public string id;
+  }
 
-    public partial class MemArgInstr : IInstr
-    {
-        public string offset;
-        public string align;
-    }
+  public partial class MemArgInstr : IInstr {
+    public string offset;
+    public string align;
+  }
 
-    public partial class BrTableInstr : IInstr
-    {
-        public List<string> labels = new List<string>();
-        public string default_lbl;
-    }
+  public partial class BrTableInstr : IInstr {
+    public List<string> labels = new List<string>();
+    public string default_lbl;
+  }
 
-    public partial class Const : IInstr
-    {
-        public bool wide = false;
-    }
+  public partial class Const : IInstr {
+    public bool wide = false;
+  }
 
-    public partial class Limits
-    {
-        public string min;
-        public string max;
-    }
+  public partial class Limits {
+    public string min;
+    public string max;
+  }
 
-    public partial class InstrList
-    {
-        public List<IInstr> instrs = new List<IInstr>();
-    }
+  public partial class InstrList {
+    public List<IInstr> instrs = new List<IInstr>();
+  }
 }

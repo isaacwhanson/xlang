@@ -279,10 +279,10 @@ namespace Xlc {
       start[93] = 52;
       start[109] = 494;
       start[98] = 495;
-      start[123] = 59;
-      start[125] = 60;
       start[108] = 496;
       start[101] = 497;
+      start[123] = 65;
+      start[125] = 66;
       start[100] = 498;
       start[117] = 76;
       start[114] = 87;
@@ -626,22 +626,22 @@ namespace Xlc {
         case 58:
         {t.kind = 20; break;}
         case 59:
-        {t.kind = 21; break;}
+          if (ch == 'o') { AddCh(); goto case 60; }
+        else {goto case 0;}
         case 60:
-        {t.kind = 22; break;}
+          if (ch == 'p') { AddCh(); goto case 61; }
+        else {goto case 0;}
         case 61:
-          if (ch == 'o') { AddCh(); goto case 62; }
-        else {goto case 0;}
+        {t.kind = 21; break;}
         case 62:
-          if (ch == 'p') { AddCh(); goto case 63; }
-        else {goto case 0;}
+        {t.kind = 22; break;}
         case 63:
-        {t.kind = 23; break;}
-        case 64:
-        {t.kind = 24; break;}
-        case 65:
-          if (ch == 'e') { AddCh(); goto case 66; }
+          if (ch == 'e') { AddCh(); goto case 64; }
         else {goto case 0;}
+        case 64:
+        {t.kind = 23; break;}
+        case 65:
+        {t.kind = 24; break;}
         case 66:
         {t.kind = 25; break;}
         case 67:
@@ -1761,7 +1761,7 @@ namespace Xlc {
           if (ch == '3') { AddCh(); goto case 500; }
           else if (ch == '6') { AddCh(); goto case 501; }
           else if (ch == 'n') { AddCh(); goto case 29; }
-          else if (ch == 'f') { AddCh(); goto case 64; }
+          else if (ch == 'f') { AddCh(); goto case 62; }
           else if (ch == 'm') { AddCh(); goto case 468; }
         else {goto case 0;}
         case 491:
@@ -1786,7 +1786,7 @@ namespace Xlc {
         else {goto case 0;}
         case 496:
           recEnd = pos; recKind = 156;
-          if (ch == 'o') { AddCh(); goto case 61; }
+          if (ch == 'o') { AddCh(); goto case 59; }
         else {t.kind = 156; break;}
         case 497:
           if (ch == 'l') { AddCh(); goto case 507; }
@@ -1823,7 +1823,7 @@ namespace Xlc {
           if (ch == '_') { AddCh(); goto case 514; }
         else {t.kind = 163; break;}
         case 507:
-          if (ch == 's') { AddCh(); goto case 65; }
+          if (ch == 's') { AddCh(); goto case 63; }
           else if (ch == 'e') { AddCh(); goto case 478; }
         else {goto case 0;}
         case 508:

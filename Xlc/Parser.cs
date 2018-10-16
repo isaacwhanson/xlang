@@ -199,13 +199,8 @@ namespace Xlc {
       Token token = la;
       _FuncType(out FuncType functype);
       func = new Func(token) { functype = functype }; 
-      Expect(21);
-      while (StartOf(2)) {
-        _Instr(out IInstr instr);
-        func.instrs.Add(instr); 
-        Expect(11);
-      }
-      Expect(22);
+      _InstrList(out InstrList instrs);
+      func.instrs = instrs; 
     }
 
     void _Import(out Import import) {
@@ -266,13 +261,8 @@ namespace Xlc {
       Expect(5);
       elem = new Elem(token) { id = t.val }; 
       Expect(192);
-      Expect(21);
-      while (StartOf(2)) {
-        _Instr(out IInstr instr);
-        elem.offset.Add(instr); 
-        Expect(11);
-      }
-      Expect(22);
+      _InstrList(out InstrList instrs);
+      elem.offset = instrs; 
       Expect(16);
       if (la.kind == 4) {
         Get();
@@ -292,13 +282,8 @@ namespace Xlc {
       Expect(6);
       data = new Data(token) { id = t.val }; 
       Expect(192);
-      Expect(21);
-      while (StartOf(2)) {
-        _Instr(out IInstr instr);
-        data.offset.Add(instr); 
-        Expect(11);
-      }
-      Expect(22);
+      _InstrList(out InstrList instrs);
+      data.offset = instrs; 
       Expect(16);
       if (la.kind == 1) {
         Get();
@@ -327,12 +312,8 @@ namespace Xlc {
         }
       }
       Expect(15);
-      Expect(16);
-      if (la.kind == 8) {
-        _ResultType(out ResultType result);
-        functype.results.Add(result); 
-      }
-      Expect(17);
+      _ResultType(out ResultType result);
+      functype.results.Add(result); 
     }
 
     void _Param(out Param param) {
@@ -344,8 +325,13 @@ namespace Xlc {
 
     void _ResultType(out ResultType result) {
       Token token = la;
-      Expect(8);
-      result = new ResultType(token) { valtype = t.val }; 
+      result = new ResultType(token); 
+      Expect(16);
+      if (la.kind == 8) {
+        Get();
+        result.valtype = t.val; 
+      }
+      Expect(17);
     }
 
     void _Limits(out Limits limits) {
@@ -373,10 +359,10 @@ namespace Xlc {
     void _Instr(out IInstr instr) {
       Token token = la;
       instr = null; 
-      if (la.kind == 20 || la.kind == 23 || la.kind == 24) {
+      if (la.kind == 20 || la.kind == 21 || la.kind == 22) {
         _StructInstr(out IInstr strct);
         instr = strct; 
-      } else if (StartOf(3)) {
+      } else if (StartOf(2)) {
         _PlainInstr(out IInstr plain);
         instr = plain; 
       } else SynErr(196);
@@ -388,10 +374,10 @@ namespace Xlc {
       if (la.kind == 20) {
         _BlockInstr(out BlockInstr block);
         instr = block; 
-      } else if (la.kind == 23) {
+      } else if (la.kind == 21) {
         _LoopInstr(out LoopInstr loop);
         instr = loop; 
-      } else if (la.kind == 24) {
+      } else if (la.kind == 22) {
         _IfInstr(out IfInstr ifinstr);
         instr = ifinstr; 
       } else SynErr(197);
@@ -400,13 +386,13 @@ namespace Xlc {
     void _PlainInstr(out IInstr instr) {
       Token token = la;
       instr = null; 
-      if (StartOf(4)) {
+      if (StartOf(3)) {
         _NoArgInstr(out NoArgInstr noarg);
         instr = noarg; 
-      } else if (StartOf(5)) {
+      } else if (StartOf(4)) {
         _IdArgInstr(out IdArgInstr idinstr);
         instr = idinstr; 
-      } else if (StartOf(6)) {
+      } else if (StartOf(5)) {
         _MemArgInstr(out MemArgInstr meminstr);
         instr = meminstr; 
       } else if (la.kind == 188) {
@@ -426,57 +412,35 @@ namespace Xlc {
       Token token = la;
       Expect(20);
       block = new BlockInstr(token); 
-      Expect(16);
-      if (la.kind == 8) {
-        Get();
-        block.valtype = t.val; 
-      }
-      Expect(17);
-      Expect(21);
-      while (StartOf(2)) {
-        _Instr(out IInstr instr);
-        block.instrs.Add(instr); 
-        Expect(11);
-      }
-      Expect(22);
+      _ResultType(out ResultType result);
+      block.result = result; 
+      _InstrList(out InstrList instrs);
+      block.instrs = instrs; 
     }
 
     void _LoopInstr(out LoopInstr loop) {
       Token token = la;
-      Expect(23);
-      loop = new LoopInstr(token); 
-      Expect(16);
-      if (la.kind == 8) {
-        Get();
-        loop.valtype = t.val; 
-      }
-      Expect(17);
       Expect(21);
-      while (StartOf(2)) {
-        _Instr(out IInstr instr);
-        loop.instrs.Add(instr); 
-        Expect(11);
-      }
-      Expect(22);
+      loop = new LoopInstr(token); 
+      _ResultType(out ResultType result);
+      loop.result = result; 
+      _InstrList(out InstrList instrs);
+      loop.instrs = instrs; 
     }
 
     void _IfInstr(out IfInstr ifinstr) {
       Token token = la;
-      Expect(24);
+      Expect(22);
       ifinstr = new IfInstr(token); 
       if (la.kind == 13) {
         _FoldedExpr(out FoldedExpr folded);
         ifinstr.folded = folded; 
       }
-      Expect(16);
-      if (la.kind == 8) {
-        _ResultType(out ResultType rslt);
-        ifinstr.result = rslt; 
-      }
-      Expect(17);
+      _ResultType(out ResultType rslt);
+      ifinstr.result = rslt; 
       _InstrList(out InstrList instrs);
       ifinstr.instrs = instrs; 
-      if (la.kind == 25) {
+      if (la.kind == 23) {
         Get();
         _InstrList(out InstrList elses);
         ifinstr.elses = elses; 
@@ -1015,7 +979,7 @@ namespace Xlc {
     void _IdArgInstr(out IdArgInstr idinstr) {
       Token token = la;
       idinstr = null; 
-      if (StartOf(7)) {
+      if (StartOf(6)) {
         if (la.kind == 158 || la.kind == 159 || la.kind == 160) {
           if (la.kind == 158) {
             Get();
@@ -1208,13 +1172,13 @@ namespace Xlc {
     void _InstrList(out InstrList instrs) {
       Token token = la;
       instrs = new InstrList(token); 
-      Expect(21);
-      while (StartOf(2)) {
+      Expect(24);
+      while (StartOf(7)) {
         _Instr(out IInstr instr);
         instrs.instrs.Add(instr); 
         Expect(11);
       }
-      Expect(22);
+      Expect(25);
     }
 
     void _ImportDesc(out IImportDesc importdesc) {
@@ -1269,12 +1233,12 @@ namespace Xlc {
     static readonly bool[,] set = {
         {_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
     {_x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _x,_T,_x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_T, _T,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x},
     {_x,_x,_T,_T, _x,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x},
     {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
     {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
     {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x}
+    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x},
+    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x}
 
     };
   } // end Parser
@@ -1584,11 +1548,11 @@ namespace Xlc {
         case 18: s = "\":\" expected"; break;
         case 19: s = "\"mut\" expected"; break;
         case 20: s = "\"block\" expected"; break;
-        case 21: s = "\"{\" expected"; break;
-        case 22: s = "\"}\" expected"; break;
-        case 23: s = "\"loop\" expected"; break;
-        case 24: s = "\"if\" expected"; break;
-        case 25: s = "\"else\" expected"; break;
+        case 21: s = "\"loop\" expected"; break;
+        case 22: s = "\"if\" expected"; break;
+        case 23: s = "\"else\" expected"; break;
+        case 24: s = "\"{\" expected"; break;
+        case 25: s = "\"}\" expected"; break;
         case 26: s = "\"nop\" expected"; break;
         case 27: s = "\"drop\" expected"; break;
         case 28: s = "\"select\" expected"; break;
