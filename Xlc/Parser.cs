@@ -56,7 +56,7 @@ namespace Xlc {
     public const int _valtype = 8;
     public const int _integer = 9;
     public const int _float = 10;
-    public const int maxT = 196;
+    public const int maxT = 195;
 
     const bool _T = true;
     const bool _x = false;
@@ -151,7 +151,7 @@ namespace Xlc {
             field = func; 
             break;
           }
-        case 189: {
+        case 188: {
             _Import(out Import import);
             field = import; 
             break;
@@ -171,7 +171,7 @@ namespace Xlc {
             field = global; 
             break;
           }
-        case 192: {
+        case 191: {
             _Export(out Export export);
             field = export; 
             break;
@@ -181,17 +181,17 @@ namespace Xlc {
             field = start; 
             break;
           }
-        case 193: {
+        case 192: {
             _Elem(out Elem elem);
             field = elem; 
             break;
           }
-        case 195: {
+        case 194: {
             _Data(out Data data);
             field = data; 
             break;
           }
-        default: SynErr(197); break;
+        default: SynErr(196); break;
       }
     }
 
@@ -205,13 +205,13 @@ namespace Xlc {
 
     void _Import(out Import import) {
       Token token = la;
-      Expect(189);
+      Expect(188);
       Expect(1);
       import = new Import(token) { module = t.val }; 
-      Expect(190);
+      Expect(189);
       Expect(1);
       import.name = t.val; 
-      Expect(191);
+      Expect(190);
       _ImportDesc(out IImportDesc desc);
       import.desc = desc; 
     }
@@ -243,7 +243,7 @@ namespace Xlc {
 
     void _Export(out Export export) {
       Token token = la;
-      Expect(192);
+      Expect(191);
       Expect(1);
       export = new Export(token) { name = t.val }; 
       _ExportDesc(out ExportDesc exportdesc);
@@ -259,10 +259,10 @@ namespace Xlc {
 
     void _Elem(out Elem elem) {
       Token token = la;
-      Expect(193);
+      Expect(192);
       Expect(5);
       elem = new Elem(token) { id = t.val }; 
-      Expect(194);
+      Expect(193);
       _InstrList(out InstrList instrs);
       elem.offset = instrs; 
       Expect(16);
@@ -280,10 +280,10 @@ namespace Xlc {
 
     void _Data(out Data data) {
       Token token = la;
-      Expect(195);
+      Expect(194);
       Expect(6);
       data = new Data(token) { id = t.val }; 
-      Expect(194);
+      Expect(193);
       _InstrList(out InstrList instrs);
       data.offset = instrs; 
       Expect(16);
@@ -367,7 +367,7 @@ namespace Xlc {
       } else if (StartOf(2)) {
         _PlainInstr(out IInstr plain);
         instr = plain; 
-      } else SynErr(198);
+      } else SynErr(197);
     }
 
     void _StructInstr(out IInstr instr) {
@@ -382,7 +382,7 @@ namespace Xlc {
       } else if (la.kind == 22) {
         _IfInstr(out IfInstr ifinstr);
         instr = ifinstr; 
-      } else SynErr(199);
+      } else SynErr(198);
     }
 
     void _PlainInstr(out IInstr instr) {
@@ -397,13 +397,13 @@ namespace Xlc {
       } else if (StartOf(5)) {
         _MemArgInstr(out MemArgInstr meminstr);
         instr = meminstr; 
-      } else if (la.kind == 188) {
+      } else if (la.kind == 187) {
         _BrTableInstr(out BrTableInstr brtable);
         instr = brtable; 
       } else if (la.kind == 9 || la.kind == 10) {
         _Const(out IInstr constinstr);
         instr = constinstr; 
-      } else SynErr(200);
+      } else SynErr(199);
       if (la.kind == 13) {
         _FoldedExpr(out FoldedExpr folded);
         folded.parent = instr; instr = folded; 
@@ -973,7 +973,7 @@ namespace Xlc {
             Get();
             break;
           }
-        default: SynErr(201); break;
+        default: SynErr(200); break;
       }
       noarg = new NoArgInstr(token); 
     }
@@ -995,22 +995,20 @@ namespace Xlc {
           Get();
         } else if (la.kind == 3) {
           Get();
-        } else SynErr(202);
-      } else if (la.kind == 161 || la.kind == 162) {
-        if (la.kind == 161) {
-          Get();
-        } else {
-          Get();
-        }
+        } else SynErr(201);
+      } else if (la.kind == 4) {
+        Get();
+      } else if (la.kind == 161) {
+        Get();
         Expect(4);
-      } else if (la.kind == 163 || la.kind == 164) {
-        if (la.kind == 163) {
+      } else if (la.kind == 162 || la.kind == 163) {
+        if (la.kind == 162) {
           Get();
         } else {
           Get();
         }
         Expect(7);
-      } else SynErr(203);
+      } else SynErr(202);
       idinstr = new IdArgInstr(token) { id = t.val }; 
     }
 
@@ -1018,6 +1016,10 @@ namespace Xlc {
       Token token = la;
       meminstr = null; 
       switch (la.kind) {
+        case 164: {
+            Get();
+            break;
+          }
         case 165: {
             Get();
             break;
@@ -1106,11 +1108,7 @@ namespace Xlc {
             Get();
             break;
           }
-        case 187: {
-            Get();
-            break;
-          }
-        default: SynErr(204); break;
+        default: SynErr(203); break;
       }
       Expect(9);
       string offset = t.val; 
@@ -1121,7 +1119,7 @@ namespace Xlc {
 
     void _BrTableInstr(out BrTableInstr brtable) {
       Token token = la;
-      Expect(188);
+      Expect(187);
       brtable = new BrTableInstr(token); 
       Expect(16);
       if (la.kind == 7) {
@@ -1145,7 +1143,7 @@ namespace Xlc {
         Get();
       } else if (la.kind == 10) {
         Get();
-      } else SynErr(205);
+      } else SynErr(204);
       if (la.kind == 156 || la.kind == 157) {
         if (la.kind == 156) {
           Get();
@@ -1198,7 +1196,7 @@ namespace Xlc {
       } else if (la.kind == 3) {
         _Global(out Global global);
         importdesc = global; 
-      } else SynErr(206);
+      } else SynErr(205);
     }
 
     void _ExportDesc(out ExportDesc exportdesc) {
@@ -1211,7 +1209,7 @@ namespace Xlc {
         Get();
       } else if (la.kind == 3) {
         Get();
-      } else SynErr(207);
+      } else SynErr(206);
       exportdesc = new ExportDesc(token) { id = t.val }; 
     }
 
@@ -1233,14 +1231,14 @@ namespace Xlc {
     }
 
     static readonly bool[,] set = {
-        {_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-    {_x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_x,_x, _T,_T,_x,_T, _x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x},
-    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x}
+        {_T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
+    {_x,_x,_x,_T, _T,_T,_T,_x, _x,_x,_x,_x, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_x,_x,_T, _T,_x,_T,_x, _x},
+    {_x,_x,_T,_T, _T,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x},
+    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
+    {_x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
+    {_x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
+    {_x,_x,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_T,_T, _T,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x,_x,_x,_x, _x},
+    {_x,_x,_T,_T, _T,_x,_x,_x, _x,_T,_T,_x, _x,_x,_x,_x, _x,_x,_x,_x, _T,_T,_T,_x, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _T,_T,_T,_T, _x,_x,_x,_x, _x,_x,_x,_x, _x}
 
     };
   } // end Parser
@@ -1690,53 +1688,52 @@ namespace Xlc {
         case 158: s = "\"set\" expected"; break;
         case 159: s = "\"get\" expected"; break;
         case 160: s = "\"tee\" expected"; break;
-        case 161: s = "\"call\" expected"; break;
-        case 162: s = "\"call_indirect\" expected"; break;
-        case 163: s = "\"br\" expected"; break;
-        case 164: s = "\"br_if\" expected"; break;
-        case 165: s = "\"i32.load\" expected"; break;
-        case 166: s = "\"i64.load\" expected"; break;
-        case 167: s = "\"f32.load\" expected"; break;
-        case 168: s = "\"f64.load\" expected"; break;
-        case 169: s = "\"i32.load8_s\" expected"; break;
-        case 170: s = "\"i32.load8_u\" expected"; break;
-        case 171: s = "\"i32.load16_s\" expected"; break;
-        case 172: s = "\"i32.load16_u\" expected"; break;
-        case 173: s = "\"i64.load8_s\" expected"; break;
-        case 174: s = "\"i64.load8_u\" expected"; break;
-        case 175: s = "\"i64.load16_s\" expected"; break;
-        case 176: s = "\"i64.load16_u\" expected"; break;
-        case 177: s = "\"i64.load32_s\" expected"; break;
-        case 178: s = "\"i64.load32_u\" expected"; break;
-        case 179: s = "\"i32.store\" expected"; break;
-        case 180: s = "\"i64.store\" expected"; break;
-        case 181: s = "\"f32.store\" expected"; break;
-        case 182: s = "\"f64.store\" expected"; break;
-        case 183: s = "\"i32.store8\" expected"; break;
-        case 184: s = "\"i32.store16\" expected"; break;
-        case 185: s = "\"i64.store8\" expected"; break;
-        case 186: s = "\"i64.store16\" expected"; break;
-        case 187: s = "\"i64.store32\" expected"; break;
-        case 188: s = "\"br_table\" expected"; break;
-        case 189: s = "\"from\" expected"; break;
-        case 190: s = "\"import\" expected"; break;
-        case 191: s = "\"as\" expected"; break;
-        case 192: s = "\"export\" expected"; break;
-        case 193: s = "\"elem\" expected"; break;
-        case 194: s = "\"offset\" expected"; break;
-        case 195: s = "\"data\" expected"; break;
-        case 196: s = "??? expected"; break;
-        case 197: s = "invalid ModuleField"; break;
-        case 198: s = "invalid Instr"; break;
-        case 199: s = "invalid StructInstr"; break;
-        case 200: s = "invalid PlainInstr"; break;
-        case 201: s = "invalid NoArgInstr"; break;
+        case 161: s = "\"call_indirect\" expected"; break;
+        case 162: s = "\"br\" expected"; break;
+        case 163: s = "\"br_if\" expected"; break;
+        case 164: s = "\"i32.load\" expected"; break;
+        case 165: s = "\"i64.load\" expected"; break;
+        case 166: s = "\"f32.load\" expected"; break;
+        case 167: s = "\"f64.load\" expected"; break;
+        case 168: s = "\"i32.load8_s\" expected"; break;
+        case 169: s = "\"i32.load8_u\" expected"; break;
+        case 170: s = "\"i32.load16_s\" expected"; break;
+        case 171: s = "\"i32.load16_u\" expected"; break;
+        case 172: s = "\"i64.load8_s\" expected"; break;
+        case 173: s = "\"i64.load8_u\" expected"; break;
+        case 174: s = "\"i64.load16_s\" expected"; break;
+        case 175: s = "\"i64.load16_u\" expected"; break;
+        case 176: s = "\"i64.load32_s\" expected"; break;
+        case 177: s = "\"i64.load32_u\" expected"; break;
+        case 178: s = "\"i32.store\" expected"; break;
+        case 179: s = "\"i64.store\" expected"; break;
+        case 180: s = "\"f32.store\" expected"; break;
+        case 181: s = "\"f64.store\" expected"; break;
+        case 182: s = "\"i32.store8\" expected"; break;
+        case 183: s = "\"i32.store16\" expected"; break;
+        case 184: s = "\"i64.store8\" expected"; break;
+        case 185: s = "\"i64.store16\" expected"; break;
+        case 186: s = "\"i64.store32\" expected"; break;
+        case 187: s = "\"br_table\" expected"; break;
+        case 188: s = "\"from\" expected"; break;
+        case 189: s = "\"import\" expected"; break;
+        case 190: s = "\"as\" expected"; break;
+        case 191: s = "\"export\" expected"; break;
+        case 192: s = "\"elem\" expected"; break;
+        case 193: s = "\"offset\" expected"; break;
+        case 194: s = "\"data\" expected"; break;
+        case 195: s = "??? expected"; break;
+        case 196: s = "invalid ModuleField"; break;
+        case 197: s = "invalid Instr"; break;
+        case 198: s = "invalid StructInstr"; break;
+        case 199: s = "invalid PlainInstr"; break;
+        case 200: s = "invalid NoArgInstr"; break;
+        case 201: s = "invalid IdArgInstr"; break;
         case 202: s = "invalid IdArgInstr"; break;
-        case 203: s = "invalid IdArgInstr"; break;
-        case 204: s = "invalid MemArgInstr"; break;
-        case 205: s = "invalid Const"; break;
-        case 206: s = "invalid ImportDesc"; break;
-        case 207: s = "invalid ExportDesc"; break;
+        case 203: s = "invalid MemArgInstr"; break;
+        case 204: s = "invalid Const"; break;
+        case 205: s = "invalid ImportDesc"; break;
+        case 206: s = "invalid ExportDesc"; break;
 
         default: s = "error " + n; break;
       }

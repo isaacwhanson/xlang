@@ -232,8 +232,8 @@ namespace Xlc {
   public class Scanner : IScanner {
     const char EOL = '\n';
     const int eofSym = 0; /* pdt */
-    const int maxT = 196;
-    const int noSym = 196;
+    const int maxT = 195;
+    const int noSym = 195;
 
     public Buffer buffer; // scanner buffer
 
@@ -265,33 +265,33 @@ namespace Xlc {
       start[46] = 11;
       start[35] = 13;
       start[38] = 15;
-      start[58] = 494;
-      start[105] = 495;
-      start[102] = 496;
+      start[58] = 498;
+      start[105] = 499;
+      start[102] = 500;
       start[48] = 37;
-      start[110] = 497;
+      start[110] = 501;
       start[59] = 43;
-      start[115] = 498;
+      start[115] = 502;
       start[40] = 48;
       start[44] = 49;
       start[41] = 50;
       start[91] = 51;
       start[93] = 52;
-      start[109] = 499;
-      start[98] = 500;
-      start[108] = 501;
-      start[101] = 502;
+      start[109] = 503;
+      start[98] = 504;
+      start[108] = 505;
+      start[101] = 506;
       start[123] = 65;
       start[125] = 66;
-      start[100] = 503;
+      start[100] = 507;
       start[117] = 76;
       start[114] = 87;
       start[76] = 412;
       start[103] = 414;
       start[116] = 417;
-      start[99] = 504;
-      start[97] = 476;
-      start[111] = 485;
+      start[99] = 420;
+      start[97] = 480;
+      start[111] = 489;
       start[Buffer.EOF] = -1;
 
     }
@@ -1575,83 +1575,84 @@ namespace Xlc {
         case 419:
         {t.kind = 160; break;}
         case 420:
-          if (ch == 'i') { AddCh(); goto case 421; }
+          if (ch == 'a') { AddCh(); goto case 421; }
         else {goto case 0;}
         case 421:
-          if (ch == 'n') { AddCh(); goto case 422; }
+          if (ch == 'l') { AddCh(); goto case 422; }
         else {goto case 0;}
         case 422:
-          if (ch == 'd') { AddCh(); goto case 423; }
+          if (ch == 'l') { AddCh(); goto case 423; }
         else {goto case 0;}
         case 423:
-          if (ch == 'i') { AddCh(); goto case 424; }
+          if (ch == '_') { AddCh(); goto case 424; }
         else {goto case 0;}
         case 424:
-          if (ch == 'r') { AddCh(); goto case 425; }
+          if (ch == 'i') { AddCh(); goto case 425; }
         else {goto case 0;}
         case 425:
-          if (ch == 'e') { AddCh(); goto case 426; }
+          if (ch == 'n') { AddCh(); goto case 426; }
         else {goto case 0;}
         case 426:
-          if (ch == 'c') { AddCh(); goto case 427; }
+          if (ch == 'd') { AddCh(); goto case 427; }
         else {goto case 0;}
         case 427:
-          if (ch == 't') { AddCh(); goto case 428; }
+          if (ch == 'i') { AddCh(); goto case 428; }
         else {goto case 0;}
         case 428:
-        {t.kind = 162; break;}
+          if (ch == 'r') { AddCh(); goto case 429; }
+        else {goto case 0;}
         case 429:
-          if (ch == 'f') { AddCh(); goto case 430; }
+          if (ch == 'e') { AddCh(); goto case 430; }
         else {goto case 0;}
         case 430:
-        {t.kind = 164; break;}
+          if (ch == 'c') { AddCh(); goto case 431; }
+        else {goto case 0;}
         case 431:
-          if (ch == 'a') { AddCh(); goto case 432; }
+          if (ch == 't') { AddCh(); goto case 432; }
         else {goto case 0;}
         case 432:
-          if (ch == 'd') { AddCh(); goto case 433; }
-        else {goto case 0;}
+        {t.kind = 161; break;}
         case 433:
-        {t.kind = 167; break;}
-        case 434:
-          if (ch == 'a') { AddCh(); goto case 435; }
+          if (ch == 'f') { AddCh(); goto case 434; }
         else {goto case 0;}
+        case 434:
+        {t.kind = 163; break;}
         case 435:
-          if (ch == 'd') { AddCh(); goto case 436; }
+          if (ch == 'a') { AddCh(); goto case 436; }
         else {goto case 0;}
         case 436:
-        {t.kind = 168; break;}
+          if (ch == 'd') { AddCh(); goto case 437; }
+        else {goto case 0;}
         case 437:
-        {t.kind = 169; break;}
+        {t.kind = 166; break;}
         case 438:
-        {t.kind = 170; break;}
+          if (ch == 'a') { AddCh(); goto case 439; }
+        else {goto case 0;}
         case 439:
-        {t.kind = 171; break;}
+          if (ch == 'd') { AddCh(); goto case 440; }
+        else {goto case 0;}
         case 440:
-        {t.kind = 172; break;}
+        {t.kind = 167; break;}
         case 441:
-        {t.kind = 173; break;}
+        {t.kind = 168; break;}
         case 442:
-        {t.kind = 174; break;}
+        {t.kind = 169; break;}
         case 443:
-        {t.kind = 175; break;}
+        {t.kind = 170; break;}
         case 444:
-        {t.kind = 176; break;}
+        {t.kind = 171; break;}
         case 445:
-        {t.kind = 177; break;}
+        {t.kind = 172; break;}
         case 446:
-        {t.kind = 178; break;}
+        {t.kind = 173; break;}
         case 447:
-          if (ch == 'o') { AddCh(); goto case 448; }
-        else {goto case 0;}
+        {t.kind = 174; break;}
         case 448:
-          if (ch == 'r') { AddCh(); goto case 449; }
-        else {goto case 0;}
+        {t.kind = 175; break;}
         case 449:
-          if (ch == 'e') { AddCh(); goto case 450; }
-        else {goto case 0;}
+        {t.kind = 176; break;}
         case 450:
-        {t.kind = 181; break;}
+        {t.kind = 177; break;}
         case 451:
           if (ch == 'o') { AddCh(); goto case 452; }
         else {goto case 0;}
@@ -1662,215 +1663,217 @@ namespace Xlc {
           if (ch == 'e') { AddCh(); goto case 454; }
         else {goto case 0;}
         case 454:
-        {t.kind = 182; break;}
+        {t.kind = 180; break;}
         case 455:
-        {t.kind = 183; break;}
+          if (ch == 'o') { AddCh(); goto case 456; }
+        else {goto case 0;}
         case 456:
-          if (ch == '6') { AddCh(); goto case 457; }
+          if (ch == 'r') { AddCh(); goto case 457; }
         else {goto case 0;}
         case 457:
-        {t.kind = 184; break;}
+          if (ch == 'e') { AddCh(); goto case 458; }
+        else {goto case 0;}
         case 458:
-        {t.kind = 185; break;}
+        {t.kind = 181; break;}
         case 459:
-          if (ch == '6') { AddCh(); goto case 460; }
-        else {goto case 0;}
+        {t.kind = 182; break;}
         case 460:
-        {t.kind = 186; break;}
-        case 461:
-          if (ch == '2') { AddCh(); goto case 462; }
+          if (ch == '6') { AddCh(); goto case 461; }
         else {goto case 0;}
+        case 461:
+        {t.kind = 183; break;}
         case 462:
-        {t.kind = 187; break;}
+        {t.kind = 184; break;}
         case 463:
-          if (ch == 'a') { AddCh(); goto case 464; }
+          if (ch == '6') { AddCh(); goto case 464; }
         else {goto case 0;}
         case 464:
-          if (ch == 'b') { AddCh(); goto case 465; }
-        else {goto case 0;}
+        {t.kind = 185; break;}
         case 465:
-          if (ch == 'l') { AddCh(); goto case 466; }
+          if (ch == '2') { AddCh(); goto case 466; }
         else {goto case 0;}
         case 466:
-          if (ch == 'e') { AddCh(); goto case 467; }
-        else {goto case 0;}
+        {t.kind = 186; break;}
         case 467:
-        {t.kind = 188; break;}
+          if (ch == 'a') { AddCh(); goto case 468; }
+        else {goto case 0;}
         case 468:
-          if (ch == 'o') { AddCh(); goto case 469; }
+          if (ch == 'b') { AddCh(); goto case 469; }
         else {goto case 0;}
         case 469:
-          if (ch == 'm') { AddCh(); goto case 470; }
+          if (ch == 'l') { AddCh(); goto case 470; }
         else {goto case 0;}
         case 470:
-        {t.kind = 189; break;}
-        case 471:
-          if (ch == 'p') { AddCh(); goto case 472; }
+          if (ch == 'e') { AddCh(); goto case 471; }
         else {goto case 0;}
+        case 471:
+        {t.kind = 187; break;}
         case 472:
           if (ch == 'o') { AddCh(); goto case 473; }
         else {goto case 0;}
         case 473:
-          if (ch == 'r') { AddCh(); goto case 474; }
+          if (ch == 'm') { AddCh(); goto case 474; }
         else {goto case 0;}
         case 474:
-          if (ch == 't') { AddCh(); goto case 475; }
-        else {goto case 0;}
+        {t.kind = 188; break;}
         case 475:
-        {t.kind = 190; break;}
+          if (ch == 'p') { AddCh(); goto case 476; }
+        else {goto case 0;}
         case 476:
-          if (ch == 's') { AddCh(); goto case 477; }
+          if (ch == 'o') { AddCh(); goto case 477; }
         else {goto case 0;}
         case 477:
-        {t.kind = 191; break;}
+          if (ch == 'r') { AddCh(); goto case 478; }
+        else {goto case 0;}
         case 478:
-          if (ch == 'p') { AddCh(); goto case 479; }
+          if (ch == 't') { AddCh(); goto case 479; }
         else {goto case 0;}
         case 479:
-          if (ch == 'o') { AddCh(); goto case 480; }
-        else {goto case 0;}
+        {t.kind = 189; break;}
         case 480:
-          if (ch == 'r') { AddCh(); goto case 481; }
+          if (ch == 's') { AddCh(); goto case 481; }
         else {goto case 0;}
         case 481:
-          if (ch == 't') { AddCh(); goto case 482; }
-        else {goto case 0;}
+        {t.kind = 190; break;}
         case 482:
-        {t.kind = 192; break;}
+          if (ch == 'p') { AddCh(); goto case 483; }
+        else {goto case 0;}
         case 483:
-          if (ch == 'm') { AddCh(); goto case 484; }
+          if (ch == 'o') { AddCh(); goto case 484; }
         else {goto case 0;}
         case 484:
-        {t.kind = 193; break;}
+          if (ch == 'r') { AddCh(); goto case 485; }
+        else {goto case 0;}
         case 485:
-          if (ch == 'f') { AddCh(); goto case 486; }
+          if (ch == 't') { AddCh(); goto case 486; }
         else {goto case 0;}
         case 486:
-          if (ch == 'f') { AddCh(); goto case 487; }
-        else {goto case 0;}
+        {t.kind = 191; break;}
         case 487:
-          if (ch == 's') { AddCh(); goto case 488; }
+          if (ch == 'm') { AddCh(); goto case 488; }
         else {goto case 0;}
         case 488:
-          if (ch == 'e') { AddCh(); goto case 489; }
-        else {goto case 0;}
+        {t.kind = 192; break;}
         case 489:
-          if (ch == 't') { AddCh(); goto case 490; }
+          if (ch == 'f') { AddCh(); goto case 490; }
         else {goto case 0;}
         case 490:
-        {t.kind = 194; break;}
+          if (ch == 'f') { AddCh(); goto case 491; }
+        else {goto case 0;}
         case 491:
-          if (ch == 't') { AddCh(); goto case 492; }
+          if (ch == 's') { AddCh(); goto case 492; }
         else {goto case 0;}
         case 492:
-          if (ch == 'a') { AddCh(); goto case 493; }
+          if (ch == 'e') { AddCh(); goto case 493; }
         else {goto case 0;}
         case 493:
-        {t.kind = 195; break;}
+          if (ch == 't') { AddCh(); goto case 494; }
+        else {goto case 0;}
         case 494:
+        {t.kind = 193; break;}
+        case 495:
+          if (ch == 't') { AddCh(); goto case 496; }
+        else {goto case 0;}
+        case 496:
+          if (ch == 'a') { AddCh(); goto case 497; }
+        else {goto case 0;}
+        case 497:
+        {t.kind = 194; break;}
+        case 498:
           recEnd = pos; recKind = 18;
           if (ch == '!' || ch >= '#' && ch <= 39 || ch >= '*' && ch <= '+' || ch >= '-' && ch <= ':' || ch >= '<' && ch <= 'Z' || ch == 92 || ch >= '^' && ch <= 'z' || ch == '|' || ch == '~') { AddCh(); goto case 17; }
         else {t.kind = 18; break;}
-        case 495:
-          if (ch == '3') { AddCh(); goto case 505; }
-          else if (ch == '6') { AddCh(); goto case 506; }
+        case 499:
+          if (ch == '3') { AddCh(); goto case 508; }
+          else if (ch == '6') { AddCh(); goto case 509; }
           else if (ch == 'n') { AddCh(); goto case 29; }
           else if (ch == 'f') { AddCh(); goto case 62; }
-          else if (ch == 'm') { AddCh(); goto case 471; }
+          else if (ch == 'm') { AddCh(); goto case 475; }
         else {goto case 0;}
-        case 496:
-          if (ch == '3') { AddCh(); goto case 507; }
-          else if (ch == '6') { AddCh(); goto case 508; }
-          else if (ch == 'r') { AddCh(); goto case 468; }
+        case 500:
+          if (ch == '3') { AddCh(); goto case 510; }
+          else if (ch == '6') { AddCh(); goto case 511; }
+          else if (ch == 'r') { AddCh(); goto case 472; }
         else {goto case 0;}
-        case 497:
+        case 501:
           if (ch == 'a') { AddCh(); goto case 40; }
           else if (ch == 'o') { AddCh(); goto case 67; }
         else {goto case 0;}
-        case 498:
+        case 502:
           if (ch == 't') { AddCh(); goto case 44; }
-          else if (ch == 'e') { AddCh(); goto case 509; }
+          else if (ch == 'e') { AddCh(); goto case 512; }
         else {goto case 0;}
-        case 499:
+        case 503:
           if (ch == 'u') { AddCh(); goto case 53; }
-          else if (ch == 'e') { AddCh(); goto case 510; }
+          else if (ch == 'e') { AddCh(); goto case 513; }
         else {goto case 0;}
-        case 500:
+        case 504:
           if (ch == 'l') { AddCh(); goto case 55; }
-          else if (ch == 'r') { AddCh(); goto case 511; }
+          else if (ch == 'r') { AddCh(); goto case 514; }
         else {goto case 0;}
-        case 501:
+        case 505:
           recEnd = pos; recKind = 156;
           if (ch == 'o') { AddCh(); goto case 59; }
         else {t.kind = 156; break;}
-        case 502:
-          if (ch == 'l') { AddCh(); goto case 512; }
-          else if (ch == 'x') { AddCh(); goto case 478; }
-        else {goto case 0;}
-        case 503:
-          if (ch == 'r') { AddCh(); goto case 69; }
-          else if (ch == 'a') { AddCh(); goto case 491; }
-        else {goto case 0;}
-        case 504:
-          if (ch == 'a') { AddCh(); goto case 513; }
-        else {goto case 0;}
-        case 505:
-          if (ch == '2') { AddCh(); goto case 514; }
-        else {goto case 0;}
         case 506:
-          if (ch == '4') { AddCh(); goto case 515; }
+          if (ch == 'l') { AddCh(); goto case 515; }
+          else if (ch == 'x') { AddCh(); goto case 482; }
         else {goto case 0;}
         case 507:
-          if (ch == '2') { AddCh(); goto case 516; }
+          if (ch == 'r') { AddCh(); goto case 69; }
+          else if (ch == 'a') { AddCh(); goto case 495; }
         else {goto case 0;}
         case 508:
-          if (ch == '4') { AddCh(); goto case 517; }
+          if (ch == '2') { AddCh(); goto case 516; }
         else {goto case 0;}
         case 509:
+          if (ch == '4') { AddCh(); goto case 517; }
+        else {goto case 0;}
+        case 510:
+          if (ch == '2') { AddCh(); goto case 518; }
+        else {goto case 0;}
+        case 511:
+          if (ch == '4') { AddCh(); goto case 519; }
+        else {goto case 0;}
+        case 512:
           if (ch == 'l') { AddCh(); goto case 72; }
           else if (ch == 't') { AddCh(); goto case 413; }
         else {goto case 0;}
-        case 510:
-          if (ch == 'm') { AddCh(); goto case 518; }
-        else {goto case 0;}
-        case 511:
-          recEnd = pos; recKind = 163;
-          if (ch == '_') { AddCh(); goto case 519; }
-        else {t.kind = 163; break;}
-        case 512:
-          if (ch == 's') { AddCh(); goto case 63; }
-          else if (ch == 'e') { AddCh(); goto case 483; }
-        else {goto case 0;}
         case 513:
-          if (ch == 'l') { AddCh(); goto case 520; }
+          if (ch == 'm') { AddCh(); goto case 520; }
         else {goto case 0;}
         case 514:
-          recEnd = pos; recKind = 8;
-          if (ch == '.') { AddCh(); goto case 521; }
-        else {t.kind = 8; break;}
+          recEnd = pos; recKind = 162;
+          if (ch == '_') { AddCh(); goto case 521; }
+        else {t.kind = 162; break;}
         case 515:
+          if (ch == 's') { AddCh(); goto case 63; }
+          else if (ch == 'e') { AddCh(); goto case 487; }
+        else {goto case 0;}
+        case 516:
           recEnd = pos; recKind = 8;
           if (ch == '.') { AddCh(); goto case 522; }
         else {t.kind = 8; break;}
-        case 516:
+        case 517:
           recEnd = pos; recKind = 8;
           if (ch == '.') { AddCh(); goto case 523; }
         else {t.kind = 8; break;}
-        case 517:
+        case 518:
           recEnd = pos; recKind = 8;
           if (ch == '.') { AddCh(); goto case 524; }
         else {t.kind = 8; break;}
-        case 518:
-          if (ch == '.') { AddCh(); goto case 525; }
-        else {goto case 0;}
         case 519:
-          if (ch == 'i') { AddCh(); goto case 429; }
-          else if (ch == 't') { AddCh(); goto case 463; }
-        else {goto case 0;}
+          recEnd = pos; recKind = 8;
+          if (ch == '.') { AddCh(); goto case 525; }
+        else {t.kind = 8; break;}
         case 520:
-          if (ch == 'l') { AddCh(); goto case 526; }
+          if (ch == '.') { AddCh(); goto case 526; }
         else {goto case 0;}
         case 521:
+          if (ch == 'i') { AddCh(); goto case 433; }
+          else if (ch == 't') { AddCh(); goto case 467; }
+        else {goto case 0;}
+        case 522:
           if (ch == 'e') { AddCh(); goto case 527; }
           else if (ch == 'n') { AddCh(); goto case 102; }
           else if (ch == 'l') { AddCh(); goto case 528; }
@@ -1887,7 +1890,7 @@ namespace Xlc {
           else if (ch == 'w') { AddCh(); goto case 145; }
           else if (ch == 't') { AddCh(); goto case 535; }
         else {goto case 0;}
-        case 522:
+        case 523:
           if (ch == 'e') { AddCh(); goto case 536; }
           else if (ch == 'n') { AddCh(); goto case 162; }
           else if (ch == 'l') { AddCh(); goto case 537; }
@@ -1903,7 +1906,7 @@ namespace Xlc {
           else if (ch == 'x') { AddCh(); goto case 197; }
           else if (ch == 't') { AddCh(); goto case 544; }
         else {goto case 0;}
-        case 523:
+        case 524:
           if (ch == 'e') { AddCh(); goto case 223; }
           else if (ch == 'n') { AddCh(); goto case 545; }
           else if (ch == 'l') { AddCh(); goto case 546; }
@@ -1917,7 +1920,7 @@ namespace Xlc {
           else if (ch == 'd') { AddCh(); goto case 552; }
           else if (ch == 'r') { AddCh(); goto case 382; }
         else {goto case 0;}
-        case 524:
+        case 525:
           if (ch == 'e') { AddCh(); goto case 288; }
           else if (ch == 'n') { AddCh(); goto case 553; }
           else if (ch == 'l') { AddCh(); goto case 554; }
@@ -1932,14 +1935,10 @@ namespace Xlc {
           else if (ch == 'p') { AddCh(); goto case 345; }
           else if (ch == 'r') { AddCh(); goto case 397; }
         else {goto case 0;}
-        case 525:
+        case 526:
           if (ch == 's') { AddCh(); goto case 93; }
           else if (ch == 'g') { AddCh(); goto case 97; }
         else {goto case 0;}
-        case 526:
-          recEnd = pos; recKind = 161;
-          if (ch == '_') { AddCh(); goto case 420; }
-        else {t.kind = 161; break;}
         case 527:
           if (ch == 'q') { AddCh(); goto case 560; }
         else {goto case 0;}
@@ -2017,7 +2016,7 @@ namespace Xlc {
         case 546:
           if (ch == 't') { AddCh(); goto case 225; }
           else if (ch == 'e') { AddCh(); goto case 227; }
-          else if (ch == 'o') { AddCh(); goto case 431; }
+          else if (ch == 'o') { AddCh(); goto case 435; }
         else {goto case 0;}
         case 547:
           if (ch == 't') { AddCh(); goto case 226; }
@@ -2034,7 +2033,7 @@ namespace Xlc {
         case 550:
           if (ch == 'q') { AddCh(); goto case 250; }
           else if (ch == 'u') { AddCh(); goto case 255; }
-          else if (ch == 't') { AddCh(); goto case 447; }
+          else if (ch == 't') { AddCh(); goto case 451; }
         else {goto case 0;}
         case 551:
           if (ch == 'u') { AddCh(); goto case 257; }
@@ -2051,7 +2050,7 @@ namespace Xlc {
         case 554:
           if (ch == 't') { AddCh(); goto case 290; }
           else if (ch == 'e') { AddCh(); goto case 292; }
-          else if (ch == 'o') { AddCh(); goto case 434; }
+          else if (ch == 'o') { AddCh(); goto case 438; }
         else {goto case 0;}
         case 555:
           if (ch == 't') { AddCh(); goto case 291; }
@@ -2068,7 +2067,7 @@ namespace Xlc {
         case 558:
           if (ch == 'q') { AddCh(); goto case 315; }
           else if (ch == 'u') { AddCh(); goto case 320; }
-          else if (ch == 't') { AddCh(); goto case 451; }
+          else if (ch == 't') { AddCh(); goto case 455; }
         else {goto case 0;}
         case 559:
           if (ch == 'u') { AddCh(); goto case 322; }
@@ -2260,10 +2259,10 @@ namespace Xlc {
           if (ch == 'v') { AddCh(); goto case 628; }
         else {goto case 0;}
         case 614:
-          recEnd = pos; recKind = 165;
+          recEnd = pos; recKind = 164;
           if (ch == '8') { AddCh(); goto case 629; }
           else if (ch == '1') { AddCh(); goto case 630; }
-        else {t.kind = 165; break;}
+        else {t.kind = 164; break;}
         case 615:
           if (ch == 's') { AddCh(); goto case 141; }
           else if (ch == 'u') { AddCh(); goto case 142; }
@@ -2286,11 +2285,11 @@ namespace Xlc {
           if (ch == 'n') { AddCh(); goto case 633; }
         else {goto case 0;}
         case 621:
-          recEnd = pos; recKind = 166;
+          recEnd = pos; recKind = 165;
           if (ch == '8') { AddCh(); goto case 634; }
           else if (ch == '1') { AddCh(); goto case 635; }
           else if (ch == '3') { AddCh(); goto case 636; }
-        else {t.kind = 166; break;}
+        else {t.kind = 165; break;}
         case 622:
           if (ch == 's') { AddCh(); goto case 201; }
           else if (ch == 'u') { AddCh(); goto case 202; }
@@ -2322,10 +2321,10 @@ namespace Xlc {
           if (ch == '6') { AddCh(); goto case 642; }
         else {goto case 0;}
         case 631:
-          recEnd = pos; recKind = 179;
-          if (ch == '8') { AddCh(); goto case 455; }
-          else if (ch == '1') { AddCh(); goto case 456; }
-        else {t.kind = 179; break;}
+          recEnd = pos; recKind = 178;
+          if (ch == '8') { AddCh(); goto case 459; }
+          else if (ch == '1') { AddCh(); goto case 460; }
+        else {t.kind = 178; break;}
         case 632:
           if (ch == '_') { AddCh(); goto case 643; }
         else {goto case 0;}
@@ -2342,11 +2341,11 @@ namespace Xlc {
           if (ch == '2') { AddCh(); goto case 647; }
         else {goto case 0;}
         case 637:
-          recEnd = pos; recKind = 180;
-          if (ch == '8') { AddCh(); goto case 458; }
-          else if (ch == '1') { AddCh(); goto case 459; }
-          else if (ch == '3') { AddCh(); goto case 461; }
-        else {t.kind = 180; break;}
+          recEnd = pos; recKind = 179;
+          if (ch == '8') { AddCh(); goto case 462; }
+          else if (ch == '1') { AddCh(); goto case 463; }
+          else if (ch == '3') { AddCh(); goto case 465; }
+        else {t.kind = 179; break;}
         case 638:
           if (ch == '_') { AddCh(); goto case 648; }
         else {goto case 0;}
@@ -2357,8 +2356,8 @@ namespace Xlc {
           if (ch == 'r') { AddCh(); goto case 650; }
         else {goto case 0;}
         case 641:
-          if (ch == 's') { AddCh(); goto case 437; }
-          else if (ch == 'u') { AddCh(); goto case 438; }
+          if (ch == 's') { AddCh(); goto case 441; }
+          else if (ch == 'u') { AddCh(); goto case 442; }
         else {goto case 0;}
         case 642:
           if (ch == '_') { AddCh(); goto case 651; }
@@ -2371,8 +2370,8 @@ namespace Xlc {
           if (ch == '_') { AddCh(); goto case 654; }
         else {goto case 0;}
         case 645:
-          if (ch == 's') { AddCh(); goto case 441; }
-          else if (ch == 'u') { AddCh(); goto case 442; }
+          if (ch == 's') { AddCh(); goto case 445; }
+          else if (ch == 'u') { AddCh(); goto case 446; }
         else {goto case 0;}
         case 646:
           if (ch == '_') { AddCh(); goto case 655; }
@@ -2391,8 +2390,8 @@ namespace Xlc {
           if (ch == 't') { AddCh(); goto case 660; }
         else {goto case 0;}
         case 651:
-          if (ch == 's') { AddCh(); goto case 439; }
-          else if (ch == 'u') { AddCh(); goto case 440; }
+          if (ch == 's') { AddCh(); goto case 443; }
+          else if (ch == 'u') { AddCh(); goto case 444; }
         else {goto case 0;}
         case 652:
           if (ch == '/') { AddCh(); goto case 661; }
@@ -2405,12 +2404,12 @@ namespace Xlc {
           else if (ch == 'u') { AddCh(); goto case 210; }
         else {goto case 0;}
         case 655:
-          if (ch == 's') { AddCh(); goto case 443; }
-          else if (ch == 'u') { AddCh(); goto case 444; }
+          if (ch == 's') { AddCh(); goto case 447; }
+          else if (ch == 'u') { AddCh(); goto case 448; }
         else {goto case 0;}
         case 656:
-          if (ch == 's') { AddCh(); goto case 445; }
-          else if (ch == 'u') { AddCh(); goto case 446; }
+          if (ch == 's') { AddCh(); goto case 449; }
+          else if (ch == 'u') { AddCh(); goto case 450; }
         else {goto case 0;}
         case 657:
           if (ch == '/') { AddCh(); goto case 663; }

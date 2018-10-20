@@ -147,7 +147,8 @@ PRODUCTIONS
 
   IdArgInstr<.out IdArgInstr idinstr.> =        (. idinstr = null; .)
     ([("set"|"get"|"tee")] (localidx|globalidx)
-    |("call"|"call_indirect") funcidx
+    | funcidx
+    |"call_indirect" funcidx
     |("br"|"br_if") labelidx)                   (. idinstr = new IdArgInstr(token) { id = t.val }; .).
 
   MemArgInstr<.out MemArgInstr meminstr.> =     (. meminstr = null; .)
