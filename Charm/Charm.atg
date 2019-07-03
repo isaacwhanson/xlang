@@ -1,0 +1,36 @@
+COMPILER Charm
+
+CHARACTERS
+  lower       = 'a'..'z'.
+  upper       = 'A'..'Z'.
+  letter      = lower + upper.
+  idchar      = letter + '_'.
+  newline     = '\r' + '\n'.
+  notquote    = ANY - '\"' - newline.
+  notapost    = ANY - '\'' - newline.
+  whitespace  = ' ' + '\t' + '\u000b' + '\u000c' + '\f'.
+  bin         = "01".
+  oct         = '0'..'7'.
+  digit       = '0'..'9'.
+  nonzero     = '1'..'9'.
+  hex         = digit + 'a'..'f' + 'A'..'F'.
+  sign        = "+-".
+  e           = "eE".
+
+TOKENS
+  identifier  = idchar {idchar | digit}.
+  type        = upper {idchar | digit}.
+  string      = '"' {notquote | "\\\""} '"'.
+  character   = '\'' (notapost | "\\\'" | "\\\"" | "\\\\" | "\\0" | "\\a" | "\\b" | "\\f" | "\\n" | "\\r" | "\\t" | "\\v" | "\\u" hex hex hex hex) '\''.
+  float       = (digit {digit} '.' digit {digit} [e [sign] digit {digit}] | digit {digit} e [sign] digit {digit}) ['f'|'l'|'F'|'L'].
+  integer     = (nonzero {digit} | '0' ['o'|'O'] {oct} | ("0x"|"0X") hex {hex} | ("0b"|"0B") bin {bin}) {'u'|'U'|'l'|'L'}.
+
+COMMENTS FROM "#" TO "\n"
+COMMENTS FROM "//" TO "\n"
+COMMENTS FROM "/*" TO "*/" NESTED
+
+IGNORE whitespace + newline
+
+PRODUCTIONS
+  Charm = '.'.
+END Charm.
